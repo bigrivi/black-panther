@@ -65,7 +65,10 @@ class Settings(BaseSettings):
         'http://localhost:5173'
     ]
     CORS_EXPOSE_HEADERS: list[str] = [
-        TRACE_ID_REQUEST_HEADER_KEY,
+        TRACE_ID_REQUEST_HEADER_KEY
+    ]
+    CORS_ALLOW_HEADERS: list[str] = [
+        "authorization"
     ]
 
     TMP_FOLDER: str = os.getenv(

@@ -17,7 +17,8 @@ from app.common.schema import (
     CUSTOM_VALIDATION_ERROR_MESSAGES,
 )
 
-DEBUG_MODE = settings.ENVIRONMENT in  ['dev','test']
+DEBUG_MODE = settings.ENVIRONMENT in ['dev', 'test']
+
 
 def _get_exception_code(status_code: int):
     try:
@@ -201,61 +202,3 @@ def register_exception(app: FastAPI):
             status_code=StandardResponseCode.HTTP_500,
             content=content,
         )
-
-    if settings.MIDDLEWARE_CORS:
-
-        @app.exception_handler(StandardResponseCode.HTTP_500)
-        async def cors_custom_code_500_exception_handler(request, exc):
-            """
-            跨域自定义 500 异常处理
-
-            `Related issue <https://github.com/encode/starlette/issues/1175>`_
-            `Solution <https://github.com/fastapi/fastapi/discussions/7847#discussioncomment-5144709>`_
-
-            :param request:
-            :param exc:
-            :return:
-            """
-            if isinstance(exc, BaseExceptionMixin):
-                content = {
-                    'code': exc.code,
-                    'msg': exc.msg,
-                    'data': exc.data,
-                }
-            else:
-                if DEBUG_MODE:
-                    content = {
-                        'code': StandardResponseCode.HTTP_500,
-                        'msg': str(exc),
-                        'data': None,
-                    }
-                else:
-                    res = response_base.fail(res=CustomResponseCode.HTTP_500)
-                    content = res.model_dump()
-            request.state.__request_cors_500_exception__ = content
-            content.update(trace_id=get_request_trace_id(request))
-            response = BaseResponse(
-                status_code=exc.code if isinstance(
-                    exc, BaseExceptionMixin) else StandardResponseCode.HTTP_500,
-                content=content,
-                background=exc.background if isinstance(
-                    exc, BaseExceptionMixin) else None,
-            )
-            origin = request.headers.get('origin')
-            if origin:
-                cors = CORSMiddleware(
-                    app=app,
-                    allow_origins=settings.CORS_ALLOWED_ORIGINS,
-                    allow_credentials=True,
-                    allow_methods=['*'],
-                    allow_headers=['*'],
-                    expose_headers=settings.CORS_EXPOSE_HEADERS,
-                )
-                response.headers.update(cors.simple_headers)
-                has_cookie = 'cookie' in request.headers
-                if cors.allow_all_origins and has_cookie:
-                    response.headers['Access-Control-Allow-Origin'] = origin
-                elif not cors.allow_all_origins and cors.is_allowed_origin(origin=origin):
-                    response.headers['Access-Control-Allow-Origin'] = origin
-                    response.headers.add_vary_header('Origin')
-            return response

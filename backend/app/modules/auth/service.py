@@ -23,14 +23,15 @@ class AuthService():
         uuid = login_model.uuid
         verify_key = f'{settings.CAPTCHA_LOGIN_REDIS_PREFIX}:{uuid}'
         captcha_code = await redis_client.get(verify_key)
+        user = None
         try:
-            user = await user_service.get_one(User.login_name == login_name)
-            if not user:
-                raise NotFoundError(msg="用户名或密码有误")
             if not captcha_code:
                 raise BadRequestError(msg='验证码失效，请重新获取')
             if captcha_code.lower() != captcha.lower():
                 raise BadRequestError(msg='验证码错误')
+            user = await user_service.get_one(User.login_name == login_name)
+            if not user:
+                raise NotFoundError(msg="用户名或密码有误")
             if not user.valid_state:
                 raise BadRequestError(msg='用户已被锁定, 请联系统管理员')
             num_error_login = int(
@@ -84,16 +85,18 @@ class AuthService():
         except NotFoundError as e:
             raise NotFoundError(msg=e.msg)
         except (BadRequestError, AccountLockError) as e:
-            task = BackgroundTask(
-                LoginLogService.create,
-                **dict(
-                    request=request,
-                    user_id=user.id,
-                    user_name=user.user_name,
-                    status=0,
-                    msg=e.msg,
-                ),
-            )
+            task = None
+            if user:
+                task = BackgroundTask(
+                    LoginLogService.create,
+                    **dict(
+                        request=request,
+                        user_id=user.id,
+                        user_name=user.user_name,
+                        status=0,
+                        msg=e.msg,
+                    ),
+                )
             raise BadRequestError(msg=e.msg, data=e.data, background=task)
         except Exception as e:
             raise e

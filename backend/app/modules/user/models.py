@@ -82,12 +82,12 @@ class User(UserBase, BaseMixin, table=True):
 
 
 class UserPublic(UserBase):
-    id: str
+    id: int
     roles: List[RolePublic] = None
 
 
 class CurrentUser(UserBase):
-    id: str
+    id: int
     roles: List[RolePublic] = None
     posts: List[PostPublic] = None
 

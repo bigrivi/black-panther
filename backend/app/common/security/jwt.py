@@ -102,7 +102,7 @@ def jwt_decode(token: str) -> str:
     try:
         payload = jwt.decode(token, settings.TOKEN_SECRET_KEY, algorithms=[
                              settings.TOKEN_ALGORITHM])
-        user_id = str(payload.get('sub'))
+        user_id = int(payload.get('sub'))
         if not user_id:
             raise TokenError(msg='Invalid token')
     except ExpiredSignatureError:
@@ -136,6 +136,3 @@ async def jwt_authentication(token: str) -> CurrentUser:
     else:
         user = CurrentUser.model_validate(json.loads(cache_user))
     return user
-
-
-print(get_hashed_password("111111"))
