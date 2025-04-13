@@ -1,9 +1,25 @@
+import { useCallback, useEffect, useState } from "react";
 import type { AuthProvider } from "@refinedev/core";
 import { AxiosInstance } from "axios";
-import { API_URL, TOKEN_KEY } from "./constants";
+import { API_URL, TOKEN_KEY } from "../constants";
 
-export const authProvider = (axiosInstance: AxiosInstance): AuthProvider => {
-    return {
+export interface AuthProviderHookResult {
+    authProvider: AuthProvider;
+    user: any;
+}
+export const useAuthProvider = (
+    axiosInstance: AxiosInstance
+): AuthProviderHookResult => {
+    const [user, setUser] = useState(null);
+    const fetchUserInfo = useCallback(async () => {
+        try {
+            const { data } = await axiosInstance.get(`${API_URL}/user/me`);
+            setUser(data);
+        } catch (error: any) {
+            console.log(error.response.data);
+        }
+    }, []);
+    const authProvider: AuthProvider = {
         login: async ({ username, loginName, password, uuid, captcha }) => {
             try {
                 const { data } = await axiosInstance.post(
@@ -15,7 +31,6 @@ export const authProvider = (axiosInstance: AxiosInstance): AuthProvider => {
                         captcha,
                     }
                 );
-                console.log(data);
                 localStorage.setItem(TOKEN_KEY, data.access_token);
                 return {
                     success: true,
@@ -34,6 +49,7 @@ export const authProvider = (axiosInstance: AxiosInstance): AuthProvider => {
             }
         },
         logout: async () => {
+            setUser(null);
             localStorage.removeItem(TOKEN_KEY);
             return {
                 success: true,
@@ -43,6 +59,7 @@ export const authProvider = (axiosInstance: AxiosInstance): AuthProvider => {
         check: async () => {
             const token = localStorage.getItem(TOKEN_KEY);
             if (token) {
+                await fetchUserInfo();
                 return {
                     authenticated: true,
                 };
@@ -55,17 +72,16 @@ export const authProvider = (axiosInstance: AxiosInstance): AuthProvider => {
         },
         getPermissions: async () => null,
         getIdentity: async () => {
-            try {
-                const { data } = await axiosInstance.get(`${API_URL}/user/me`);
-                return data;
-            } catch (error: any) {
-                console.log(error.response.data);
-            }
-            return null;
+            return user;
         },
         onError: async (error) => {
             console.error(error);
             return { error };
         },
+    };
+
+    return {
+        authProvider,
+        user,
     };
 };

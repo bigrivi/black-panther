@@ -1,17 +1,8 @@
-import {
-    Authenticated,
-    GitHubBanner,
-    HttpError,
-    Refine,
-    useApiUrl,
-    useCustom,
-} from "@refinedev/core";
-import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
+import { Authenticated, CanAccess, HttpError, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { useTranslation } from "react-i18next";
 import {
-    ErrorComponent,
     ThemedLayoutV2,
     ThemedSiderV2,
     useNotificationProvider,
@@ -26,8 +17,7 @@ import routerBindings, {
 } from "@refinedev/react-router";
 import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
-import { authProvider } from "./authProvider";
-import { Header } from "./components/header";
+import { Header, PageLoading, AccessDenied, NotFound } from "./components";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import {
     BlogPostCreate,
@@ -47,15 +37,15 @@ import { Register } from "./pages/register";
 import dataProvider from "./dataProvider";
 import { resources } from "./resources";
 import { TOKEN_KEY } from "./constants";
+import { useAuthProvider } from "./hooks/useAuthProvider";
+import { useAccessControlProvider } from "./hooks/useAccessControlProvider";
 
 const axiosInstance = axios.create();
-
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token && config.headers) {
         config.headers["Authorization"] = `Bearer ${token}`;
     }
-
     return config;
 });
 
@@ -77,11 +67,14 @@ axiosInstance.interceptors.response.use(
 
 const App: React.FC = () => {
     const { t, i18n } = useTranslation();
+    const { authProvider, user } = useAuthProvider(axiosInstance);
+    const { accessControlProvider } = useAccessControlProvider(user);
     const i18nProvider = {
         translate: (key: string, params: object) => t(key, params),
         changeLocale: (lang: string) => i18n.changeLanguage(lang),
         getLocale: () => i18n.language,
     };
+
     return (
         <BrowserRouter>
             <RefineKbarProvider>
@@ -89,39 +82,19 @@ const App: React.FC = () => {
                     <AntdApp>
                         <Refine
                             i18nProvider={i18nProvider}
-                            accessControlProvider={{
-                                can: async ({ resource, action }) => {
-                                    if (
-                                        resource == "post" &&
-                                        action == "edit"
-                                    ) {
-                                        return {
-                                            can: false,
-                                            reason: "Unauthorized",
-                                        };
-                                    }
-                                    return { can: true };
-                                },
-                                options: {
-                                    buttons: {
-                                        enableAccessControl: true,
-                                        hideIfUnauthorized: true,
-                                    },
-                                    queryOptions: {
-                                        // ... default global query options
-                                    },
-                                },
-                            }}
+                            accessControlProvider={accessControlProvider}
                             dataProvider={dataProvider(axiosInstance)}
                             notificationProvider={useNotificationProvider}
                             routerProvider={routerBindings}
-                            authProvider={authProvider(axiosInstance)}
+                            authProvider={authProvider}
                             resources={resources}
                             options={{
                                 syncWithLocation: true,
                                 warnWhenUnsavedChanges: true,
                                 useNewQueryKeys: true,
-                                projectId: "m03TmB-6AokxR-OdrSlZ",
+                                title: {
+                                    text: "Photinia",
+                                },
                             }}
                         >
                             <Routes>
@@ -129,21 +102,38 @@ const App: React.FC = () => {
                                     element={
                                         <Authenticated
                                             key="authenticated-inner"
+                                            loading={<PageLoading />}
                                             fallback={
                                                 <CatchAllNavigate to="/login" />
                                             }
                                         >
-                                            <ThemedLayoutV2
-                                                Header={Header}
-                                                Sider={(props) => (
-                                                    <ThemedSiderV2
-                                                        {...props}
-                                                        fixed
-                                                    />
-                                                )}
+                                            <CanAccess
+                                                action="list"
+                                                onUnauthorized={({
+                                                    resource,
+                                                    reason,
+                                                    action,
+                                                    params,
+                                                }) => {
+                                                    console.log(params);
+                                                    console.warn(
+                                                        `You cannot access ${resource}-${params} resource with ${action} action because ${reason}`
+                                                    );
+                                                }}
+                                                fallback={<AccessDenied />}
                                             >
-                                                <Outlet />
-                                            </ThemedLayoutV2>
+                                                <ThemedLayoutV2
+                                                    Header={Header}
+                                                    Sider={(props) => (
+                                                        <ThemedSiderV2
+                                                            {...props}
+                                                            fixed
+                                                        />
+                                                    )}
+                                                >
+                                                    <Outlet />
+                                                </ThemedLayoutV2>
+                                            </CanAccess>
                                         </Authenticated>
                                     }
                                 >
@@ -153,7 +143,7 @@ const App: React.FC = () => {
                                             <NavigateToResource resource="post" />
                                         }
                                     />
-                                    <Route path="/:resource">
+                                    {/* <Route path="/:resource">
                                         <Route
                                             index
                                             element={<BlogPostList />}
@@ -170,7 +160,7 @@ const App: React.FC = () => {
                                             path="show/:id"
                                             element={<BlogPostShow />}
                                         />
-                                    </Route>
+                                    </Route> */}
                                     <Route path="/blog-posts">
                                         <Route
                                             index
@@ -189,7 +179,7 @@ const App: React.FC = () => {
                                             element={<BlogPostShow />}
                                         />
                                     </Route>
-                                    <Route path="/categories">
+                                    <Route path="/user">
                                         <Route
                                             index
                                             element={<CategoryList />}
@@ -207,10 +197,7 @@ const App: React.FC = () => {
                                             element={<CategoryShow />}
                                         />
                                     </Route>
-                                    <Route
-                                        path="*"
-                                        element={<ErrorComponent />}
-                                    />
+                                    <Route path="*" element={<NotFound />} />
                                 </Route>
                                 <Route
                                     element={
