@@ -129,6 +129,14 @@
         "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
         "importProgress": "Importing: {{processed}}/{{total}}"
     },
+    "fields": {
+        "status": {
+            "label": "Status",
+            "true": "Enabled",
+            "false": "Disabled"
+        },
+        "createdAt": "Created At"
+    },
     "categories": {
         "categories": "Categories",
         "titles": {
@@ -385,147 +393,6 @@
             },
             "mainTotal": "MAIN TOTAL"
         }
-    },
-    "products": {
-        "products": "Products",
-        "titles": {
-            "list": "Products",
-            "create": "Create Product",
-            "edit": "Edit Product"
-        },
-        "fields": {
-            "id": "ID",
-            "name": "Name",
-            "description": "Description",
-            "isActive": {
-                "label": "Status",
-                "true": "Available",
-                "false": "Unavailable"
-            },
-            "price": "Price",
-            "category": "Category",
-            "images": {
-                "label": "Images",
-                "description": "Upload Image",
-                "validation": "must be 1080x1080 px"
-            },
-            "createdAt": "CreatedAt"
-        },
-        "filter": {
-            "title": "Filters",
-            "allCategories": {
-                "label": "All Categories",
-                "placeholder": "All Categories"
-            },
-            "id": {
-                "label": "ID",
-                "placeholder": "Search ID"
-            },
-            "name": {
-                "label": "Name",
-                "placeholder": "Search Name"
-            },
-            "description": {
-                "label": "Description",
-                "placeholder": "Search Description"
-            },
-            "category": {
-                "label": "Category",
-                "placeholder": "Search Category"
-            },
-            "createdAt": {
-                "label": "Created At"
-            },
-            "isActive": {
-                "label": "Status",
-                "placeholder": "Select Status",
-                "true": "Available",
-                "false": "Unavailable"
-            }
-        },
-        "actions": {
-            "add": "Add new product",
-            "edit": "Edit product"
-        }
-    },
-    "reviews": {
-        "reviews": "Reviews",
-        "titles": {
-            "list": "Reviews"
-        },
-        "fields": {
-            "user": "User",
-            "orderId": "Order",
-            "review": "Review",
-            "rating": "Rating"
-        }
-    },
-    "stores": {
-        "stores": "Stores",
-        "titles": {
-            "create": "Create Store",
-            "edit": "Edit Store",
-            "list": "Stores",
-            "show": "Show Store"
-        },
-        "fields": {
-            "id": "Store ID",
-            "title": "Title",
-            "isActive": {
-                "label": "Status",
-                "placeholder": "Select Status",
-                "true": "Open",
-                "false": "Closed"
-            },
-            "createdAt": "CreatedAt",
-            "address": "Address",
-            "email": "Email",
-            "gsm": "Phone"
-        },
-        "filter": {
-            "id": {
-                "label": "ID",
-                "placeholder": "Search ID"
-            },
-            "title": {
-                "label": "Title",
-                "placeholder": "Search Title"
-            },
-            "email": {
-                "label": "Email",
-                "placeholder": "Search Email"
-            },
-            "gsm": {
-                "label": "Gsm",
-                "placeholder": "Search Gsm"
-            },
-            "search": {
-                "label": "Search",
-                "placeholder": "FirstName, lastName, gsm, etc."
-            },
-            "createdAt": {
-                "label": "Created At"
-            },
-            "isActive": {
-                "label": "Status",
-                "placeholder": "Select Status",
-                "true": "Open",
-                "false": "Closed"
-            },
-            "submit": "Filter"
-        },
-        "buttons": {
-            "editProducts": "Edit Products",
-            "addProduct": "Add Product",
-            "outOfStock": "Out Of Stock",
-            "edit": "Edit Product"
-        },
-        "selectLocation": "Choose store location on the map",
-        "storeProducts": "Store Products",
-        "tagFilterDescription": "Use tags to filter your search",
-        "all": "All",
-        "productSearch": "Product Search",
-        "addNewStore": "Add New Store"
     },
     "users": {
         "users": "Customers",

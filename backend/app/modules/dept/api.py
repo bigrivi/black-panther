@@ -18,7 +18,7 @@ router = APIRouter()
 class DeptController():
     service: DeptService = Depends(DeptService)
 
-    @router.get("/dept_tree", dependencies=[
+    @router.get("/tree", dependencies=[
         DependsJwtAuth
     ])
     async def get_dept_tree(self, request: Request, parent_id: str = None) -> ResponseModel[List[DeptPublic]]:

@@ -19,18 +19,8 @@ import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { Header, PageLoading, AccessDenied, NotFound } from "./components";
 import { ColorModeContextProvider } from "./contexts/color-mode";
-import {
-    BlogPostCreate,
-    BlogPostEdit,
-    BlogPostList,
-    BlogPostShow,
-} from "./pages/blog-posts";
-import {
-    CategoryCreate,
-    CategoryEdit,
-    CategoryList,
-    CategoryShow,
-} from "./pages/categories";
+import { UserCreate, UserEdit, UserList, UserShow } from "./pages/users";
+import { RoleCreate, RoleEdit, RoleList, RoleShow } from "./pages/roles";
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
@@ -39,6 +29,12 @@ import { resources } from "./resources";
 import { TOKEN_KEY } from "./constants";
 import { useAuthProvider } from "./hooks/useAuthProvider";
 import { useAccessControlProvider } from "./hooks/useAccessControlProvider";
+import {
+    DepartmentCreate,
+    DepartmentEdit,
+    DepartmentList,
+    DepartmentShow,
+} from "./pages/departments";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -161,42 +157,55 @@ const App: React.FC = () => {
                                             element={<BlogPostShow />}
                                         />
                                     </Route> */}
-                                    <Route path="/blog-posts">
-                                        <Route
-                                            index
-                                            element={<BlogPostList />}
-                                        />
+                                    <Route path="/users">
+                                        <Route index element={<UserList />} />
                                         <Route
                                             path="create"
-                                            element={<BlogPostCreate />}
+                                            element={<UserCreate />}
                                         />
                                         <Route
                                             path="edit/:id"
-                                            element={<BlogPostEdit />}
+                                            element={<UserEdit />}
                                         />
                                         <Route
                                             path="show/:id"
-                                            element={<BlogPostShow />}
+                                            element={<UserShow />}
                                         />
                                     </Route>
-                                    <Route path="/user">
-                                        <Route
-                                            index
-                                            element={<CategoryList />}
-                                        />
+                                    <Route path="/roles">
+                                        <Route index element={<RoleList />} />
                                         <Route
                                             path="create"
-                                            element={<CategoryCreate />}
+                                            element={<RoleCreate />}
                                         />
                                         <Route
                                             path="edit/:id"
-                                            element={<CategoryEdit />}
+                                            element={<RoleEdit />}
                                         />
                                         <Route
                                             path="show/:id"
-                                            element={<CategoryShow />}
+                                            element={<RoleShow />}
                                         />
                                     </Route>
+                                    <Route path="/departments">
+                                        <Route
+                                            index
+                                            element={<DepartmentList />}
+                                        />
+                                        <Route
+                                            path="create"
+                                            element={<DepartmentCreate />}
+                                        />
+                                        <Route
+                                            path="edit/:id"
+                                            element={<DepartmentEdit />}
+                                        />
+                                        <Route
+                                            path="show/:id"
+                                            element={<DepartmentShow />}
+                                        />
+                                    </Route>
+
                                     <Route path="*" element={<NotFound />} />
                                 </Route>
                                 <Route

@@ -25,6 +25,8 @@ class Role(RoleBase, BaseMixin, table=True):
 class RolePublic(RoleBase):
     id: Optional[int]
     menus: Optional[List[MenuPublic]] = None
+    valid_state: Optional[bool] = None
+    created_at: datetime = None
 
 
 class RoleCreate(RoleBase):

@@ -21,7 +21,7 @@ import { Table, Space, Select, Radio, Input } from "antd";
 
 import type { IPost, ICategory } from "../../interfaces";
 
-export const BlogPostList = () => {
+export const UserList = () => {
     const { resource } = useResource();
     const { tableProps, filters } = useTable<IPost>({
         syncWithLocation: false,
