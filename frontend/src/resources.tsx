@@ -54,4 +54,17 @@ export const resources: ResourceProps[] = [
             parent: "system_manager",
         },
     },
+    {
+        name: "resource",
+        list: "/resources",
+        create: "/resources/create",
+        edit: "/resources/edit/:id",
+        show: "/resources/show/:id",
+        meta: {
+            canDelete: true,
+            icon: <TeamOutlined />,
+            label: "Resource",
+            parent: "system_manager",
+        },
+    },
 ];

@@ -3,14 +3,8 @@ import { Edit, useForm } from "@refinedev/antd";
 import { useList } from "@refinedev/core";
 import { Form, Input, TreeSelect } from "antd";
 
-export const DepartmentEdit = () => {
+export const ResourceEdit = () => {
     const { formProps, saveButtonProps } = useForm<IDepartment>({});
-    const { data: deptTreeData } = useList({
-        resource: "dept",
-        meta: {
-            isTree: true,
-        },
-    });
 
     return (
         <Edit saveButtonProps={saveButtonProps}>

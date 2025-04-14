@@ -22,19 +22,26 @@ import { ColorModeContextProvider } from "./contexts/color-mode";
 import { UserCreate, UserEdit, UserList, UserShow } from "./pages/users";
 import { RoleCreate, RoleEdit, RoleList, RoleShow } from "./pages/roles";
 import { ForgotPassword } from "./pages/forgotPassword";
-import { Login } from "./pages/login";
-import { Register } from "./pages/register";
-import dataProvider from "./dataProvider";
-import { resources } from "./resources";
-import { TOKEN_KEY } from "./constants";
-import { useAuthProvider } from "./hooks/useAuthProvider";
-import { useAccessControlProvider } from "./hooks/useAccessControlProvider";
+import { Login } from "@/pages/login";
+import { Register } from "@/pages/register";
+import dataProvider from "@/dataProvider";
+import { resources } from "@/resources";
+import { TOKEN_KEY } from "@/constants";
+import { useAuthProvider } from "@/hooks/useAuthProvider";
+import { useAccessControlProvider } from "@/hooks/useAccessControlProvider";
 import {
     DepartmentCreate,
     DepartmentEdit,
     DepartmentList,
     DepartmentShow,
-} from "./pages/departments";
+} from "@/pages/departments";
+import {
+    ResourceCreate,
+    ResourceEdit,
+    ResourceList,
+    ResourceShow,
+} from "./pages/resource";
+import "./App.css";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -203,6 +210,25 @@ const App: React.FC = () => {
                                         <Route
                                             path="show/:id"
                                             element={<DepartmentShow />}
+                                        />
+                                    </Route>
+
+                                    <Route path="/resources">
+                                        <Route
+                                            index
+                                            element={<ResourceList />}
+                                        />
+                                        <Route
+                                            path="create"
+                                            element={<ResourceCreate />}
+                                        />
+                                        <Route
+                                            path="edit/:id"
+                                            element={<ResourceEdit />}
+                                        />
+                                        <Route
+                                            path="show/:id"
+                                            element={<ResourceShow />}
                                         />
                                     </Route>
 

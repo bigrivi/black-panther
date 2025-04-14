@@ -1,10 +1,12 @@
-import { IDepartment } from "@/interfaces";
-import { Edit, useForm } from "@refinedev/antd";
+import { Create, useForm } from "@refinedev/antd";
 import { useList } from "@refinedev/core";
 import { Form, Input, TreeSelect } from "antd";
+import { useMemo } from "react";
+import { useQuery } from "../../hooks/useQuery";
 
-export const DepartmentEdit = () => {
-    const { formProps, saveButtonProps } = useForm<IDepartment>({});
+export const ResourceCreate = () => {
+    const query = useQuery();
+    const { formProps, saveButtonProps } = useForm({});
     const { data: deptTreeData } = useList({
         resource: "dept",
         meta: {
@@ -13,7 +15,7 @@ export const DepartmentEdit = () => {
     });
 
     return (
-        <Edit saveButtonProps={saveButtonProps}>
+        <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
                 <Form.Item
                     label={"Name"}
@@ -37,7 +39,6 @@ export const DepartmentEdit = () => {
                 >
                     <TreeSelect
                         showSearch
-                        disabled={formProps.initialValues?.parent_id == null}
                         style={{ width: "100%" }}
                         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                         placeholder="Please select"
@@ -51,6 +52,6 @@ export const DepartmentEdit = () => {
                     />
                 </Form.Item>
             </Form>
-        </Edit>
+        </Create>
     );
 };

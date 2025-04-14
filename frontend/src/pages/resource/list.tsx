@@ -11,54 +11,68 @@ import {
 } from "@refinedev/antd";
 import { useGo, useTranslate } from "@refinedev/core";
 import { type BaseRecord } from "@refinedev/core";
-import { Button, Space, Table } from "antd";
+import { Button, Space, Table, TableColumnsType } from "antd";
 import { Status } from "@/components";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+    MinusCircleTwoTone,
+    PlusCircleTwoTone,
+    PlusOutlined,
+    RightOutlined,
+} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { IDepartment } from "@/interfaces";
 import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
 
-export const DepartmentList = () => {
+export const ResourceList = () => {
     const t = useTranslate();
     const go = useGo();
-    const [expandedRowKeys, setExpandedRowKeys] = useState([1, 2]);
     const { tableProps } = useTable<IDepartment>({
         syncWithLocation: true,
-        meta: {
-            isTree: true,
-        },
     });
 
-    useEffect(() => {
-        if (tableProps.dataSource && tableProps.dataSource.length > 0) {
-            setExpandedRowKeys(
-                getExpandNodeIds<IDepartment>(tableProps?.dataSource[0])
-            );
-        }
-    }, [tableProps.dataSource]);
+    const expandColumns: TableColumnsType = [
+        {
+            title: "Name",
+            className: "action-name",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "Action",
+            key: "operation",
+            align: "right",
+            render: () => (
+                <Space size="middle">
+                    <a>Pause</a>
+                    <a>Stop</a>
+                </Space>
+            ),
+        },
+    ];
+
+    const expandedRowRender = (record: any) => (
+        <Table
+            showHeader={false}
+            columns={expandColumns}
+            rowKey={"id"}
+            dataSource={record.actions}
+            pagination={false}
+        />
+    );
 
     return (
         <List>
             <Table
                 {...tableProps}
                 expandable={{
-                    childrenColumnName: "children",
-                    onExpand(expanded, record: any) {
-                        let newRowKeys = expandedRowKeys;
-                        if (expanded) {
-                            newRowKeys = [...newRowKeys, record.id];
-                        } else {
-                            newRowKeys = newRowKeys.filter(
-                                (e) => e !== record.id
-                            );
-                        }
-                        setExpandedRowKeys(newRowKeys);
-                    },
-                    expandedRowKeys,
+                    expandedRowRender,
+                    indentSize: 0,
+                    // childrenColumnName: "actions",
                 }}
                 rowKey="id"
             >
-                <Table.Column dataIndex="name" title={"Name"} />
+                <Table.Column dataIndex="name" width={200} title={"Name"} />
+                <Table.Column dataIndex="key" width={200} title={"Key"} />
                 <Table.Column
                     dataIndex="valid_state"
                     title="Status"
@@ -74,20 +88,24 @@ export const DepartmentList = () => {
                 <Table.Column
                     title={"Actions"}
                     dataIndex="actions"
+                    align="right"
                     render={(_, record: BaseRecord) => (
                         <Space>
-                            <Button
-                                icon={<PlusOutlined />}
-                                size="small"
-                                onClick={() => {
-                                    go({
-                                        to: "/departments/create",
-                                        query: {
-                                            parent_id: record.id,
-                                        },
-                                    });
-                                }}
-                            ></Button>
+                            {record.actions && (
+                                <Button
+                                    icon={<PlusOutlined />}
+                                    size="small"
+                                    onClick={() => {
+                                        go({
+                                            to: "/departments/create",
+                                            query: {
+                                                parent_id: record.id,
+                                            },
+                                        });
+                                    }}
+                                ></Button>
+                            )}
+
                             <EditButton
                                 hideText
                                 size="small"
