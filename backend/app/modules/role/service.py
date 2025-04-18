@@ -7,29 +7,31 @@ from app.utils.common import find
 from .models import Role
 from app.extensions import logger
 from app.exception import errors
-from app.modules.menu.service import menu_service, Menu
 from app.modules.user.service import user_service, UserService, User
 from app.modules.user.models import UserRoleLink
+from app.modules.resource.action.service import action_service, Action
 
 
 class RoleService(ServiceBase[Role]):
     def __init__(self):
         super().__init__(Role)
 
-    async def update_role_menu(self, request: Request, role_id: str, menu_ids: List[str]) -> int:
-        role = await self.get(role_id, options=[joinedload(Role.menus)])
+    async def update_role_actions(self, request: Request, role_id: str, action_ids: List[str]) -> int:
+        role = await self.get(role_id, options=[joinedload(Role.actions)])
         if not role:
-            raise errors.NotFoundError(msg='角色不存在')
-        for menu_id in menu_ids:
-            menu = await menu_service.get(menu_id)
-            if not menu:
-                raise errors.NotFoundError(msg='菜单不存在')
-        role.menus = await menu_service.get_list([Menu.id.in_(menu_ids)])
+            raise errors.NotFoundError(msg=f'Role {role_id} does not exist')
+        for action_id in action_ids:
+            action = await action_service.get(action_id)
+            if not action:
+                raise errors.NotFoundError(
+                    msg='Action {action_id} does not exist')
+        role.actions = await action_service.get_list([Action.id.in_(action_ids)])
         db.session.add(role)
         await db.session.commit()
-        if role_id in [role.id for role in request.user.roles]:
-            await UserService.clear_jwt_cache_user(request=request)
-        return len(role.menus)
+        users = await user_service.get_list([User.roles.any(Role.id == role_id)])
+        for user in users:
+            await UserService.clear_jwt_cache_user(user_id=user.id)
+        return len(role.actions)
 
     async def add_user_to_role(self, role_id: int, user_ids: List[str]):
         if not user_ids:

@@ -2,10 +2,8 @@ from typing import Optional, List, Any, TYPE_CHECKING
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, Column, DateTime
 from app.common.model import BaseMixin
-from app.common.model.link import RoleMenuLink
-from app.modules.menu.models import MenuPublic
-if TYPE_CHECKING:
-    from app.modules.menu.models import Menu
+from app.common.model.link import RoleActionLink
+from app.modules.resource.action.models import ActionPublic, Action
 
 
 class RoleBase(SQLModel):
@@ -15,16 +13,21 @@ class RoleBase(SQLModel):
 
 
 class Role(RoleBase, BaseMixin, table=True):
-    menus: List["Menu"] = Relationship(
+    actions: List["Action"] = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
-        back_populates="roles",
-        link_model=RoleMenuLink
+        link_model=RoleActionLink
     )
 
 
 class RolePublic(RoleBase):
     id: Optional[int]
-    menus: Optional[List[MenuPublic]] = None
+    actions: Optional[List[ActionPublic]] = None
+    valid_state: Optional[bool] = None
+    created_at: datetime = None
+
+
+class RolePublicWithoutActions(RoleBase):
+    id: Optional[int]
     valid_state: Optional[bool] = None
     created_at: datetime = None
 

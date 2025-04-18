@@ -1,4 +1,5 @@
 import {
+    DashboardOutlined,
     SettingOutlined,
     TagsOutlined,
     TeamOutlined,
@@ -8,8 +9,15 @@ import { ResourceProps } from "@refinedev/core";
 
 export const resources: ResourceProps[] = [
     {
-        name: "system",
-        identifier: "system_manager",
+        name: "dashboard",
+        list: "/",
+        meta: {
+            label: "Dashboard",
+            icon: <DashboardOutlined />,
+        },
+    },
+    {
+        name: "system_manager",
         meta: {
             icon: <SettingOutlined />,
             label: "System",
@@ -42,7 +50,7 @@ export const resources: ResourceProps[] = [
         },
     },
     {
-        name: "dept",
+        name: "department",
         list: "/departments",
         create: "/departments/create",
         edit: "/departments/edit/:id",

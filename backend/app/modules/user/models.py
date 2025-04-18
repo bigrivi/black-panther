@@ -4,7 +4,7 @@ from sqlalchemy.dialects.mysql import BIGINT
 from sqlmodel import Field, SQLModel, Relationship, Column, DateTime, String, BIGINT
 from app.common.model import BaseMixin
 from app.modules.post.models import Post, PostPublic
-from app.modules.role.models import Role, RolePublic
+from app.modules.role.models import Role, RolePublic, RolePublicWithoutActions
 from app.utils.common import find
 
 
@@ -88,8 +88,9 @@ class UserPublic(UserBase):
 
 class CurrentUser(UserBase):
     id: int
-    roles: List[RolePublic] = None
+    roles: List[RolePublicWithoutActions] = None
     posts: List[PostPublic] = None
+    permissions: List[str] = None
 
 
 class UserCreate(UserBase):

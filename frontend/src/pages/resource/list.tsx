@@ -19,11 +19,11 @@ import {
     PlusOutlined,
     RightOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { IDepartment } from "@/interfaces";
 import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
 
-export const ResourceList = () => {
+export const ResourceList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const go = useGo();
     const { tableProps } = useTable<IDepartment>({
@@ -97,10 +97,10 @@ export const ResourceList = () => {
                                     size="small"
                                     onClick={() => {
                                         go({
-                                            to: "/departments/create",
-                                            query: {
-                                                parent_id: record.id,
-                                            },
+                                            to: "/resources/create",
+                                            // query: {
+                                            //     parent_id: record.id,
+                                            // },
                                         });
                                     }}
                                 ></Button>
@@ -125,6 +125,7 @@ export const ResourceList = () => {
                     )}
                 />
             </Table>
+            {children}
         </List>
     );
 };

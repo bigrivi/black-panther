@@ -6,6 +6,7 @@ from app.exception import errors
 from app.common.security.jwt import get_hashed_password
 from app.middleware.fastapi_sqlalchemy import db
 from app.common.service.base import ServiceBase
+from app.modules.resource.action.models import Action
 from .models import User, CurrentUser
 from app.extensions import redis_client
 from app.config.settings import settings
@@ -59,10 +60,15 @@ class UserService(ServiceBase[User]):
         current_user = await user_service.get(
             user_id,
             options=[
-                joinedload(User.roles).joinedload(Role.menus),
+                joinedload(User.roles).joinedload(
+                    Role.actions).joinedload(Action.resource),
             ]
         )
-        return CurrentUser.model_validate(current_user, from_attributes=True)
+        permissions = []
+        for role in current_user.roles:
+            for action in role.actions:
+                permissions.append(f"{action.resource.key}:{action.name}")
+        return CurrentUser.model_validate(current_user, from_attributes=True, update={"permissions": list(set(permissions))})
 
     async def update_password(self, id, new_password: str):
         entity = await self.get_by_id(id)

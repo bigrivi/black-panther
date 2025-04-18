@@ -42,6 +42,7 @@ import {
     ResourceShow,
 } from "./pages/resource";
 import "./App.css";
+import { DashboardPage } from "./pages/dashboard";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -140,12 +141,8 @@ const App: React.FC = () => {
                                         </Authenticated>
                                     }
                                 >
-                                    <Route
-                                        index
-                                        element={
-                                            <NavigateToResource resource="post" />
-                                        }
-                                    />
+                                    <Route index element={<DashboardPage />} />
+
                                     {/* <Route path="/:resource">
                                         <Route
                                             index
@@ -213,11 +210,14 @@ const App: React.FC = () => {
                                         />
                                     </Route>
 
-                                    <Route path="/resources">
-                                        <Route
-                                            index
-                                            element={<ResourceList />}
-                                        />
+                                    <Route
+                                        path="/resources"
+                                        element={
+                                            <ResourceList>
+                                                <Outlet />
+                                            </ResourceList>
+                                        }
+                                    >
                                         <Route
                                             path="create"
                                             element={<ResourceCreate />}

@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     CSRF_ENABLED: bool = True
     TOKEN_SECRET_KEY: str = "1=F[b{uOzd}^t+6b^-BraV3YDn7__lnM3g9e9_R8C3y1vb,Bv^K^=ky->EWkw/Y<u"
     TRACE_ID_REQUEST_HEADER_KEY: str = 'X-Request-ID'
+    SYNC_LOG_TO_DB: bool = False
     # Token
     TOKEN_ALGORITHM: str = 'HS256'
     TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 10

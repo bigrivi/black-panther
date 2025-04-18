@@ -8,12 +8,20 @@ export const useAccessControlProvider = (
 ): AccessControlProviderHookResult => {
     const accessControlProvider: AccessControlProvider = {
         can: async ({ resource, action }) => {
-            // if (resource == "post" && action == "list") {
-            //     return {
-            //         can: false,
-            //         reason: "Unauthorized",
-            //     };
-            // }
+            if (!user) {
+                return {
+                    can: false,
+                    reason: "Unauthorized",
+                };
+            }
+            const { permissions } = user;
+            const permissionKey = `${resource}:${action}`;
+            if (!permissions.includes(permissionKey)) {
+                return {
+                    can: false,
+                    reason: "Unauthorized",
+                };
+            }
             return { can: true };
         },
         options: {

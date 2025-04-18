@@ -11,12 +11,12 @@ async def rbac(request: Request) -> None:
         return
     if not request.auth.scopes:
         raise TokenError
-    # if request.user.is_superuser:
-    #     return
+    if request.user.is_superuser:
+        return
     user_roles = request.user.roles
     if not user_roles:
         raise ForbiddenError(msg='用户未分配角色，授权失败')
-    if not any(len(role.menus) > 0 for role in user_roles):
+    if not any(len(role.actions) > 0 for role in user_roles):
         raise ForbiddenError(msg='用户所属角色未分配菜单，授权失败')
     feature = get_feature(request)
     action = get_action(request)
@@ -28,10 +28,10 @@ async def rbac(request: Request) -> None:
     if path_auth_perm in set(settings.RBAC_ROLE_MENU_EXCLUDE):
         return
     allow_perms = []
-    for role in user_roles:
-        for menu in role.menus:
-            if menu.valid_state:
-                allow_perms.extend(menu.perm_code.split(','))
+    # for role in user_roles:
+    #     for action in role.actions:
+    #         if action.valid_state:
+    #             allow_perms.extend(action.perm_code.split(','))
     logger.debug(path_auth_perm)
     if path_auth_perm not in allow_perms:
         raise ForbiddenError
