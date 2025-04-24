@@ -1,44 +1,20 @@
-import {
-    DateField,
-    DeleteButton,
-    EditButton,
-    List,
-    ShowButton,
-    useTable,
-} from "@refinedev/antd";
+import { List } from "@refinedev/antd";
 import {
     useCustomMutation,
     useHandleNotification,
     useList,
-    useNotification,
     useTranslate,
 } from "@refinedev/core";
-import { type BaseRecord } from "@refinedev/core";
+import { Button, Segmented, Space } from "antd";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { IResource, IRole } from "@/interfaces";
 import {
-    Button,
-    Checkbox,
-    CheckboxChangeEvent,
-    CheckboxProps,
-    Dropdown,
-    Flex,
-    MenuProps,
-    message,
-    Popconfirm,
-    Space,
-    Table,
-} from "antd";
-import { PropsWithChildren, useEffect, useMemo, useRef, useState } from "react";
-import { useStyles } from "./styled";
-import { IAction, IResource, IRole } from "@/interfaces";
-import {
-    CheckOutlined,
-    CheckSquareFilled,
-    DownOutlined,
+    AppstoreOutlined,
     SaveFilled,
-    SaveOutlined,
+    UnorderedListOutlined,
 } from "@ant-design/icons";
-import { API_URL } from "@/constants";
 import { FooterToolbar } from "@/components/footerToolbar";
+import { NestedEditor } from "./components/nested-editor";
 
 type ChangeData = Array<{
     roleId: string;
@@ -46,16 +22,7 @@ type ChangeData = Array<{
     remove: number[];
 }>;
 
-const headerItems: MenuProps["items"] = [
-    {
-        label: "Clear Permissions",
-        key: "clear",
-    },
-    {
-        label: "Allow All",
-        key: "allowAll",
-    },
-];
+type View = "nested" | "flatten";
 
 const diffActions = (oldActions: number[], newActions: number[]) => {
     return {
@@ -66,20 +33,22 @@ const diffActions = (oldActions: number[], newActions: number[]) => {
 
 export const PolicyPage = () => {
     const t = useTranslate();
-    const { styles } = useStyles();
-    const [hoverColumn, setHoverColumn] = useState<number>();
-    const [hoverRow, setHoverRow] = useState<number>();
-    const { open } = useNotification();
+    const serverInitialRoleActionsRef = useRef<Record<string, number[]>>();
     const handleNotification = useHandleNotification();
     const { mutateAsync: addOrRemovePermissions, isLoading } =
         useCustomMutation();
-    const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
-    const serverInitialRoleActionsRef = useRef<Record<string, number[]>>();
-    const [selectedRoleActions, setSelectedRoleActions] = useState<
-        Record<string, number[]>
-    >({});
-    const { tableProps } = useTable<IResource>({
-        syncWithLocation: true,
+    const [view, setView] = useState<View>(
+        (localStorage.getItem("editor-view") as View) || "nested"
+    );
+
+    const { data: roleData, refetch: refetchRole } = useList<IRole>({
+        resource: "role",
+        pagination: {
+            mode: "off",
+        },
+    });
+
+    const { data: resourceData } = useList<IResource>({
         resource: "resource",
         pagination: { mode: "off" },
         queryOptions: {
@@ -97,13 +66,22 @@ export const PolicyPage = () => {
             },
         },
     });
-    const { data: roleData, refetch: refetchRole } = useList<IRole>({
-        resource: "role",
-    });
+
+    const resources = useMemo(() => {
+        return resourceData?.data || [];
+    }, [resourceData]);
+
+    const roles = useMemo(() => {
+        return roleData?.data || [];
+    }, [roleData]);
+
+    const [selectedRoleActions, setSelectedRoleActions] = useState<
+        Record<string, number[]>
+    >({});
 
     const changedCount = useMemo(() => {
-        if (roleData?.data && serverInitialRoleActionsRef.current) {
-            return roleData.data.reduce((prev, item) => {
+        if (roles && serverInitialRoleActionsRef.current) {
+            return roles.reduce((prev, item) => {
                 const roleKey = String(item.id);
                 const diff = diffActions(
                     serverInitialRoleActionsRef.current![roleKey],
@@ -114,34 +92,30 @@ export const PolicyPage = () => {
             }, 0);
         }
         return 0;
-    }, [selectedRoleActions, roleData]);
+    }, [selectedRoleActions, roles]);
 
-    const handleActionSelectChange = (
-        e: CheckboxChangeEvent,
-        roleId: string,
-        actionId: number,
-        actions: IAction[]
+    const handleActionSelectionChange = (
+        checked: boolean,
+        roleId: number,
+        actionIds: number[]
     ) => {
         setSelectedRoleActions((prev) => {
-            let roleActions = prev[roleId] || [];
-            let changeActionIds = actions
-                ? actions.map((item) => item.id)
-                : [actionId];
-            if (e.target.checked) {
-                changeActionIds.forEach((changeActionId) => {
-                    if (!roleActions.includes(changeActionId)) {
-                        roleActions.push(changeActionId);
+            let newRoleActions = prev[roleId + ""] || [];
+            if (checked) {
+                actionIds.forEach((changeActionId) => {
+                    if (!newRoleActions.includes(changeActionId)) {
+                        newRoleActions.push(changeActionId);
                     }
                 });
             } else {
-                roleActions = roleActions.filter((action) => {
-                    return !changeActionIds.includes(action);
+                newRoleActions = newRoleActions.filter((action) => {
+                    return !actionIds.includes(action);
                 });
             }
 
             return {
                 ...prev,
-                [roleId]: [...roleActions],
+                [roleId + ""]: [...newRoleActions],
             };
         });
     };
@@ -167,47 +141,9 @@ export const PolicyPage = () => {
         }
     }, [roleData]);
 
-    useEffect(() => {
-        if (tableProps.dataSource && tableProps.dataSource.length > 0) {
-            setExpandedRowKeys(
-                tableProps?.dataSource.map((item: IResource) => item.id)
-            );
-        }
-    }, [tableProps.dataSource]);
-
     if (!roleData) {
         return null;
     }
-
-    const handleHeaderClick = (key: string, roleId: number) => {
-        const allActions: IAction[] | undefined =
-            tableProps.dataSource?.flatMap((item) => item.actions as IAction[]);
-        if (allActions && key == "allowAll") {
-            setSelectedRoleActions((prev) => {
-                return {
-                    ...prev,
-                    [roleId]: [...allActions.map((item) => item.id)],
-                };
-            });
-        } else if (key == "clear") {
-            setSelectedRoleActions((prev) => {
-                return {
-                    ...prev,
-                    [roleId]: [],
-                };
-            });
-        }
-    };
-
-    const handleCellMouseEnter = (row: number, col: number) => {
-        setHoverColumn(col);
-        setHoverRow(row);
-    };
-
-    const handleCellMouseLeave = () => {
-        setHoverColumn(undefined);
-        setHoverRow(undefined);
-    };
 
     const handleReset = () => {
         setSelectedRoleActions(
@@ -260,7 +196,6 @@ export const PolicyPage = () => {
                 ];
             })
             .filter((item) => !!item);
-        console.log(requests);
         try {
             await Promise.all(requests);
             refetchRole();
@@ -274,198 +209,46 @@ export const PolicyPage = () => {
         }
     };
 
+    const handleViewChange = (value: View) => {
+        setView(value);
+        localStorage.setItem("editor-view", value);
+    };
+
     return (
         <>
             <List
-                headerProps={{
-                    extra: <></>,
-                }}
-            >
-                <Table
-                    rowClassName={styles.row}
-                    bordered
-                    rowKey={(record: any) => {
-                        if (record.resource_id) {
-                            return record.id + "," + record.resource_id;
-                        }
-                        return record.id;
-                    }}
-                    {...tableProps}
-                    scroll={{ x: 1000 }}
-                    expandable={{
-                        childrenColumnName: "actions",
-                        indentSize: 0,
-                        expandedRowKeys,
-                        onExpand(expanded, record: any) {
-                            let newRowKeys = expandedRowKeys;
-                            if (expanded) {
-                                newRowKeys = [...newRowKeys, record.id];
-                            } else {
-                                newRowKeys = newRowKeys.filter(
-                                    (e) => e !== record.id
-                                );
-                            }
-                            setExpandedRowKeys(newRowKeys);
-                        },
-                    }}
-                >
-                    <Table.Column
-                        fixed="left"
-                        dataIndex="name"
-                        width={200}
-                        title={"Resource"}
-                        // render={(value, record: any, index) => {
-                        //     if (record.actions) {
-                        //         return (
-                        //             <Flex align="center" style={{ height: 55 }}>
-                        //                 {value}
-                        //             </Flex>
-                        //         );
-                        //     }
-                        //     return (
-                        //         <Flex
-                        //             align="center"
-                        //             className={styles.cell}
-                        //             style={{ height: 55 }}
-                        //         >
-                        //             {value}
-                        //         </Flex>
-                        //     );
-                        // }}
-                    />
-                    {roleData.data.map((role, col) => {
-                        return (
-                            <Table.Column
-                                width={200}
-                                key={role.id}
-                                className={
-                                    hoverColumn == col
-                                        ? styles.highlightColumn
-                                        : undefined
-                                }
-                                render={(value, record: any, index) => {
-                                    const isActive =
-                                        hoverRow == record.index &&
-                                        col == hoverColumn;
-                                    if (record.actions) {
-                                        const allChecked = record.actions.every(
-                                            (action: IAction) => {
-                                                return selectedRoleActions[
-                                                    role.id + ""
-                                                ]?.includes(action.id);
-                                            }
-                                        );
-                                        return (
-                                            <Flex
-                                                justify="center"
-                                                className={
-                                                    isActive
-                                                        ? styles.activeCell
-                                                        : undefined
-                                                }
-                                                style={{ height: 55 }}
-                                                onMouseEnter={() =>
-                                                    handleCellMouseEnter(
-                                                        record.index,
-                                                        col
-                                                    )
-                                                }
-                                                onMouseLeave={
-                                                    handleCellMouseLeave
-                                                }
-                                            >
-                                                <Checkbox
-                                                    onChange={(e) => {
-                                                        handleActionSelectChange(
-                                                            e,
-                                                            role.id + "",
-                                                            record.id,
-                                                            record.actions
-                                                        );
-                                                    }}
-                                                    indeterminate={
-                                                        record.actions.some(
-                                                            (
-                                                                action: IAction
-                                                            ) => {
-                                                                return selectedRoleActions[
-                                                                    role.id + ""
-                                                                ]?.includes(
-                                                                    action.id
-                                                                );
-                                                            }
-                                                        ) && !allChecked
-                                                    }
-                                                    checked={allChecked}
-                                                />
-                                            </Flex>
-                                        );
-                                    }
-                                    return (
-                                        <Flex
-                                            justify="center"
-                                            className={
-                                                isActive
-                                                    ? styles.activeCell
-                                                    : undefined
-                                            }
-                                            style={{ height: 55 }}
-                                            onMouseEnter={() =>
-                                                handleCellMouseEnter(
-                                                    record.index,
-                                                    col
-                                                )
-                                            }
-                                            onMouseLeave={handleCellMouseLeave}
-                                        >
-                                            <Checkbox
-                                                onChange={(e) => {
-                                                    handleActionSelectChange(
-                                                        e,
-                                                        role.id + "",
-                                                        record.id,
-                                                        record.actions
-                                                    );
-                                                }}
-                                                checked={selectedRoleActions[
-                                                    role.id + ""
-                                                ]?.includes(record.id)}
-                                            />
-                                        </Flex>
-                                    );
-                                }}
-                                align="center"
-                                title={
-                                    <Dropdown
-                                        menu={{
-                                            items: headerItems,
-                                            onClick: (evt) => {
-                                                handleHeaderClick(
-                                                    evt.key,
-                                                    role.id
-                                                );
-                                            },
-                                        }}
-                                        trigger={["click"]}
-                                    >
-                                        <Button
-                                            type="text"
-                                            onClick={(e) => e.preventDefault()}
-                                        >
-                                            <Space>
-                                                {role.name}
-                                                <DownOutlined />
-                                            </Space>
-                                        </Button>
-                                    </Dropdown>
-                                }
-                            />
-                        );
-                    })}
+                headerButtons={(props) => [
+                    <Segmented<View>
+                        key="view"
+                        size="large"
+                        value={view}
+                        style={{ marginRight: 24 }}
+                        options={[
+                            {
+                                label: "",
+                                value: "nested",
+                                icon: <UnorderedListOutlined />,
+                            },
+                            {
+                                label: "",
+                                value: "flatten",
+                                icon: <AppstoreOutlined />,
+                            },
+                        ]}
+                        onChange={handleViewChange}
+                    />,
+                ]}
+            ></List>
+            {view == "nested" && (
+                <NestedEditor
+                    resources={resources}
+                    roles={roles}
+                    changedCount={changedCount}
+                    selectedRoleActions={selectedRoleActions}
+                    onActionSelectionChange={handleActionSelectionChange}
+                />
+            )}
 
-                    <Table.Column title={""} />
-                </Table>
-            </List>
             {changedCount > 0 && (
                 <FooterToolbar>
                     <Space>

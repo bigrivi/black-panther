@@ -136,15 +136,7 @@ const App: React.FC = () => {
                                                         />
                                                     )}
                                                 >
-                                                    <div
-                                                        style={{
-                                                            maxWidth: "1200px",
-                                                            marginLeft: "auto",
-                                                            marginRight: "auto",
-                                                        }}
-                                                    >
-                                                        <Outlet />
-                                                    </div>
+                                                    <Outlet />
                                                 </ThemedLayoutV2>
                                             </CanAccess>
                                         </Authenticated>
