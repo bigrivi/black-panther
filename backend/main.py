@@ -1,4 +1,3 @@
-import sys
 from fastapi.staticfiles import StaticFiles
 from textwrap import dedent
 from app.extensions import redis_client, logger, scheduler_service

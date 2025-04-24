@@ -53,7 +53,7 @@ export const UserList = () => {
                     sorter={{ multiple: 1 }}
                 />
                 <Table.Column
-                    dataIndex="title"
+                    dataIndex="user_name"
                     sorter={{ multiple: 2 }}
                     defaultFilteredValue={getDefaultFilter(
                         "title",
@@ -65,7 +65,22 @@ export const UserList = () => {
                             <Input />
                         </FilterDropdown>
                     )}
-                    title="Title"
+                    title="User Name"
+                />
+                <Table.Column
+                    dataIndex="login_name"
+                    sorter={{ multiple: 2 }}
+                    defaultFilteredValue={getDefaultFilter(
+                        "title",
+                        filters,
+                        "contains"
+                    )}
+                    filterDropdown={(props) => (
+                        <FilterDropdown {...props}>
+                            <Input />
+                        </FilterDropdown>
+                    )}
+                    title="Login Name"
                 />
                 {/* <Table.Column
           dataIndex={["category", "id"]}

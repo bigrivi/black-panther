@@ -27,8 +27,8 @@ class ResourcePublic(ResourceBase):
 
 
 class ResourceCreate(ResourceBase):
-    actions: List[ActionCreate] = None
+    actions: List[str] = None
 
 
 class ResourceUpdate(ResourceBase):
-    actions: List[ActionCreate] = None
+    actions: List[str] = None

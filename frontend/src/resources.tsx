@@ -75,4 +75,13 @@ export const resources: ResourceProps[] = [
             parent: "system_manager",
         },
     },
+    {
+        name: "policy",
+        list: "/policy",
+        meta: {
+            label: "Policy",
+            icon: <DashboardOutlined />,
+            parent: "system_manager",
+        },
+    },
 ];

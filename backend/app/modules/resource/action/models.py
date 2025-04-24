@@ -20,6 +20,7 @@ class Action(ActionBase, BaseMixin, table=True):
 
 class ActionPublic(ActionBase):
     id: Optional[int]
+    resource_id: int
     valid_state: Optional[bool]
     created_at: Optional[datetime] = None
 

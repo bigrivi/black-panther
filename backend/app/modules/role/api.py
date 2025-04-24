@@ -24,10 +24,23 @@ router = APIRouter()
 class RoleController():
     service: RoleService = Depends(RoleService)
 
+    @router.post(
+        '/{role_id}/permissions',
+        dependencies=[DependsJwtAuth, Depends(
+            RequestPermission("role:authorize")), DependsRBAC]
+    )
+    async def add_role_actions(
+        self,
+        request: Request,
+        role_id: Annotated[str, Path(...)], action_ids: List[int]
+    ) -> ResponseModel:
+        await self.service.add_role_actions(request=request, role_id=role_id, action_ids=action_ids)
+        return response_base.success()
+
     @router.put(
         '/{role_id}/permissions',
         dependencies=[DependsJwtAuth, Depends(
-            RequestPermission("role.update_menu")), DependsRBAC]
+            RequestPermission("role:authorize")), DependsRBAC]
     )
     async def update_role_actions(
         self,
@@ -38,6 +51,19 @@ class RoleController():
         if count > 0:
             return response_base.success()
         return response_base.fail()
+
+    @router.delete(
+        '/{role_id}/permissions',
+        dependencies=[DependsJwtAuth, Depends(
+            RequestPermission("role:authorize")), DependsRBAC]
+    )
+    async def delete_role_actions(
+        self,
+        request: Request,
+        role_id: Annotated[str, Path(...)], action_ids: List[int]
+    ) -> ResponseModel:
+        await self.service.delete_role_actions(request=request, role_id=role_id, action_ids=action_ids)
+        return response_base.success()
 
     @router.post(
         '/{role_id}/add_user',

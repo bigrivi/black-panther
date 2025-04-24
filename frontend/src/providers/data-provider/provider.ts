@@ -5,7 +5,7 @@ import { AxiosInstance } from "axios";
 import { BetterCRUDQuery } from "./types";
 import { handleFilter, handlePagination, handleSort } from "./utils";
 import { transformHttpError } from "./utils/transformHttpError";
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 
 export const dataProvider = (axios: AxiosInstance): DataProvider => {
     return {
@@ -79,7 +79,7 @@ export const dataProvider = (axios: AxiosInstance): DataProvider => {
         createMany: async ({ resource, variables }) => {
             try {
                 const { data } = await axios.post(
-                    `${apiUrl}/${resource}/bulk`,
+                    `${API_URL}/${resource}/bulk`,
                     {
                         data: variables,
                     }
@@ -115,6 +115,24 @@ export const dataProvider = (axios: AxiosInstance): DataProvider => {
             try {
                 const { data } = await axios.delete(url, {
                     data: variables,
+                });
+
+                return {
+                    data,
+                };
+            } catch (error) {
+                const httpError = transformHttpError(error);
+                throw httpError;
+            }
+        },
+        custom: async ({ url, method, payload, query, headers }) => {
+            try {
+                const { data } = await axios.request({
+                    url: `${API_URL}/${url}`,
+                    method,
+                    data: payload,
+                    params: query,
+                    headers: headers,
                 });
 
                 return {

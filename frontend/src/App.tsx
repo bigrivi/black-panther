@@ -18,13 +18,13 @@ import routerBindings, {
 import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { Header, PageLoading, AccessDenied, NotFound } from "./components";
-import { ColorModeContextProvider } from "./contexts/color-mode";
+import { ConfigProvider } from "./providers/config-provider";
 import { UserCreate, UserEdit, UserList, UserShow } from "./pages/users";
 import { RoleCreate, RoleEdit, RoleList, RoleShow } from "./pages/roles";
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "@/pages/login";
 import { Register } from "@/pages/register";
-import dataProvider from "@/dataProvider";
+import dataProvider from "@/providers/data-provider";
 import { resources } from "@/resources";
 import { TOKEN_KEY } from "@/constants";
 import { useAuthProvider } from "@/hooks/useAuthProvider";
@@ -43,6 +43,7 @@ import {
 } from "./pages/resource";
 import "./App.css";
 import { DashboardPage } from "./pages/dashboard";
+import { PolicyPage } from "./pages/policy";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -82,7 +83,7 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <RefineKbarProvider>
-                <ColorModeContextProvider>
+                <ConfigProvider>
                     <AntdApp>
                         <Refine
                             i18nProvider={i18nProvider}
@@ -135,7 +136,15 @@ const App: React.FC = () => {
                                                         />
                                                     )}
                                                 >
-                                                    <Outlet />
+                                                    <div
+                                                        style={{
+                                                            maxWidth: "1200px",
+                                                            marginLeft: "auto",
+                                                            marginRight: "auto",
+                                                        }}
+                                                    >
+                                                        <Outlet />
+                                                    </div>
                                                 </ThemedLayoutV2>
                                             </CanAccess>
                                         </Authenticated>
@@ -222,6 +231,7 @@ const App: React.FC = () => {
                                             path="create"
                                             element={<ResourceCreate />}
                                         />
+
                                         <Route
                                             path="edit/:id"
                                             element={<ResourceEdit />}
@@ -231,6 +241,11 @@ const App: React.FC = () => {
                                             element={<ResourceShow />}
                                         />
                                     </Route>
+
+                                    <Route
+                                        path="/policy"
+                                        element={<PolicyPage />}
+                                    />
 
                                     <Route path="*" element={<NotFound />} />
                                 </Route>
@@ -261,7 +276,7 @@ const App: React.FC = () => {
                             <DocumentTitleHandler />
                         </Refine>
                     </AntdApp>
-                </ColorModeContextProvider>
+                </ConfigProvider>
             </RefineKbarProvider>
         </BrowserRouter>
     );

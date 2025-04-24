@@ -125,6 +125,7 @@ async def jwt_authentication(token: str) -> CurrentUser:
     if not token_verify:
         raise TokenError(msg='Token expired')
     cache_user = await redis_client.get(f'{settings.JWT_USER_REDIS_PREFIX}:{user_id}')
+    cache_user = None
     if not cache_user:
         from app.modules.user.service import user_service
         user = await user_service.get_current_user_data(user_id)

@@ -21,7 +21,7 @@ import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
 export const DepartmentList = () => {
     const t = useTranslate();
     const go = useGo();
-    const [expandedRowKeys, setExpandedRowKeys] = useState([1, 2]);
+    const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const { tableProps } = useTable<IDepartment>({
         syncWithLocation: true,
         meta: {

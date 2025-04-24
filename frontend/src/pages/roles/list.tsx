@@ -8,19 +8,37 @@ import {
     TagField,
     useTable,
 } from "@refinedev/antd";
-import { useTranslate } from "@refinedev/core";
+import { useGo, useTranslate } from "@refinedev/core";
 import { getDefaultFilter, type BaseRecord } from "@refinedev/core";
-import { Radio, Space, Table } from "antd";
+import { Button, Radio, Space, Table } from "antd";
 import { Status } from "../../components/status";
+import { EyeFilled } from "@ant-design/icons";
 
 export const RoleList = () => {
     const t = useTranslate();
+    const go = useGo();
     const { tableProps, filters } = useTable({
         syncWithLocation: true,
     });
 
+    const handleAuthorize = () => {
+        go({
+            to: "/roles/authorize",
+            options: { keepQuery: false },
+        });
+    };
+
     return (
-        <List>
+        <List
+            headerButtons={({ defaultButtons }) => (
+                <>
+                    {defaultButtons}
+                    <Button onClick={handleAuthorize} icon={<EyeFilled />}>
+                        Authorize Permission
+                    </Button>
+                </>
+            )}
+        >
             <Table {...tableProps} rowKey="id">
                 <Table.Column dataIndex="id" title={"ID"} />
                 <Table.Column dataIndex="name" title={"Name"} />

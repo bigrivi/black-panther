@@ -1,36 +1,56 @@
 import {
-    CreateButton,
     DateField,
     DeleteButton,
     EditButton,
-    FilterDropdown,
     List,
     ShowButton,
-    TagField,
     useTable,
 } from "@refinedev/antd";
-import { useGo, useTranslate } from "@refinedev/core";
-import { type BaseRecord } from "@refinedev/core";
-import { Button, Space, Table, TableColumnsType } from "antd";
-import { Status } from "@/components";
 import {
-    MinusCircleTwoTone,
-    PlusCircleTwoTone,
-    PlusOutlined,
-    RightOutlined,
-} from "@ant-design/icons";
+    BaseKey,
+    useCan,
+    useDelete,
+    useGo,
+    useTranslate,
+} from "@refinedev/core";
+import { type BaseRecord } from "@refinedev/core";
+import { Button, Popconfirm, Space, Table, TableColumnsType } from "antd";
+import { Status } from "@/components";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { PropsWithChildren, useEffect, useState } from "react";
-import { IDepartment } from "@/interfaces";
-import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
+import { IAction, IResource } from "@/interfaces";
+import { ActionDrawerForm } from "./components/drawer-action-form ";
+import { useStyles } from "./styled";
 
 export const ResourceList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
-    const go = useGo();
-    const { tableProps } = useTable<IDepartment>({
+    const { mutate, isLoading } = useDelete();
+    const { styles } = useStyles();
+
+    const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
+    const [actionResourceId, setActionResourceId] = useState<BaseKey>();
+    const [actionId, setActionId] = useState<BaseKey>();
+    const [actionDrawerMode, setActionDrawerMode] = useState<
+        "create" | "edit"
+    >();
+
+    const { data: canCreateAction } = useCan({
+        resource: "resource",
+        action: "create-action",
+    });
+    const { data: canEditAction } = useCan({
+        resource: "resource",
+        action: "edit-action",
+    });
+    const { data: canDeleteAction } = useCan({
+        resource: "resource",
+        action: "delete-action",
+    });
+    const { tableProps, tableQuery } = useTable<IResource>({
         syncWithLocation: true,
     });
 
-    const expandColumns: TableColumnsType = [
+    const expandColumns: TableColumnsType<IAction> = [
         {
             title: "Name",
             className: "action-name",
@@ -41,10 +61,51 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
             title: "Action",
             key: "operation",
             align: "right",
-            render: () => (
-                <Space size="middle">
-                    <a>Pause</a>
-                    <a>Stop</a>
+            render: (_, record: IAction) => (
+                <Space>
+                    {canEditAction?.can && (
+                        <EditButton
+                            hideText
+                            size="small"
+                            onClick={() => {
+                                setActionDrawerOpen(true);
+                                setActionResourceId(record.resource_id);
+                                setActionDrawerMode("edit");
+                                setActionId(record.id);
+                            }}
+                            recordItemId={record.id}
+                        />
+                    )}
+                    {canDeleteAction?.can && (
+                        <Popconfirm
+                            key="delete"
+                            okText={"OK"}
+                            cancelText={"Cancel"}
+                            okType="danger"
+                            title={"Are your sure"}
+                            okButtonProps={{ disabled: isLoading }}
+                            onConfirm={() => {
+                                mutate(
+                                    {
+                                        resource: `resource/${record.resource_id}/action`,
+                                        id: record.id,
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            tableQuery.refetch();
+                                        },
+                                    }
+                                );
+                            }}
+                        >
+                            <Button
+                                danger
+                                icon={<DeleteOutlined />}
+                                size="small"
+                                onClick={() => {}}
+                            ></Button>
+                        </Popconfirm>
+                    )}
                 </Space>
             ),
         },
@@ -52,6 +113,7 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
 
     const expandedRowRender = (record: any) => (
         <Table
+            rootClassName={styles.actionRow}
             showHeader={false}
             columns={expandColumns}
             rowKey={"id"}
@@ -91,17 +153,15 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                     align="right"
                     render={(_, record: BaseRecord) => (
                         <Space>
-                            {record.actions && (
+                            {record.actions && canCreateAction?.can && (
                                 <Button
                                     icon={<PlusOutlined />}
                                     size="small"
                                     onClick={() => {
-                                        go({
-                                            to: "/resources/create",
-                                            // query: {
-                                            //     parent_id: record.id,
-                                            // },
-                                        });
+                                        setActionDrawerOpen(true);
+                                        setActionResourceId(record.id);
+                                        setActionDrawerMode("create");
+                                        setActionId(undefined);
                                     }}
                                 ></Button>
                             )}
@@ -126,6 +186,22 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                 />
             </Table>
             {children}
+            {actionResourceId && (
+                <ActionDrawerForm
+                    open={actionDrawerOpen}
+                    resourceId={actionResourceId}
+                    action={actionDrawerMode!}
+                    id={actionId}
+                    onClose={() => {
+                        setActionDrawerOpen(false);
+                        setActionResourceId(undefined);
+                    }}
+                    onMutationSuccess={() => {
+                        setActionDrawerOpen(false);
+                        tableQuery.refetch();
+                    }}
+                />
+            )}
         </List>
     );
 };

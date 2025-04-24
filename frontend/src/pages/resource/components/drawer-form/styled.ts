@@ -2,9 +2,6 @@ import { createStyles } from "antd-style";
 
 export const useStyles = createStyles(({ token }) => {
     return {
-        actionRow: {
-            backgroundColor: "#ff0000",
-        },
         formItem: {
             backgroundColor: token.colorBgContainer,
             padding: "16px",

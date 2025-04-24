@@ -33,6 +33,51 @@ class RoleService(ServiceBase[Role]):
             await UserService.clear_jwt_cache_user(user_id=user.id)
         return len(role.actions)
 
+    async def add_role_actions(self, request: Request, role_id: str, action_ids: List[str]) -> int:
+        role = await self.get(role_id, options=[joinedload(Role.actions)])
+        old_actions = role.actions
+        old_action_ids = [action.id for action in role.actions]
+        if not role:
+            raise errors.NotFoundError(msg=f'Role {role_id} does not exist')
+        new_actions = []
+        for action_id in action_ids:
+            action = await action_service.get(action_id)
+            if action_id in old_action_ids:
+                continue
+            if not action:
+                raise errors.NotFoundError(
+                    msg='Action {action_id} does not exist')
+            new_actions.append(action)
+        role.actions = old_actions+new_actions
+        db.session.add(role)
+        await db.session.commit()
+        users = await user_service.get_list([User.roles.any(Role.id == role_id)])
+        for user in users:
+            await UserService.clear_jwt_cache_user(user_id=user.id)
+        return len(role.actions)
+
+    async def delete_role_actions(self, request: Request, role_id: str, action_ids: List[str]) -> int:
+        role = await self.get(role_id, options=[joinedload(Role.actions)])
+        actions = role.actions
+        old_action_ids = [action.id for action in role.actions]
+        if not role:
+            raise errors.NotFoundError(msg=f'Role {role_id} does not exist')
+        for action_id in action_ids:
+            action = await action_service.get(action_id)
+            if action_id not in old_action_ids:
+                continue
+            if not action:
+                raise errors.NotFoundError(
+                    msg='Action {action_id} does not exist')
+            actions.remove(action)
+        role.actions = actions
+        db.session.add(role)
+        await db.session.commit()
+        users = await user_service.get_list([User.roles.any(Role.id == role_id)])
+        for user in users:
+            await UserService.clear_jwt_cache_user(user_id=user.id)
+        return len(role.actions)
+
     async def add_user_to_role(self, role_id: int, user_ids: List[str]):
         if not user_ids:
             raise errors.BadRequestError(msg="至少选择一个用户")

@@ -96,7 +96,7 @@ class Settings(BaseSettings):
     REDIS_DATABASE: int = os.getenv("REDIS_DATABASE", 0)
     REDIS_TIMEOUT: int = 5
 
-    RBAC_ROLE_MENU_EXCLUDE: List[str] = []
+    RBAC_PERMISSION_EXCLUDE: List[str] = []
     OPERA_LOG_EXCLUDES: List[str] = [
         '/favicon.ico',
         "/api/auth/login",

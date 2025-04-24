@@ -18,9 +18,10 @@ import {
     Typography,
 } from "antd";
 import React, { useContext } from "react";
-import { ColorModeContext } from "../../contexts/color-mode";
+// import { ColorModeContext } from "../../contexts/color-mode";
 import { DownOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
+import { useConfigProvider } from "@/providers/config-provider";
 
 const { Text } = Typography;
 const { useToken } = theme;
@@ -36,7 +37,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 }) => {
     const { token } = useToken();
     const { data: user } = useGetIdentity<IUser>();
-    const { mode, setMode } = useContext(ColorModeContext);
+    const { mode, setMode } = useConfigProvider();
     const locale = useGetLocale();
     const { i18n } = useTranslation();
     const changeLanguage = useSetLocale();
@@ -56,7 +57,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
     if (sticky) {
         headerStyles.position = "sticky";
         headerStyles.top = 0;
-        headerStyles.zIndex = 1;
+        headerStyles.zIndex = 100;
     }
 
     const menuItems: MenuProps["items"] = [...(i18n.languages || [])]

@@ -41,9 +41,17 @@ interface IDepartment {
     children?: IDepartment[];
 }
 
+interface IRole {
+    id: number;
+    name: string;
+    actions: IAction[];
+}
+
 interface IAction {
     id: number;
     name: string;
+    resource_id?: number;
+    [key: string]: any;
 }
 
 interface IResource {
@@ -51,4 +59,5 @@ interface IResource {
     name: string;
     key: string;
     actions?: IAction[];
+    [key: string]: any;
 }
