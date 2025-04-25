@@ -33,6 +33,8 @@ type NestedEditorProps = {
     roles: IRole[];
     resources: IResource[];
     changedCount: number;
+    filteredRoleIds: number[];
+    filteredResourceIds: number[];
     selectedRoleActions: Record<string, number[]>;
     onActionSelectionChange: (
         checked: boolean,
@@ -47,6 +49,8 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
     selectedRoleActions,
     onActionSelectionChange,
     changedCount,
+    filteredResourceIds,
+    filteredRoleIds,
 }) => {
     const { styles } = useStyles();
     const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
@@ -96,11 +100,27 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
         }
     }, [resources]);
 
+    const filteredResources = useMemo(() => {
+        if (filteredResourceIds.length > 0) {
+            return resources.filter((item) =>
+                filteredResourceIds.includes(item.id)
+            );
+        }
+        return resources;
+    }, [resources, filteredResourceIds]);
+
+    const filteredRoles = useMemo(() => {
+        if (filteredRoleIds.length > 0) {
+            return roles.filter((item) => filteredRoleIds.includes(item.id));
+        }
+        return roles;
+    }, [roles, filteredRoleIds]);
+
     return (
         <Table<IResource>
             className={styles.table}
             rowClassName={styles.row}
-            dataSource={resources}
+            dataSource={filteredResources}
             pagination={false}
             bordered
             rowKey={(record: any) => {
@@ -131,7 +151,7 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
                 width={200}
                 title={"Resource"}
             />
-            {roles.map((role, col) => {
+            {filteredRoles.map((role, col) => {
                 return (
                     <Table.Column
                         width={200}

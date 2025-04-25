@@ -15,6 +15,8 @@ import {
 } from "@ant-design/icons";
 import { FooterToolbar } from "@/components/footerToolbar";
 import { NestedEditor } from "./components/nested-editor";
+import { FlattenEditor } from "./components/flatten-editor";
+import { Filter } from "./components/filter";
 
 type ChangeData = Array<{
     roleId: string;
@@ -39,6 +41,10 @@ export const PolicyPage = () => {
         useCustomMutation();
     const [view, setView] = useState<View>(
         (localStorage.getItem("editor-view") as View) || "nested"
+    );
+    const [filteredRoleIds, setFilteredRoleIds] = useState<number[]>([]);
+    const [filteredResourceIds, setFilteredResourceIds] = useState<number[]>(
+        []
     );
 
     const { data: roleData, refetch: refetchRole } = useList<IRole>({
@@ -174,8 +180,6 @@ export const PolicyPage = () => {
             },
             []
         );
-
-        console.log(changeData);
         const requests = changeData
             .flatMap((changeDataItem) => {
                 return [
@@ -214,15 +218,33 @@ export const PolicyPage = () => {
         localStorage.setItem("editor-view", value);
     };
 
+    const handleFilterChange = (filterValues: string[]) => {
+        setFilteredRoleIds(
+            filterValues
+                .filter((item) => item.startsWith("role_"))
+                .map((item) => Number(item.replace("role_", "")))
+        );
+        setFilteredResourceIds(
+            filterValues
+                .filter((item) => item.startsWith("resource_"))
+                .map((item) => Number(item.replace("resource_", "")))
+        );
+    };
+
     return (
         <>
             <List
                 headerButtons={(props) => [
+                    <Filter
+                        onChange={handleFilterChange}
+                        resources={resources}
+                        roles={roles}
+                        key="filter"
+                    />,
                     <Segmented<View>
                         key="view"
                         size="large"
                         value={view}
-                        style={{ marginRight: 24 }}
                         options={[
                             {
                                 label: "",
@@ -243,7 +265,19 @@ export const PolicyPage = () => {
                 <NestedEditor
                     resources={resources}
                     roles={roles}
+                    filteredResourceIds={filteredResourceIds}
+                    filteredRoleIds={filteredRoleIds}
                     changedCount={changedCount}
+                    selectedRoleActions={selectedRoleActions}
+                    onActionSelectionChange={handleActionSelectionChange}
+                />
+            )}
+            {view == "flatten" && (
+                <FlattenEditor
+                    filteredResourceIds={filteredResourceIds}
+                    filteredRoleIds={filteredRoleIds}
+                    resources={resources}
+                    roles={roles}
                     selectedRoleActions={selectedRoleActions}
                     onActionSelectionChange={handleActionSelectionChange}
                 />
