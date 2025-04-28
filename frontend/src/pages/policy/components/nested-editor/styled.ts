@@ -3,6 +3,8 @@ import { createStyles } from "antd-style";
 export const useStyles = createStyles(({ token, isDarkMode }) => {
     return {
         table: {
+            width: "100%",
+            overflow: "hidden",
             "thead th": {
                 "&:not(:first-child)": {
                     padding: "0px !important",

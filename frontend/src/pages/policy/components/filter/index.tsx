@@ -2,12 +2,12 @@ import { IAction, IResource, IRole } from "@/interfaces";
 import { SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import { FC } from "react";
+import { usePolicyProviderContext } from "../../context";
 type FilterProps = {
-    resources: IResource[];
-    roles: IRole[];
     onChange: (value: string[]) => void;
 };
-export const Filter: FC<FilterProps> = ({ resources, roles, onChange }) => {
+export const Filter: FC<FilterProps> = ({ onChange }) => {
+    const { resources, roles } = usePolicyProviderContext();
     const handleChange = (value: string[]) => {
         onChange(value);
     };

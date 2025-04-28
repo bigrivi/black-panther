@@ -18,6 +18,7 @@ import {
 import { IAction, IResource, IRole } from "@/interfaces";
 import { DownOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
+import { usePolicyProviderContext } from "../../context";
 const headerItems: MenuProps["items"] = [
     {
         label: "Clear Permissions",
@@ -29,33 +30,22 @@ const headerItems: MenuProps["items"] = [
     },
 ];
 
-type NestedEditorProps = {
-    roles: IRole[];
-    resources: IResource[];
-    changedCount: number;
-    filteredRoleIds: number[];
-    filteredResourceIds: number[];
-    selectedRoleActions: Record<string, number[]>;
-    onActionSelectionChange: (
-        checked: boolean,
-        roleId: number,
-        actionIds: number[]
-    ) => void;
-};
+type NestedEditorProps = {};
 
-export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
-    resources,
-    roles,
-    selectedRoleActions,
-    onActionSelectionChange,
-    changedCount,
-    filteredResourceIds,
-    filteredRoleIds,
-}) => {
+export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
     const { styles } = useStyles();
     const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
     const [hoverColumn, setHoverColumn] = useState<number>();
     const [hoverRow, setHoverRow] = useState<number>();
+
+    const {
+        filteredResources,
+        filteredRoles,
+        resources,
+        selectedRoleActions,
+        handleActionSelectionChange,
+        changedCount,
+    } = usePolicyProviderContext();
 
     const handleCellMouseEnter = (row: number, col: number) => {
         setHoverColumn(col);
@@ -72,18 +62,18 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
         roleId: number,
         actionIds: number[]
     ) => {
-        onActionSelectionChange(e.target.checked, roleId, actionIds);
+        handleActionSelectionChange(e.target.checked, roleId, actionIds);
     };
 
     const handleHeaderClick = (key: string, roleId: number) => {
-        const allActions: IAction[] | undefined = resources?.flatMap(
+        const allActions: IAction[] | undefined = filteredResources?.flatMap(
             (item) => item.actions as IAction[]
         );
         const allActionIds = allActions.map((item) => item.id);
         if (allActions && key == "allowAll") {
-            onActionSelectionChange(true, roleId, allActionIds);
+            handleActionSelectionChange(true, roleId, allActionIds);
         } else if (key == "clear") {
-            onActionSelectionChange(false, roleId, allActionIds);
+            handleActionSelectionChange(false, roleId, allActionIds);
         }
     };
 
@@ -100,28 +90,13 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
         }
     }, [resources]);
 
-    const filteredResources = useMemo(() => {
-        if (filteredResourceIds.length > 0) {
-            return resources.filter((item) =>
-                filteredResourceIds.includes(item.id)
-            );
-        }
-        return resources;
-    }, [resources, filteredResourceIds]);
-
-    const filteredRoles = useMemo(() => {
-        if (filteredRoleIds.length > 0) {
-            return roles.filter((item) => filteredRoleIds.includes(item.id));
-        }
-        return roles;
-    }, [roles, filteredRoleIds]);
-
     return (
         <Table<IResource>
             className={styles.table}
             rowClassName={styles.row}
             dataSource={filteredResources}
             pagination={false}
+            sticky
             bordered
             rowKey={(record: any) => {
                 if (record.resource_id) {
@@ -129,7 +104,10 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
                 }
                 return record.id;
             }}
-            scroll={{ x: 1000, y: scrollHeight }}
+            scroll={{
+                x: (filteredRoles.length + 1) * 170 + 50,
+                y: scrollHeight,
+            }}
             expandable={{
                 childrenColumnName: "actions",
                 indentSize: 0,
@@ -154,7 +132,7 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({
             {filteredRoles.map((role, col) => {
                 return (
                     <Table.Column
-                        width={200}
+                        width={170}
                         key={role.id}
                         className={
                             hoverColumn == col

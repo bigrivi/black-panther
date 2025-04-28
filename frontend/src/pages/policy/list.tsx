@@ -3,7 +3,6 @@ import {
     useCustomMutation,
     useHandleNotification,
     useList,
-    useTranslate,
 } from "@refinedev/core";
 import { Button, Segmented, Space } from "antd";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -17,6 +16,8 @@ import { FooterToolbar } from "@/components/footerToolbar";
 import { NestedEditor } from "./components/nested-editor";
 import { FlattenEditor } from "./components/flatten-editor";
 import { Filter } from "./components/filter";
+import { PolicyProviderContext } from "./context";
+import { SelectedRoleActionsMap } from "./types";
 
 type ChangeData = Array<{
     roleId: string;
@@ -34,7 +35,6 @@ const diffActions = (oldActions: number[], newActions: number[]) => {
 };
 
 export const PolicyPage = () => {
-    const t = useTranslate();
     const serverInitialRoleActionsRef = useRef<Record<string, number[]>>();
     const handleNotification = useHandleNotification();
     const { mutateAsync: addOrRemovePermissions, isLoading } =
@@ -46,7 +46,6 @@ export const PolicyPage = () => {
     const [filteredResourceIds, setFilteredResourceIds] = useState<number[]>(
         []
     );
-
     const { data: roleData, refetch: refetchRole } = useList<IRole>({
         resource: "role",
         pagination: {
@@ -81,9 +80,24 @@ export const PolicyPage = () => {
         return roleData?.data || [];
     }, [roleData]);
 
-    const [selectedRoleActions, setSelectedRoleActions] = useState<
-        Record<string, number[]>
-    >({});
+    const filteredResources = useMemo(() => {
+        if (filteredResourceIds.length > 0) {
+            return resources.filter((item) =>
+                filteredResourceIds.includes(item.id)
+            );
+        }
+        return resources;
+    }, [resources, filteredResourceIds]);
+
+    const filteredRoles = useMemo(() => {
+        if (filteredRoleIds.length > 0) {
+            return roles.filter((item) => filteredRoleIds.includes(item.id));
+        }
+        return roles;
+    }, [roles, filteredRoleIds]);
+
+    const [selectedRoleActions, setSelectedRoleActions] =
+        useState<SelectedRoleActionsMap>({});
 
     const changedCount = useMemo(() => {
         if (roles && serverInitialRoleActionsRef.current) {
@@ -147,10 +161,6 @@ export const PolicyPage = () => {
         }
     }, [roleData]);
 
-    if (!roleData) {
-        return null;
-    }
-
     const handleReset = () => {
         setSelectedRoleActions(
             Object.keys(serverInitialRoleActionsRef.current!).reduce(
@@ -166,7 +176,7 @@ export const PolicyPage = () => {
     };
 
     const handleSave = async () => {
-        const changeData: ChangeData = roleData.data.reduce(
+        const changeData: ChangeData = roles.reduce(
             (prev: ChangeData, item): ChangeData => {
                 const roleKey = String(item.id);
                 const diff = diffActions(
@@ -232,15 +242,20 @@ export const PolicyPage = () => {
     };
 
     return (
-        <>
+        <PolicyProviderContext.Provider
+            value={{
+                resources,
+                roles,
+                filteredResources,
+                filteredRoles,
+                selectedRoleActions,
+                handleActionSelectionChange,
+                changedCount,
+            }}
+        >
             <List
                 headerButtons={(props) => [
-                    <Filter
-                        onChange={handleFilterChange}
-                        resources={resources}
-                        roles={roles}
-                        key="filter"
-                    />,
+                    <Filter onChange={handleFilterChange} key="filter" />,
                     <Segmented<View>
                         key="view"
                         size="large"
@@ -261,27 +276,9 @@ export const PolicyPage = () => {
                     />,
                 ]}
             ></List>
-            {view == "nested" && (
-                <NestedEditor
-                    resources={resources}
-                    roles={roles}
-                    filteredResourceIds={filteredResourceIds}
-                    filteredRoleIds={filteredRoleIds}
-                    changedCount={changedCount}
-                    selectedRoleActions={selectedRoleActions}
-                    onActionSelectionChange={handleActionSelectionChange}
-                />
-            )}
-            {view == "flatten" && (
-                <FlattenEditor
-                    filteredResourceIds={filteredResourceIds}
-                    filteredRoleIds={filteredRoleIds}
-                    resources={resources}
-                    roles={roles}
-                    selectedRoleActions={selectedRoleActions}
-                    onActionSelectionChange={handleActionSelectionChange}
-                />
-            )}
+
+            {view == "nested" && <NestedEditor />}
+            {view == "flatten" && <FlattenEditor />}
 
             {changedCount > 0 && (
                 <FooterToolbar>
@@ -299,6 +296,6 @@ export const PolicyPage = () => {
                     </Space>
                 </FooterToolbar>
             )}
-        </>
+        </PolicyProviderContext.Provider>
     );
 };

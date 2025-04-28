@@ -4,6 +4,7 @@ import { IAction, IResource, IRole } from "@/interfaces";
 import { DownOutlined, MoreOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { zip } from "@/utils/zip";
+import { usePolicyProviderContext } from "../../context";
 const headerItems: MenuProps["items"] = [
     {
         label: "Clear Permissions",
@@ -19,20 +20,15 @@ type RoleEditorProps = {
     role: IRole;
     resources: IResource[];
     selectedRoleActions: Record<string, number[]>;
-    onActionSelectionChange: (
-        checked: boolean,
-        roleId: number,
-        actionIds: number[]
-    ) => void;
 };
 
 export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
     resources,
     role,
     selectedRoleActions,
-    onActionSelectionChange,
 }) => {
     const { styles } = useStyles();
+    const { handleActionSelectionChange } = usePolicyProviderContext();
 
     const dataSource = useMemo(() => {
         if (!resources || resources.length == 0) {
@@ -58,9 +54,9 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
     const handleHeaderClick = (key: string, actions: IAction[]) => {
         const allActionIds = actions.map((item) => item.id);
         if (actions && key == "allowAll") {
-            onActionSelectionChange(true, role.id, allActionIds);
+            handleActionSelectionChange(true, role.id, allActionIds);
         } else if (key == "clear") {
-            onActionSelectionChange(false, role.id, allActionIds);
+            handleActionSelectionChange(false, role.id, allActionIds);
         }
     };
 
@@ -69,9 +65,9 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
             item.actions!.map((item) => item.id)
         );
         if (key == "allowAll") {
-            onActionSelectionChange(true, role.id, allActionIds);
+            handleActionSelectionChange(true, role.id, allActionIds);
         } else if (key == "clear") {
-            onActionSelectionChange(false, role.id, allActionIds);
+            handleActionSelectionChange(false, role.id, allActionIds);
         }
     };
 
@@ -107,7 +103,7 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
                     />
                 </Dropdown>,
             ]}
-            styles={{ body: { padding: 0 } }}
+            styles={{ body: { padding: 0, overflow: "hidden" } }}
         >
             <Table
                 className={styles.table}
@@ -115,6 +111,7 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
                 dataSource={dataSource}
                 rowKey={"id"}
                 pagination={false}
+                scroll={{ x: 200 * resources.length }}
                 bordered
             >
                 {resources.map((resource, columnIndex) => {
@@ -154,7 +151,7 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
                                 return (
                                     <Checkbox
                                         onChange={(e) => {
-                                            onActionSelectionChange(
+                                            handleActionSelectionChange(
                                                 e.target.checked,
                                                 role.id,
                                                 [data.id]
@@ -171,6 +168,7 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
                         />
                     );
                 })}
+                <Table.Column title="" />
             </Table>
         </Card>
     );

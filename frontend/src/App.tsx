@@ -44,6 +44,7 @@ import {
 import "./App.css";
 import { DashboardPage } from "./pages/dashboard";
 import { PolicyPage } from "./pages/policy";
+import { CssBaseline } from "@mui/material";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {

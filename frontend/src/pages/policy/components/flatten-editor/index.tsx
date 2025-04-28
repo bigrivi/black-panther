@@ -2,53 +2,42 @@ import { Space } from "antd";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { IResource, IRole } from "@/interfaces";
 import { RoleEditor } from "./RoleEditor";
+import { useStyles } from "./styled";
+import { usePolicyProviderContext } from "../../context";
 
-type FlattenEditorProps = {
-    roles: IRole[];
-    resources: IResource[];
-    filteredRoleIds: number[];
-    filteredResourceIds: number[];
-    selectedRoleActions: Record<string, number[]>;
-    onActionSelectionChange: (
-        checked: boolean,
-        roleId: number,
-        actionIds: number[]
-    ) => void;
-};
+type FlattenEditorProps = {};
 
-export const FlattenEditor: FC<PropsWithChildren<FlattenEditorProps>> = ({
-    resources,
-    roles,
-    filteredResourceIds,
-    filteredRoleIds,
-    selectedRoleActions,
-    onActionSelectionChange,
-}) => {
-    const filteredResources = useMemo(() => {
-        if (filteredResourceIds.length > 0) {
-            return resources.filter((item) =>
-                filteredResourceIds.includes(item.id)
-            );
+export const FlattenEditor: FC<
+    PropsWithChildren<FlattenEditorProps>
+> = ({}) => {
+    const { styles } = useStyles();
+    const {
+        filteredResources,
+        filteredRoles,
+        selectedRoleActions,
+        changedCount,
+    } = usePolicyProviderContext();
+
+    const maxHeight = useMemo(() => {
+        if (changedCount > 0) {
+            return "calc(-250px + 100vh)";
         }
-        return resources;
-    }, [resources, filteredResourceIds]);
-
-    const filteredRoles = useMemo(() => {
-        if (filteredRoleIds.length > 0) {
-            return roles.filter((item) => filteredRoleIds.includes(item.id));
-        }
-        return roles;
-    }, [roles, filteredRoleIds]);
+        return "calc(-195px + 100vh)";
+    }, [changedCount]);
 
     return (
-        <Space direction="vertical" size="middle" style={{ display: "flex" }}>
+        <Space
+            style={{ maxHeight }}
+            className={styles.root}
+            direction="vertical"
+            size="middle"
+        >
             {filteredRoles.map((role) => {
                 return (
                     <RoleEditor
                         key={role.id}
                         role={role}
                         resources={filteredResources}
-                        onActionSelectionChange={onActionSelectionChange}
                         selectedRoleActions={selectedRoleActions}
                     />
                 );
