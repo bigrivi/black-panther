@@ -1,14 +1,6 @@
 import {
-    Checkbox,
-    CheckboxChangeEvent,
-    Dropdown,
-    Flex,
-    MenuProps,
-    Space,
-    Table,
-} from "antd";
-import {
     FC,
+    Fragment,
     PropsWithChildren,
     useEffect,
     useMemo,
@@ -16,10 +8,26 @@ import {
     useState,
 } from "react";
 import { IAction, IResource, IRole } from "@/interfaces";
-import { DownOutlined } from "@ant-design/icons";
-import { useStyles } from "./styled";
 import { usePolicyProviderContext } from "../../context";
-const headerItems: MenuProps["items"] = [
+import {
+    Checkbox,
+    IconButton,
+    styled,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from "@mui/material";
+import { BorderedCell } from "./BorderedCell";
+import { StickColumn } from "./StickColumn";
+import { ActionRows } from "./ActionRows";
+import { ResourceRow } from "./ResourceRow";
+import { Paper } from "@/components";
+import { HighLightRowColumnContext } from "./context";
+import classNames from "classnames";
+const headerItems: any = [
     {
         label: "Clear Permissions",
         key: "clear",
@@ -33,10 +41,9 @@ const headerItems: MenuProps["items"] = [
 type NestedEditorProps = {};
 
 export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
-    const { styles } = useStyles();
     const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
-    const [hoverColumn, setHoverColumn] = useState<number>();
-    const [hoverRow, setHoverRow] = useState<number>();
+    const [highlightColumn, setHighlightColumn] = useState<number>();
+    const [highlightRow, setHighlightRow] = useState<number>();
 
     const {
         filteredResources,
@@ -46,24 +53,6 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
         handleActionSelectionChange,
         changedCount,
     } = usePolicyProviderContext();
-
-    const handleCellMouseEnter = (row: number, col: number) => {
-        setHoverColumn(col);
-        setHoverRow(row);
-    };
-
-    const handleCellMouseLeave = () => {
-        setHoverColumn(undefined);
-        setHoverRow(undefined);
-    };
-
-    const handleActionSelectChange = (
-        e: CheckboxChangeEvent,
-        roleId: number,
-        actionIds: number[]
-    ) => {
-        handleActionSelectionChange(e.target.checked, roleId, actionIds);
-    };
 
     const handleHeaderClick = (key: string, roleId: number) => {
         const allActions: IAction[] | undefined = filteredResources?.flatMap(
@@ -77,11 +66,23 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
         }
     };
 
+    const toggleRowExpanded = (resourceId: number) => {
+        if (expandedRowKeys.includes(resourceId)) {
+            setExpandedRowKeys(
+                expandedRowKeys.filter(
+                    (expandRowKey) => expandRowKey != resourceId
+                )
+            );
+        } else {
+            setExpandedRowKeys([...expandedRowKeys, resourceId]);
+        }
+    };
+
     const scrollHeight = useMemo(() => {
         if (changedCount > 0) {
             return "calc(-300px + 100vh)";
         }
-        return "calc(-250px + 100vh)";
+        return "calc(-300px + 100vh)";
     }, [changedCount]);
 
     useEffect(() => {
@@ -91,161 +92,75 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
     }, [resources]);
 
     return (
-        <Table<IResource>
-            className={styles.table}
-            rowClassName={styles.row}
-            dataSource={filteredResources}
-            pagination={false}
-            sticky
-            bordered
-            rowKey={(record: any) => {
-                if (record.resource_id) {
-                    return record.id + "," + record.resource_id;
-                }
-                return record.id;
-            }}
-            scroll={{
-                x: (filteredRoles.length + 1) * 170 + 50,
-                y: scrollHeight,
-            }}
-            expandable={{
-                childrenColumnName: "actions",
-                indentSize: 0,
-                expandedRowKeys,
-                onExpand(expanded, record: any) {
-                    let newRowKeys = expandedRowKeys;
-                    if (expanded) {
-                        newRowKeys = [...newRowKeys, record.id];
-                    } else {
-                        newRowKeys = newRowKeys.filter((e) => e !== record.id);
-                    }
-                    setExpandedRowKeys(newRowKeys);
-                },
-            }}
-        >
-            <Table.Column
-                fixed="left"
-                dataIndex="name"
-                width={200}
-                title={"Resource"}
-            />
-            {filteredRoles.map((role, col) => {
-                return (
-                    <Table.Column
-                        width={170}
-                        key={role.id}
-                        className={
-                            hoverColumn == col
-                                ? styles.highlightColumn
-                                : undefined
-                        }
-                        render={(value, record, index) => {
-                            const isActive =
-                                hoverRow == record.index && col == hoverColumn;
-                            if (record.actions) {
-                                const allChecked = record.actions.every(
-                                    (action: IAction) => {
-                                        return selectedRoleActions[
-                                            role.id + ""
-                                        ]?.includes(action.id);
-                                    }
+        <Paper elevation={0} sx={{ width: "100%", overflow: "hidden" }}>
+            <HighLightRowColumnContext.Provider
+                value={{
+                    row: highlightRow,
+                    column: highlightColumn,
+                    setColumn: setHighlightColumn,
+                    setRow: setHighlightRow,
+                }}
+            >
+                <TableContainer sx={{ maxHeight: scrollHeight }}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <StickColumn
+                                    align={"left"}
+                                    style={{
+                                        minWidth: 176,
+                                        width: 176,
+                                        zIndex: 100,
+                                    }}
+                                >
+                                    Resource
+                                </StickColumn>
+                                {filteredRoles.map((role, col) => {
+                                    return (
+                                        <BorderedCell
+                                            key={role.id}
+                                            className={classNames({
+                                                highlight:
+                                                    highlightColumn == col,
+                                            })}
+                                            align={"center"}
+                                            style={{
+                                                minWidth: 176,
+                                                width: 176,
+                                                zIndex: 99,
+                                            }}
+                                        >
+                                            {role.name}
+                                        </BorderedCell>
+                                    );
+                                })}
+                                <BorderedCell></BorderedCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filteredResources.map((resource, row) => {
+                                const isExpanded = expandedRowKeys.includes(
+                                    resource.id
                                 );
                                 return (
-                                    <Flex
-                                        justify="center"
-                                        className={
-                                            isActive
-                                                ? styles.activeCell
-                                                : undefined
-                                        }
-                                        style={{ height: 55 }}
-                                        onMouseEnter={() =>
-                                            handleCellMouseEnter(
-                                                record.index,
-                                                col
-                                            )
-                                        }
-                                        onMouseLeave={handleCellMouseLeave}
-                                    >
-                                        <Checkbox
-                                            onChange={(e) => {
-                                                handleActionSelectChange(
-                                                    e,
-                                                    role.id,
-                                                    record.actions.map(
-                                                        (item: IAction) =>
-                                                            item.id
-                                                    )
-                                                );
-                                            }}
-                                            indeterminate={
-                                                record.actions.some(
-                                                    (action: IAction) => {
-                                                        return selectedRoleActions[
-                                                            role.id + ""
-                                                        ]?.includes(action.id);
-                                                    }
-                                                ) && !allChecked
+                                    <Fragment key={resource.id}>
+                                        <ResourceRow
+                                            isExpanded={isExpanded}
+                                            toggleRowExpanded={
+                                                toggleRowExpanded
                                             }
-                                            checked={allChecked}
+                                            resource={resource}
                                         />
-                                    </Flex>
+                                        {isExpanded && (
+                                            <ActionRows resource={resource} />
+                                        )}
+                                    </Fragment>
                                 );
-                            }
-                            return (
-                                <Flex
-                                    justify="center"
-                                    className={
-                                        isActive ? styles.activeCell : undefined
-                                    }
-                                    style={{ height: 55 }}
-                                    onMouseEnter={() =>
-                                        handleCellMouseEnter(record.index, col)
-                                    }
-                                    onMouseLeave={handleCellMouseLeave}
-                                >
-                                    <Checkbox
-                                        onChange={(e) => {
-                                            handleActionSelectChange(
-                                                e,
-                                                role.id,
-                                                [record.id]
-                                            );
-                                        }}
-                                        checked={selectedRoleActions[
-                                            role.id + ""
-                                        ]?.includes(record.id)}
-                                    />
-                                </Flex>
-                            );
-                        }}
-                        align="center"
-                        title={
-                            <Dropdown
-                                menu={{
-                                    items: headerItems,
-                                    onClick: (evt) => {
-                                        handleHeaderClick(evt.key, role.id);
-                                    },
-                                }}
-                                trigger={["click"]}
-                            >
-                                <div
-                                    className={styles.headerCell}
-                                    onClick={(e) => e.preventDefault()}
-                                >
-                                    <Space>
-                                        {role.name}
-                                        <DownOutlined />
-                                    </Space>
-                                </div>
-                            </Dropdown>
-                        }
-                    />
-                );
-            })}
-
-            <Table.Column title={""} />
-        </Table>
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </HighLightRowColumnContext.Provider>
+        </Paper>
     );
 };

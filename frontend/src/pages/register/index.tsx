@@ -1,5 +1,5 @@
-import { AuthPage } from "@refinedev/antd";
+import { AuthPage as MUIAuthPage, type AuthProps } from "@refinedev/mui";
 
 export const Register = () => {
-  return <AuthPage type="register" />;
+    return <MUIAuthPage type="register" />;
 };

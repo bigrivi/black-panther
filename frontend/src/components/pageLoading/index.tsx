@@ -1,18 +1,10 @@
-import type { SpinProps } from "antd";
-import { Spin } from "antd";
+import { CircularProgress } from "@mui/material";
 import React from "react";
 
-const PageLoading: React.FC<SpinProps & any> = ({
-  isLoading,
-  pastDelay,
-  timedOut,
-  error,
-  retry,
-  ...reset
-}) => (
-  <div style={{ paddingBlockStart: 100, textAlign: "center" }}>
-    <Spin size="large" {...reset} />
-  </div>
+const PageLoading = () => (
+    <div style={{ paddingBlockStart: 100, textAlign: "center" }}>
+        <CircularProgress />
+    </div>
 );
 
 export { PageLoading };

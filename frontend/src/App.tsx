@@ -2,49 +2,33 @@ import { Authenticated, CanAccess, HttpError, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import {
-    ThemedLayoutV2,
-    ThemedSiderV2,
-    useNotificationProvider,
-} from "@refinedev/antd";
-import "@refinedev/antd/dist/reset.css";
-
 import routerBindings, {
     CatchAllNavigate,
     DocumentTitleHandler,
     NavigateToResource,
     UnsavedChangesNotifier,
 } from "@refinedev/react-router";
-import { App as AntdApp } from "antd";
+import {
+    ErrorComponent,
+    useNotificationProvider,
+    ThemedLayoutV2,
+    RefineSnackbarProvider,
+} from "@refinedev/mui";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
-import { Header, PageLoading, AccessDenied, NotFound } from "./components";
-import { ConfigProvider } from "./providers/config-provider";
-import { UserCreate, UserEdit, UserList, UserShow } from "./pages/users";
-import { RoleCreate, RoleEdit, RoleList, RoleShow } from "./pages/roles";
+import { Header, PageLoading } from "./components";
 import { ForgotPassword } from "./pages/forgotPassword";
-import { Login } from "@/pages/login";
+import { LoginPage } from "@/pages/login";
 import { Register } from "@/pages/register";
 import dataProvider from "@/providers/data-provider";
 import { resources } from "@/resources";
 import { TOKEN_KEY } from "@/constants";
 import { useAuthProvider } from "@/hooks/useAuthProvider";
 import { useAccessControlProvider } from "@/hooks/useAccessControlProvider";
-import {
-    DepartmentCreate,
-    DepartmentEdit,
-    DepartmentList,
-    DepartmentShow,
-} from "@/pages/departments";
-import {
-    ResourceCreate,
-    ResourceEdit,
-    ResourceList,
-    ResourceShow,
-} from "./pages/resource";
 import "./App.css";
 import { DashboardPage } from "./pages/dashboard";
 import { PolicyPage } from "./pages/policy";
-import { CssBaseline } from "@mui/material";
+import { Box, CssBaseline, GlobalStyles } from "@mui/material";
+import { ColorModeContextProvider } from "./contexts";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -84,8 +68,12 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <RefineKbarProvider>
-                <ConfigProvider>
-                    <AntdApp>
+                <ColorModeContextProvider>
+                    <CssBaseline />
+                    <GlobalStyles
+                        styles={{ html: { WebkitFontSmoothing: "auto" } }}
+                    />
+                    <RefineSnackbarProvider>
                         <Refine
                             i18nProvider={i18nProvider}
                             accessControlProvider={accessControlProvider}
@@ -126,18 +114,17 @@ const App: React.FC = () => {
                                                         `You cannot access ${resource}-${params} resource with ${action} action because ${reason}`
                                                     );
                                                 }}
-                                                fallback={<AccessDenied />}
                                             >
-                                                <ThemedLayoutV2
-                                                    Header={Header}
-                                                    Sider={(props) => (
-                                                        <ThemedSiderV2
-                                                            {...props}
-                                                            fixed
-                                                        />
-                                                    )}
-                                                >
-                                                    <Outlet />
+                                                <ThemedLayoutV2 Header={Header}>
+                                                    {/* <Box
+                                                        sx={{
+                                                            maxWidth: "1200px",
+                                                            marginLeft: "auto",
+                                                            marginRight: "auto",
+                                                        }}
+                                                    > */}
+                                                        <Outlet />
+                                                    {/* </Box> */}
                                                 </ThemedLayoutV2>
                                             </CanAccess>
                                         </Authenticated>
@@ -163,7 +150,7 @@ const App: React.FC = () => {
                                             element={<BlogPostShow />}
                                         />
                                     </Route> */}
-                                    <Route path="/users">
+                                    {/* <Route path="/users">
                                         <Route index element={<UserList />} />
                                         <Route
                                             path="create"
@@ -233,14 +220,17 @@ const App: React.FC = () => {
                                             path="show/:id"
                                             element={<ResourceShow />}
                                         />
-                                    </Route>
+                                    </Route> */}
 
                                     <Route
                                         path="/policy"
                                         element={<PolicyPage />}
                                     />
 
-                                    <Route path="*" element={<NotFound />} />
+                                    <Route
+                                        path="*"
+                                        element={<ErrorComponent />}
+                                    />
                                 </Route>
                                 <Route
                                     element={
@@ -252,7 +242,10 @@ const App: React.FC = () => {
                                         </Authenticated>
                                     }
                                 >
-                                    <Route path="/login" element={<Login />} />
+                                    <Route
+                                        path="/login"
+                                        element={<LoginPage />}
+                                    />
                                     <Route
                                         path="/register"
                                         element={<Register />}
@@ -265,11 +258,11 @@ const App: React.FC = () => {
                             </Routes>
 
                             <RefineKbar />
-                            <UnsavedChangesNotifier />
+                            {/* <UnsavedChangesNotifier /> */}
                             <DocumentTitleHandler />
                         </Refine>
-                    </AntdApp>
-                </ConfigProvider>
+                    </RefineSnackbarProvider>
+                </ColorModeContextProvider>
             </RefineKbarProvider>
         </BrowserRouter>
     );

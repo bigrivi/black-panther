@@ -1,23 +1,21 @@
-import { List } from "@refinedev/antd";
 import {
     useCustomMutation,
     useHandleNotification,
     useList,
 } from "@refinedev/core";
-import { Button, Segmented, Space } from "antd";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IResource, IRole } from "@/interfaces";
-import {
-    AppstoreOutlined,
-    SaveFilled,
-    UnorderedListOutlined,
-} from "@ant-design/icons";
 import { FooterToolbar } from "@/components/footerToolbar";
+import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
+import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
 import { NestedEditor } from "./components/nested-editor";
-import { FlattenEditor } from "./components/flatten-editor";
-import { Filter } from "./components/filter";
+// import { FlattenEditor } from "./components/flatten-editor";
+// import { Filter } from "./components/filter";
 import { PolicyProviderContext } from "./context";
 import { SelectedRoleActionsMap } from "./types";
+import { List } from "@refinedev/mui";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { RefineListView } from "@/components/refine-list-view";
 
 type ChangeData = Array<{
     roleId: string;
@@ -223,7 +221,7 @@ export const PolicyPage = () => {
         }
     };
 
-    const handleViewChange = (value: View) => {
+    const handleViewChange = (evt: any, value: View) => {
         setView(value);
         localStorage.setItem("editor-view", value);
     };
@@ -253,34 +251,37 @@ export const PolicyPage = () => {
                 changedCount,
             }}
         >
-            <List
+            <RefineListView
                 headerButtons={(props) => [
-                    <Filter onChange={handleFilterChange} key="filter" />,
-                    <Segmented<View>
-                        key="view"
-                        size="large"
+                    // <Filter onChange={handleFilterChange} key="filter" />,
+                    <ToggleButtonGroup
+                        key="view-toggle"
                         value={view}
-                        options={[
-                            {
-                                label: "",
-                                value: "nested",
-                                icon: <UnorderedListOutlined />,
-                            },
-                            {
-                                label: "",
-                                value: "flatten",
-                                icon: <AppstoreOutlined />,
-                            },
-                        ]}
+                        exclusive
                         onChange={handleViewChange}
-                    />,
+                        aria-label="text alignment"
+                    >
+                        <ToggleButton
+                            value="nested"
+                            aria-label="nested view"
+                            size="small"
+                        >
+                            <ListOutlinedIcon />
+                        </ToggleButton>
+                        <ToggleButton
+                            value="flatten"
+                            aria-label="flatten view"
+                            size="small"
+                        >
+                            <BorderAllOutlinedIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>,
                 ]}
-            ></List>
+            >
+                {view == "nested" && <NestedEditor />}
+                {/* {view == "flatten" && <FlattenEditor />} */}
 
-            {view == "nested" && <NestedEditor />}
-            {view == "flatten" && <FlattenEditor />}
-
-            {changedCount > 0 && (
+                {/* {changedCount > 0 && (
                 <FooterToolbar>
                     <Space>
                         {changedCount} unsaved changes
@@ -295,7 +296,8 @@ export const PolicyPage = () => {
                         </Button>
                     </Space>
                 </FooterToolbar>
-            )}
+            )} */}
+            </RefineListView>
         </PolicyProviderContext.Provider>
     );
 };
