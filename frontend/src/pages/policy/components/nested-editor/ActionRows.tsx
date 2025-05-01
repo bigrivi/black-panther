@@ -27,6 +27,7 @@ export const ActionRows: FC<ActionRowsProps> = ({ resource }) => {
                     })}
                     style={{
                         minWidth: 176,
+                        background: "#fafafa",
                     }}
                 >
                     <div

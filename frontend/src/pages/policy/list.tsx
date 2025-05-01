@@ -13,9 +13,9 @@ import { NestedEditor } from "./components/nested-editor";
 // import { Filter } from "./components/filter";
 import { PolicyProviderContext } from "./context";
 import { SelectedRoleActionsMap } from "./types";
-import { List } from "@refinedev/mui";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { RefineListView } from "@/components/refine-list-view";
+import { Save } from "@mui/icons-material";
 
 type ChangeData = Array<{
     roleId: string;
@@ -281,22 +281,23 @@ export const PolicyPage = () => {
                 {view == "nested" && <NestedEditor />}
                 {/* {view == "flatten" && <FlattenEditor />} */}
 
-                {/* {changedCount > 0 && (
-                <FooterToolbar>
-                    <Space>
-                        {changedCount} unsaved changes
-                        <Button onClick={handleReset}>Reset</Button>
-                        <Button
-                            onClick={handleSave}
-                            type="primary"
-                            loading={isLoading}
-                            icon={<SaveFilled />}
-                        >
-                            Save Changes
-                        </Button>
-                    </Space>
-                </FooterToolbar>
-            )} */}
+                {changedCount > 0 && (
+                    <FooterToolbar>
+                        <Box>
+                            {changedCount} unsaved changes
+                            <Button onClick={handleReset}>Reset</Button>
+                            <Button
+                                onClick={handleSave}
+                                color="primary"
+                                variant="contained"
+                                loading={isLoading}
+                                startIcon={<Save />}
+                            >
+                                Save Changes
+                            </Button>
+                        </Box>
+                    </FooterToolbar>
+                )}
             </RefineListView>
         </PolicyProviderContext.Provider>
     );

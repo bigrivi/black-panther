@@ -4,39 +4,16 @@ import {
     PropsWithChildren,
     useEffect,
     useMemo,
-    useRef,
     useState,
 } from "react";
-import { IAction, IResource, IRole } from "@/interfaces";
+import { IResource } from "@/interfaces";
 import { usePolicyProviderContext } from "../../context";
-import {
-    Checkbox,
-    IconButton,
-    styled,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from "@mui/material";
-import { BorderedCell } from "./BorderedCell";
-import { StickColumn } from "./StickColumn";
+import { Table, TableBody, TableContainer, TableHead } from "@mui/material";
 import { ActionRows } from "./ActionRows";
 import { ResourceRow } from "./ResourceRow";
 import { Paper } from "@/components";
 import { HighLightRowColumnContext } from "./context";
-import classNames from "classnames";
-const headerItems: any = [
-    {
-        label: "Clear Permissions",
-        key: "clear",
-    },
-    {
-        label: "Allow All",
-        key: "allowAll",
-    },
-];
+import { Header } from "./Header";
 
 type NestedEditorProps = {};
 
@@ -45,26 +22,8 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
     const [highlightColumn, setHighlightColumn] = useState<number>();
     const [highlightRow, setHighlightRow] = useState<number>();
 
-    const {
-        filteredResources,
-        filteredRoles,
-        resources,
-        selectedRoleActions,
-        handleActionSelectionChange,
-        changedCount,
-    } = usePolicyProviderContext();
-
-    const handleHeaderClick = (key: string, roleId: number) => {
-        const allActions: IAction[] | undefined = filteredResources?.flatMap(
-            (item) => item.actions as IAction[]
-        );
-        const allActionIds = allActions.map((item) => item.id);
-        if (allActions && key == "allowAll") {
-            handleActionSelectionChange(true, roleId, allActionIds);
-        } else if (key == "clear") {
-            handleActionSelectionChange(false, roleId, allActionIds);
-        }
-    };
+    const { filteredResources, resources, changedCount } =
+        usePolicyProviderContext();
 
     const toggleRowExpanded = (resourceId: number) => {
         if (expandedRowKeys.includes(resourceId)) {
@@ -80,9 +39,9 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
 
     const scrollHeight = useMemo(() => {
         if (changedCount > 0) {
-            return "calc(-300px + 100vh)";
+            return "calc(-260px + 100vh)";
         }
-        return "calc(-300px + 100vh)";
+        return "calc(-215px + 100vh)";
     }, [changedCount]);
 
     useEffect(() => {
@@ -104,38 +63,7 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
                 <TableContainer sx={{ maxHeight: scrollHeight }}>
                     <Table stickyHeader>
                         <TableHead>
-                            <TableRow>
-                                <StickColumn
-                                    align={"left"}
-                                    style={{
-                                        minWidth: 176,
-                                        width: 176,
-                                        zIndex: 100,
-                                    }}
-                                >
-                                    Resource
-                                </StickColumn>
-                                {filteredRoles.map((role, col) => {
-                                    return (
-                                        <BorderedCell
-                                            key={role.id}
-                                            className={classNames({
-                                                highlight:
-                                                    highlightColumn == col,
-                                            })}
-                                            align={"center"}
-                                            style={{
-                                                minWidth: 176,
-                                                width: 176,
-                                                zIndex: 99,
-                                            }}
-                                        >
-                                            {role.name}
-                                        </BorderedCell>
-                                    );
-                                })}
-                                <BorderedCell></BorderedCell>
-                            </TableRow>
+                            <Header />
                         </TableHead>
                         <TableBody>
                             {filteredResources.map((resource, row) => {

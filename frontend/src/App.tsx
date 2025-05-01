@@ -123,7 +123,7 @@ const App: React.FC = () => {
                                                             marginRight: "auto",
                                                         }}
                                                     > */}
-                                                        <Outlet />
+                                                    <Outlet />
                                                     {/* </Box> */}
                                                 </ThemedLayoutV2>
                                             </CanAccess>

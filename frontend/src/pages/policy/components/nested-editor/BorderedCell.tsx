@@ -17,10 +17,23 @@ export const BorderedCell = styled(({ children, ...rest }: TableCellProps) => {
                 : darken(alpha(theme.palette.divider, 1), 0.68)
         }`,
     },
+    ["&.hover:hover"]: {
+        cursor: "pointer",
+        background: `${lighten(
+            alpha(theme.palette.primary.main, 1),
+            0.9
+        )} !important`,
+    },
     ["&.highlight"]: {
-        background: lighten(alpha(theme.palette.primary.main, 1), 0.9),
+        background: `${lighten(
+            alpha(theme.palette.primary.main, 1),
+            0.9
+        )} !important`,
     },
     ["&.highlight-both"]: {
-        background: lighten(alpha(theme.palette.primary.main, 1), 0.7),
+        background: `${lighten(
+            alpha(theme.palette.primary.main, 1),
+            0.7
+        )} !important`,
     },
 }));
