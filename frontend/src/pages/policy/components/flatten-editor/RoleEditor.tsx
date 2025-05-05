@@ -1,35 +1,83 @@
-import { Card, Checkbox, Dropdown, MenuProps, Space, Table } from "antd";
-import { FC, PropsWithChildren, useMemo } from "react";
-import { IAction, IResource, IRole } from "@/interfaces";
-import { DownOutlined, MoreOutlined } from "@ant-design/icons";
-import { useStyles } from "./styled";
+import { FC, PropsWithChildren, useMemo, useState } from "react";
+import { IResource, IRole } from "@/interfaces";
 import { zip } from "@/utils/zip";
 import { usePolicyProviderContext } from "../../context";
-const headerItems: MenuProps["items"] = [
-    {
-        label: "Clear Permissions",
-        key: "clear",
-    },
-    {
-        label: "Allow All",
-        key: "allowAll",
-    },
-];
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {
+    Card as MCard,
+    CardContent,
+    CardHeader as MCardHeader,
+    IconButton,
+    Table,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    styled,
+    CardProps,
+    lighten,
+    darken,
+    alpha,
+    CardHeaderProps,
+    TableBody,
+    Menu,
+    MenuItem,
+    ListItemText,
+    Divider,
+    ListItemIcon,
+} from "@mui/material";
+import { cardClasses } from "@mui/material/Card";
+import { cardHeaderClasses } from "@mui/material/CardHeader";
+import { BorderedCell } from "../common/BorderedCell";
+import { ActionCell } from "./ActionCell";
+import { CheckBoxOutlineBlank, LibraryAddCheck } from "@mui/icons-material";
 
 type RoleEditorProps = {
     role: IRole;
     resources: IResource[];
-    selectedRoleActions: Record<string, number[]>;
 };
+
+const Card = styled(({ children, ...rest }: CardProps) => {
+    return <MCard {...rest}>{children}</MCard>;
+})(({ theme }) => ({
+    [`&.${cardClasses.root}`]: {
+        overflow: "hidden",
+        borderRadius: 8,
+        boxShadow: "none",
+        border: `1px solid ${
+            theme.palette.mode === "light"
+                ? lighten(alpha(theme.palette.divider, 1), 0.88)
+                : darken(alpha(theme.palette.divider, 1), 0.68)
+        }`,
+    },
+    ["& .MuiTableRow-root:last-child td"]: {
+        borderBottom: "0px solid",
+    },
+}));
+
+const CardHeader = styled(({ children, ...rest }: CardHeaderProps) => {
+    return <MCardHeader {...rest}>{children}</MCardHeader>;
+})(({ theme }) => ({
+    [`&.${cardHeaderClasses.root}`]: {
+        borderBottom: `1px solid ${
+            theme.palette.mode === "light"
+                ? lighten(alpha(theme.palette.divider, 1), 0.88)
+                : darken(alpha(theme.palette.divider, 1), 0.68)
+        }`,
+    },
+}));
 
 export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
     resources,
     role,
-    selectedRoleActions,
 }) => {
-    const { styles } = useStyles();
     const { handleActionSelectionChange } = usePolicyProviderContext();
-
+    const [openResource, setOpenResource] = useState<IResource>();
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const handleClose = () => {
+        setAnchorEl(null);
+        setOpenResource(undefined);
+    };
     const dataSource = useMemo(() => {
         if (!resources || resources.length == 0) {
             return [];
@@ -51,125 +99,126 @@ export const RoleEditor: FC<PropsWithChildren<RoleEditorProps>> = ({
         }, []);
     }, [resources]);
 
-    const handleHeaderClick = (key: string, actions: IAction[]) => {
-        const allActionIds = actions.map((item) => item.id);
-        if (actions && key == "allowAll") {
-            handleActionSelectionChange(true, role.id, allActionIds);
-        } else if (key == "clear") {
-            handleActionSelectionChange(false, role.id, allActionIds);
-        }
-    };
+    const handleMenuItemClick = (key: string) => {
+        const allActionIds: number[] = openResource
+            ? openResource.actions!!.map((item) => item.id)
+            : resources.flatMap((item) => item.actions!.map((item) => item.id));
 
-    const handleMoreClick = (key: string) => {
-        const allActionIds: number[] = resources.flatMap((item) =>
-            item.actions!.map((item) => item.id)
-        );
         if (key == "allowAll") {
             handleActionSelectionChange(true, role.id, allActionIds);
         } else if (key == "clear") {
             handleActionSelectionChange(false, role.id, allActionIds);
         }
+        handleClose();
     };
 
+    const handleCellClick = (
+        event: React.MouseEvent<HTMLTableCellElement | HTMLButtonElement>,
+        resource?: IResource
+    ) => {
+        setAnchorEl(event.currentTarget);
+        setOpenResource(resource);
+    };
+    const open = Boolean(anchorEl);
+
     return (
-        <Card
-            title={role.name}
-            extra={[
-                <Dropdown
-                    key={"moreAction"}
-                    menu={{
-                        items: [
-                            {
-                                key: "title",
-                                label: role.name,
-                                type: "group",
-                            },
-                            {
-                                type: "divider",
-                            },
-                            ...headerItems,
-                        ],
-                        onClick: (evt) => {
-                            handleMoreClick(evt.key);
-                        },
-                    }}
-                    trigger={["click"]}
-                >
-                    <MoreOutlined
-                        role="button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                        }}
-                    />
-                </Dropdown>,
-            ]}
-            styles={{ body: { padding: 0, overflow: "hidden" } }}
-        >
-            <Table
-                className={styles.table}
-                rowClassName={styles.row}
-                dataSource={dataSource}
-                rowKey={"id"}
-                pagination={false}
-                scroll={{ x: 200 * resources.length }}
-                bordered
+        <>
+            <Card elevation={0}>
+                <CardHeader
+                    title={role.name}
+                    action={
+                        <IconButton
+                            onClick={(e) => handleCellClick(e, undefined)}
+                            aria-label="settings"
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                    }
+                />
+                <CardContent>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {resources.map((resource) => {
+                                        return (
+                                            <BorderedCell
+                                                onClick={(e) =>
+                                                    handleCellClick(e, resource)
+                                                }
+                                                className="hover"
+                                                style={{
+                                                    minWidth: 176,
+                                                    width: 176,
+                                                }}
+                                                key={resource.id}
+                                            >
+                                                {resource.name}
+                                            </BorderedCell>
+                                        );
+                                    })}
+                                    <TableCell />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {dataSource.map((row) => {
+                                    return (
+                                        <TableRow key={row.id}>
+                                            {resources.map(
+                                                (resource, columnIndex) => (
+                                                    <ActionCell
+                                                        key={resource.id}
+                                                        roleId={role.id}
+                                                        data={
+                                                            row[
+                                                                "col_" +
+                                                                    columnIndex
+                                                            ]
+                                                        }
+                                                    />
+                                                )
+                                            )}
+                                            <TableCell />
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </CardContent>
+            </Card>
+            <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: openResource ? "left" : "center",
+                }}
+                transformOrigin={{
+                    horizontal: openResource ? "left" : "right",
+                    vertical: "top",
+                }}
+                open={open}
+                onClose={handleClose}
             >
-                {resources.map((resource, columnIndex) => {
-                    return (
-                        <Table.Column
-                            width={200}
-                            key={resource.id}
-                            title={
-                                <Dropdown
-                                    menu={{
-                                        items: headerItems,
-                                        onClick: (evt) => {
-                                            handleHeaderClick(
-                                                evt.key,
-                                                resource.actions!
-                                            );
-                                        },
-                                    }}
-                                    trigger={["click"]}
-                                >
-                                    <div
-                                        className={styles.headerCell}
-                                        onClick={(e) => e.preventDefault()}
-                                    >
-                                        <Space>
-                                            {resource.name}
-                                            <DownOutlined />
-                                        </Space>
-                                    </div>
-                                </Dropdown>
-                            }
-                            render={(value, record, index) => {
-                                const data = record["col_" + columnIndex];
-                                if (!data) {
-                                    return null;
-                                }
-                                return (
-                                    <Checkbox
-                                        onChange={(e) => {
-                                            handleActionSelectionChange(
-                                                e.target.checked,
-                                                role.id,
-                                                [data.id]
-                                            );
-                                        }}
-                                        checked={selectedRoleActions[
-                                            role.id + ""
-                                        ]?.includes(data.id)}
-                                    >
-                                        {data.name}
-                                    </Checkbox>
-                                );
-                            }}
-                        />
-                    );
-                })}
-                <Table.Column title="" />
-            </Table>
-        </Card>
+                <MenuItem disableRipple disabled>
+                    <ListItemText>
+                        {openResource?.name ?? role.name}
+                    </ListItemText>
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={() => handleMenuItemClick("clear")}>
+                    <ListItemIcon>
+                        <CheckBoxOutlineBlank />
+                    </ListItemIcon>
+                    <ListItemText>Clear Permissions</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuItemClick("allowAll")}>
+                    <ListItemIcon>
+                        <LibraryAddCheck />
+                    </ListItemIcon>
+                    <ListItemText>Allow All</ListItemText>
+                </MenuItem>
+            </Menu>
+        </>
     );
 };

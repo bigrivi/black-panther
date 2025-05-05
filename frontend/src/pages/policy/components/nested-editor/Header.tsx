@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { StickColumn } from "./StickColumn";
 import { usePolicyProviderContext } from "../../context";
-import { BorderedCell } from "./BorderedCell";
+import { BorderedCell } from "../common/BorderedCell";
 import classNames from "classnames";
 import { useHighLightRowColumnContext } from "./context";
 import { CheckBoxOutlineBlank, LibraryAddCheck } from "@mui/icons-material";

@@ -33,7 +33,7 @@ export const RefineListView = ({ children, ...props }: Props) => {
                     padding: 0,
                     ".MuiCardContent-root": {
                         padding: "0px",
-                        paddingBottom: 0,
+                        paddingBottom: "0px !important",
                     },
                     ".MuiBreadcrumbs-root": {
                         padding: 0,

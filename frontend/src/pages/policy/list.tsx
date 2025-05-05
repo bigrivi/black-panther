@@ -9,13 +9,13 @@ import { FooterToolbar } from "@/components/footerToolbar";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
 import { NestedEditor } from "./components/nested-editor";
-// import { FlattenEditor } from "./components/flatten-editor";
 // import { Filter } from "./components/filter";
 import { PolicyProviderContext } from "./context";
 import { SelectedRoleActionsMap } from "./types";
 import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { RefineListView } from "@/components/refine-list-view";
 import { Save } from "@mui/icons-material";
+import { FlattenEditor } from "./components/flatten-editor";
 
 type ChangeData = Array<{
     roleId: string;
@@ -222,8 +222,10 @@ export const PolicyPage = () => {
     };
 
     const handleViewChange = (evt: any, value: View) => {
-        setView(value);
-        localStorage.setItem("editor-view", value);
+        if (value) {
+            setView(value);
+            localStorage.setItem("editor-view", value);
+        }
     };
 
     const handleFilterChange = (filterValues: string[]) => {
@@ -279,7 +281,7 @@ export const PolicyPage = () => {
                 ]}
             >
                 {view == "nested" && <NestedEditor />}
-                {/* {view == "flatten" && <FlattenEditor />} */}
+                {view == "flatten" && <FlattenEditor />}
 
                 {changedCount > 0 && (
                     <FooterToolbar>

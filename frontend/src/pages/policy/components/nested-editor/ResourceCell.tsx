@@ -1,5 +1,5 @@
 import { FC, MouseEventHandler } from "react";
-import { BorderedCell } from "./BorderedCell";
+import { BorderedCell } from "../common/BorderedCell";
 import { IAction, IResource, IRole } from "@/interfaces";
 import { Checkbox } from "@mui/material";
 import { usePolicyProviderContext } from "../../context";

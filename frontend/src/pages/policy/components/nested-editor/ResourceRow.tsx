@@ -6,12 +6,14 @@ import {
     IconButton,
     Menu,
     MenuItem,
-    TableRow,
+    TableRow as MUITableRow,
+    styled,
+    TableRowProps,
 } from "@mui/material";
 import { StickColumn } from "./StickColumn";
-import { IAction, IResource, IRole } from "@/interfaces";
+import { IResource } from "@/interfaces";
 import { ResourceCell } from "./ResourceCell";
-import { BorderedCell } from "./BorderedCell";
+import { BorderedCell } from "../common/BorderedCell";
 import {
     CheckBoxOutlineBlank,
     ChevronRightOutlined,
@@ -26,6 +28,15 @@ type ResourceRowProps = {
     isExpanded: boolean;
     toggleRowExpanded: (resourceId: number) => void;
 };
+
+const TableRow = styled(({ children, ...rest }: TableRowProps) => {
+    return <MUITableRow {...rest}>{children}</MUITableRow>;
+})(({ theme }) => ({
+    ["& .MuiTableCell-root:first-child"]: {
+        background: theme.palette.mode === "light" ? "#fff" : "#1e1e1e",
+    },
+}));
+
 export const ResourceRow: FC<ResourceRowProps> = ({
     resource,
     isExpanded,
@@ -75,7 +86,6 @@ export const ResourceRow: FC<ResourceRowProps> = ({
                         minWidth: 176,
                         width: 176,
                         padding: 0,
-                        background: "#fff",
                     }}
                 >
                     <IconButton

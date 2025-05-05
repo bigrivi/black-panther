@@ -8,14 +8,36 @@ import {
 } from "react";
 import { IResource } from "@/interfaces";
 import { usePolicyProviderContext } from "../../context";
-import { Table, TableBody, TableContainer, TableHead } from "@mui/material";
+import {
+    paperClasses,
+    PaperProps,
+    styled,
+    Table,
+    TableBody,
+    TableContainer,
+    TableHead,
+} from "@mui/material";
 import { ActionRows } from "./ActionRows";
 import { ResourceRow } from "./ResourceRow";
-import { Paper } from "@/components";
+import { Paper as MUIPaper } from "@/components";
 import { HighLightRowColumnContext } from "./context";
 import { Header } from "./Header";
 
 type NestedEditorProps = {};
+
+const Paper = styled(({ children, ...rest }: PaperProps) => {
+    return <MUIPaper {...rest}>{children}</MUIPaper>;
+})(({ theme }) => ({
+    [`&.${paperClasses.root}`]: {
+        overflow: "hidden",
+        borderRadius: 8,
+        boxShadow: "none",
+        width: "100%",
+    },
+    ["& .MuiTableRow-root:last-child td"]: {
+        borderBottom: "0px solid",
+    },
+}));
 
 export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
     const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
@@ -51,7 +73,7 @@ export const NestedEditor: FC<PropsWithChildren<NestedEditorProps>> = ({}) => {
     }, [resources]);
 
     return (
-        <Paper elevation={0} sx={{ width: "100%", overflow: "hidden" }}>
+        <Paper>
             <HighLightRowColumnContext.Provider
                 value={{
                     row: highlightRow,

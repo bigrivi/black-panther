@@ -1,6 +1,6 @@
-import { FC, MouseEventHandler } from "react";
+import { FC } from "react";
 import { IAction, IRole } from "@/interfaces";
-import { BorderedCell } from "./BorderedCell";
+import { BorderedCell } from "../common/BorderedCell";
 import { Checkbox } from "@mui/material";
 import { usePolicyProviderContext } from "../../context";
 import { useHighLightRowColumnContext } from "./context";

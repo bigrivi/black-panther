@@ -1,8 +1,13 @@
 import { IResource, IRole } from "@/interfaces";
-import { TableRow } from "@mui/material";
+import {
+    styled,
+    TableRow as MUITableRow,
+    TableRowProps,
+    tableRowClasses,
+} from "@mui/material";
 import { FC } from "react";
 import { ActionCell } from "./ActionCell";
-import { BorderedCell } from "./BorderedCell";
+import { BorderedCell } from "../common/BorderedCell";
 import { StickColumn } from "./StickColumn";
 import { usePolicyProviderContext } from "../../context";
 import { useHighLightRowColumnContext } from "./context";
@@ -11,15 +16,24 @@ import classNames from "classnames";
 type ActionRowsProps = {
     resource: IResource;
 };
+
+const TableRow = styled(({ children, ...rest }: TableRowProps) => {
+    return <MUITableRow {...rest}>{children}</MUITableRow>;
+})(({ theme }) => ({
+    [`&.${tableRowClasses.root}`]: {
+        background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
+    },
+    ["& .MuiTableCell-root:first-child"]: {
+        background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
+    },
+}));
+
 export const ActionRows: FC<ActionRowsProps> = ({ resource }) => {
     const { filteredRoles } = usePolicyProviderContext();
     const { row: highlightRow } = useHighLightRowColumnContext();
     return resource.actions!.map((action, col) => {
         return (
-            <TableRow
-                style={{ background: "#fafafa" }}
-                key={resource.id + "_" + action.id}
-            >
+            <TableRow key={resource.id + "_" + action.id}>
                 <StickColumn
                     align={"left"}
                     className={classNames({
@@ -27,7 +41,6 @@ export const ActionRows: FC<ActionRowsProps> = ({ resource }) => {
                     })}
                     style={{
                         minWidth: 176,
-                        background: "#fafafa",
                     }}
                 >
                     <div
