@@ -1,3 +1,4 @@
+import { Dashboard, Person, Settings } from "@mui/icons-material";
 import { ResourceProps } from "@refinedev/core";
 
 export const resources: ResourceProps[] = [
@@ -6,12 +7,14 @@ export const resources: ResourceProps[] = [
         list: "/",
         meta: {
             label: "Dashboard",
+            icon: <Dashboard />,
         },
     },
     {
         name: "system_manager",
         meta: {
             label: "System",
+            icon: <Settings />,
         },
     },
     {

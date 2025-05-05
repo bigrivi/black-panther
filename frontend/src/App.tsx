@@ -15,7 +15,7 @@ import {
     RefineSnackbarProvider,
 } from "@refinedev/mui";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
-import { Header, PageLoading } from "./components";
+import { AppSider, Header, PageLoading } from "./components";
 import { ForgotPassword } from "./pages/forgotPassword";
 import { LoginPage } from "@/pages/login";
 import { Register } from "@/pages/register";
@@ -115,7 +115,10 @@ const App: React.FC = () => {
                                                     );
                                                 }}
                                             >
-                                                <ThemedLayoutV2 Header={Header}>
+                                                <ThemedLayoutV2
+                                                    Header={Header}
+                                                    Sider={AppSider}
+                                                >
                                                     {/* <Box
                                                         sx={{
                                                             maxWidth: "1200px",
