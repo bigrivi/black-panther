@@ -9,7 +9,7 @@ import { FooterToolbar } from "@/components/footerToolbar";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
 import { NestedEditor } from "./components/nested-editor";
-// import { Filter } from "./components/filter";
+import { Filter } from "./components/filter";
 import { PolicyProviderContext } from "./context";
 import { SelectedRoleActionsMap } from "./types";
 import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -255,7 +255,7 @@ export const PolicyPage = () => {
         >
             <RefineListView
                 headerButtons={(props) => [
-                    // <Filter onChange={handleFilterChange} key="filter" />,
+                    <Filter onChange={handleFilterChange} key="filter" />,
                     <ToggleButtonGroup
                         key="view-toggle"
                         value={view}

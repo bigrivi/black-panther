@@ -14,8 +14,8 @@ export const RefineListView = ({ children, ...props }: Props) => {
                         margin: 0,
                         alignSelf: "center",
                     },
-                    height: "72px",
                     padding: 0,
+                    marginBottom: "16px",
                 },
             }}
             headerButtonProps={{
