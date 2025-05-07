@@ -29,6 +29,9 @@ import { DashboardPage } from "./pages/dashboard";
 import { PolicyPage } from "./pages/policy";
 import { Box, CssBaseline, GlobalStyles } from "@mui/material";
 import { ColorModeContextProvider } from "./contexts";
+import { ResourceList } from "./pages/resource";
+import { ResourceCreate } from "./pages/resource/create";
+import { ResourceEdit } from "./pages/resource/edit";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -202,6 +205,8 @@ const App: React.FC = () => {
                                         />
                                     </Route>
 
+                                     */}
+
                                     <Route
                                         path="/resources"
                                         element={
@@ -219,11 +224,7 @@ const App: React.FC = () => {
                                             path="edit/:id"
                                             element={<ResourceEdit />}
                                         />
-                                        <Route
-                                            path="show/:id"
-                                            element={<ResourceShow />}
-                                        />
-                                    </Route> */}
+                                    </Route>
 
                                     <Route
                                         path="/policy"

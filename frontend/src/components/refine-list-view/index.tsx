@@ -15,6 +15,7 @@ export const RefineListView = ({ children, ...props }: Props) => {
                         alignSelf: "center",
                     },
                     padding: 0,
+                    marginTop: "16px",
                     marginBottom: "16px",
                 },
             }}

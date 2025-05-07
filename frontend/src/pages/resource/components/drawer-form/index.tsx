@@ -1,41 +1,60 @@
-import { SaveButton, useDrawerForm, useForm } from "@refinedev/antd";
-import { BaseKey, useGetToPath, useGo } from "@refinedev/core";
-import { Button, Flex, Form, Grid, Input, Select, Space, Spin } from "antd";
-import { Drawer } from "@/components/drawer";
-import { IAction, IResource } from "@/interfaces";
+import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
+import { Drawer } from "@/components/drawer/drawer";
+import { IAction, IResource, Nullable } from "@/interfaces";
 import { useSearchParams } from "react-router";
-import { useStyles } from "./styled";
 import { FC } from "react";
+import { useForm } from "@refinedev/react-hook-form";
+import { Control, Field, Help, Label } from "@/components";
+import { DrawerContent, DrawerFooter } from "@/components/drawer";
+import {
+    Autocomplete,
+    Button,
+    OutlinedInput,
+    Stack,
+    TextField,
+} from "@mui/material";
+import { Controller } from "react-hook-form";
 
 type Props = {
     id?: BaseKey;
     action: "create" | "edit";
-    onClose?: () => void;
-    onMutationSuccess?: () => void;
 };
 
-export const ResourceDrawerForm: FC<Props> = ({
-    id,
-    action,
-    onClose,
-    onMutationSuccess,
-}) => {
+type ResourceFormType = {
+    name: string;
+    key: string;
+    actions: string[];
+};
+
+const defaultActionOptions = ["list", "create", "edit", "show", "delete"];
+
+export const ResourceDrawerForm: FC<Props> = ({ action }) => {
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const go = useGo();
-    const breakpoint = Grid.useBreakpoint();
-    const { styles } = useStyles();
-    const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-        useDrawerForm<IResource>({
-            resource: "resource",
-            id,
+    const {
+        handleSubmit,
+        register,
+        control,
+        formState: { errors },
+        refineCore: { onFinish, id },
+        saveButtonProps,
+    } = useForm<ResourceFormType, HttpError, Nullable<ResourceFormType>>({
+        defaultValues: {
+            name: "",
+            actions: [...defaultActionOptions],
+        },
+        refineCoreProps: {
+            resource: `resource`,
             action,
             redirect: "list",
-            autoSubmitClose: true,
+            onMutationSuccess: () => {
+                onDrawerCLose();
+            },
             queryOptions: {
                 select: (data) => {
                     const actions = data.data.actions?.map(
-                        (ele) => (ele as IAction).name
+                        (ele:any) => ele.name
                     );
                     return {
                         data: {
@@ -45,16 +64,10 @@ export const ResourceDrawerForm: FC<Props> = ({
                     };
                 },
             },
-            onMutationSuccess: () => {
-                onMutationSuccess?.();
-            },
-        });
+        },
+    });
 
     const onDrawerCLose = () => {
-        if (onClose) {
-            onClose();
-            return;
-        }
         close();
         go({
             to:
@@ -75,93 +88,132 @@ export const ResourceDrawerForm: FC<Props> = ({
 
     return (
         <Drawer
-            {...drawerProps}
+            slotProps={{
+                paper: { sx: { width: { sm: "100%", md: "616px" } } },
+            }}
             open={true}
-            title={"Create Resource"}
-            width={breakpoint.sm ? "578px" : "100%"}
-            zIndex={1001}
+            title={id ? "Edit Resource" : "Create Resource"}
+            anchor="right"
             onClose={onDrawerCLose}
         >
-            <Spin spinning={formLoading}>
-                <Form {...formProps} layout="vertical">
-                    <Form.Item
-                        className={styles.formItem}
-                        label={"Name"}
-                        name={["name"]}
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
+            <DrawerContent>
+                <form
+                    onSubmit={handleSubmit((data) => {
+                        onFinish(data);
+                    })}
+                >
+                    <Stack spacing={2}>
+                        <Field>
+                            <Label htmlFor="name" required>
+                                Name
+                            </Label>
+                            <Control>
+                                <OutlinedInput
+                                    {...register("name", {
+                                        required: "Resource name is required",
+                                    })}
+                                    id="name"
+                                    error={!!errors?.name?.message}
+                                    fullWidth
+                                />
+                            </Control>
+                            <Help error={!!errors?.name?.message}>
+                                {errors?.name?.message}
+                            </Help>
+                        </Field>
+                        <Field>
+                            <Label htmlFor="key" required>
+                                Key
+                            </Label>
+                            <Control>
+                                <OutlinedInput
+                                    {...register("key", {
+                                        required: "Resource key is required",
+                                    })}
+                                    id="key"
+                                    error={!!errors?.key?.message}
+                                    fullWidth
+                                />
+                            </Control>
+                            <Help error={!!errors?.key?.message}>
+                                {errors?.key?.message ?? (
+                                    <>
+                                        Use this key in your code or when
+                                        working with the API. The key is the
+                                        unique identifier of the resource within
+                                        a Permit Environment.
+                                    </>
+                                )}
+                            </Help>
+                        </Field>
+                        <Field>
+                            <Label htmlFor="actions" required>
+                                Actions
+                            </Label>
+                            <Control>
+                                <Controller
+                                    control={control}
+                                    name="actions"
+                                    rules={{
+                                        required:
+                                            "Resource actions is required",
+                                    }}
+                                    render={({ field }) => (
+                                        <Autocomplete
+                                            multiple
+                                            {...field}
+                                            getOptionLabel={(option) => option}
+                                            onChange={(_, value) => {
+                                                field.onChange(value);
+                                            }}
+                                            options={defaultActionOptions}
+                                            freeSolo
+                                            disableCloseOnSelect
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    variant="outlined"
+                                                    label={null}
+                                                    placeholder="Add action..."
+                                                    error={
+                                                        !!errors?.actions
+                                                            ?.message
+                                                    }
+                                                    {...params}
+                                                />
+                                            )}
+                                            fullWidth
+                                        />
+                                    )}
+                                />
+                            </Control>
+                            <Help error={!!errors?.actions?.message}>
+                                {errors?.actions?.message ?? (
+                                    <>
+                                        Actions are the ways a user can act on a
+                                        resource, or access the resource. After
+                                        typing the action name into the box,
+                                        press Enter or Return on your keyboard
+                                        for the action to be correctly added.
+                                    </>
+                                )}
+                            </Help>
+                        </Field>
+                    </Stack>
+                </form>
+            </DrawerContent>
+            <DrawerFooter>
+                <Stack direction="row">
+                    <Button onClick={onDrawerCLose}>Cancel</Button>
+                    <Button
+                        {...saveButtonProps}
+                        variant="contained"
+                        color="primary"
+                        type="submit"
                     >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        className={styles.formItem}
-                        label={"Key"}
-                        name={["key"]}
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        className={styles.formItem}
-                        label={"Actions"}
-                        initialValue={[
-                            "list",
-                            "create",
-                            "edit",
-                            "show",
-                            "delete",
-                        ]}
-                        name={["actions"]}
-                        help="Actions are the ways a user can act on a resource, or access the resource. After typing the action name into the box, press <Enter> or <Return> on your keyboard for the action to be correctly added."
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
-                    >
-                        <Select
-                            mode="tags"
-                            style={{ width: "100%" }}
-                            placeholder="Add action"
-                            options={[
-                                { value: "list", label: "list" },
-                                { value: "create", label: "create" },
-                                { value: "edit", label: "edit" },
-                                { value: "show", label: "show" },
-                                { value: "delete", label: "delete" },
-                            ]}
-                        />
-                    </Form.Item>
-
-                    <Flex justify="flex-end">
-                        <Space
-                            align="end"
-                            style={{
-                                padding: "16px 16px 0px 16px",
-                            }}
-                        >
-                            <Button type="text" onClick={onDrawerCLose}>
-                                Cancel
-                            </Button>
-                            <SaveButton
-                                {...saveButtonProps}
-                                htmlType="submit"
-                                type="primary"
-                                icon={null}
-                            >
-                                Save
-                            </SaveButton>
-                        </Space>
-                    </Flex>
-                </Form>
-            </Spin>
+                        Save
+                    </Button>
+                </Stack>
+            </DrawerFooter>
         </Drawer>
     );
 };

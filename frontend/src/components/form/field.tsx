@@ -1,10 +1,13 @@
-import { FormControl } from "@mui/material";
+import { FormControl, FormControlProps } from "@mui/material";
 import { FC, PropsWithChildren } from "react";
 
-type FieldProps = {};
-export const Field: FC<PropsWithChildren<FieldProps>> = ({ children }) => {
+type FieldProps = {} & FormControlProps;
+export const Field: FC<PropsWithChildren<FieldProps>> = ({
+    children,
+    margin,
+}) => {
     return (
-        <FormControl margin="normal" fullWidth>
+        <FormControl margin={margin} fullWidth>
             {children}
         </FormControl>
     );

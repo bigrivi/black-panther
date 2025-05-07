@@ -1,11 +1,18 @@
-import { SaveButton, useDrawerForm, useForm } from "@refinedev/antd";
-import { BaseKey, useGetToPath, useGo } from "@refinedev/core";
-import { Button, Flex, Form, Grid, Input, Select, Space, Spin } from "antd";
-import { Drawer } from "@/components/drawer";
-import { IAction, IResource } from "@/interfaces";
+import {
+    BaseKey,
+    BaseRecord,
+    HttpError,
+    useGetToPath,
+    useGo,
+} from "@refinedev/core";
+import { Drawer } from "@/components/drawer/drawer";
+import { IAction, IResource, Nullable } from "@/interfaces";
 import { useSearchParams } from "react-router";
-import { useStyles } from "../../styled";
 import { FC } from "react";
+import { DrawerContent, DrawerFooter, DrawerHeader } from "@/components/drawer";
+import { Control, Field, Help, Label } from "@/components";
+import { Button, OutlinedInput, Stack } from "@mui/material";
+import { useForm } from "@refinedev/react-hook-form";
 
 type Props = {
     id?: BaseKey;
@@ -16,8 +23,12 @@ type Props = {
     onMutationSuccess?: () => void;
 };
 
+export interface ActionFormTypes {
+    name: string;
+}
+
 export const ActionDrawerForm: FC<Props> = ({
-    id,
+    id: idProp,
     action,
     onClose,
     open,
@@ -27,19 +38,30 @@ export const ActionDrawerForm: FC<Props> = ({
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const go = useGo();
-    const breakpoint = Grid.useBreakpoint();
-    const { styles } = useStyles();
-    const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-        useDrawerForm<IResource>({
+
+    const {
+        watch,
+        control,
+        setValue,
+        handleSubmit,
+        register,
+        formState: { errors },
+        refineCore: { onFinish, id, formLoading },
+        saveButtonProps,
+    } = useForm<IAction, HttpError, Nullable<IAction>>({
+        defaultValues: {
+            name: "",
+        },
+        refineCoreProps: {
             resource: `resource/${resourceId}/action`,
-            id,
+            id: idProp,
             action,
-            redirect: "list",
-            autoSubmitClose: true,
+            redirect: false,
             onMutationSuccess: () => {
                 onMutationSuccess?.();
             },
-        });
+        },
+    });
 
     const onDrawerCLose = () => {
         if (onClose) {
@@ -66,50 +88,53 @@ export const ActionDrawerForm: FC<Props> = ({
 
     return (
         <Drawer
-            {...drawerProps}
+            slotProps={{
+                paper: { sx: { width: { sm: "100%", md: "616px" } } },
+            }}
             open={open}
             title={id ? "Edit Action" : "Create Action"}
-            width={breakpoint.sm ? "578px" : "100%"}
-            zIndex={1001}
+            anchor="right"
             onClose={onDrawerCLose}
         >
-            <Spin spinning={formLoading}>
-                <Form {...formProps} layout="vertical">
-                    <Form.Item
-                        className={styles.formItem}
-                        label={"Name"}
-                        name={["name"]}
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
+            <DrawerContent>
+                <form
+                    onSubmit={handleSubmit((data) => {
+                        onFinish(data);
+                    })}
+                >
+                    <Field>
+                        <Label htmlFor="name" required>
+                            Action Name
+                        </Label>
+                        <Control>
+                            <OutlinedInput
+                                {...register("name", {
+                                    required: "Action name is required",
+                                })}
+                                id="name"
+                                error={!!errors?.name?.message}
+                                fullWidth
+                            />
+                        </Control>
+                        <Help error={!!errors?.name?.message}>
+                            {errors?.name?.message}
+                        </Help>
+                    </Field>
+                </form>
+            </DrawerContent>
+            <DrawerFooter>
+                <Stack direction="row">
+                    <Button onClick={onDrawerCLose}>Cancel</Button>
+                    <Button
+                        {...saveButtonProps}
+                        variant="contained"
+                        color="primary"
+                        type="submit"
                     >
-                        <Input />
-                    </Form.Item>
-
-                    <Flex justify="flex-end">
-                        <Space
-                            align="end"
-                            style={{
-                                padding: "16px 16px 0px 16px",
-                            }}
-                        >
-                            <Button type="text" onClick={onDrawerCLose}>
-                                Cancel
-                            </Button>
-                            <SaveButton
-                                {...saveButtonProps}
-                                htmlType="submit"
-                                type="primary"
-                                icon={null}
-                            >
-                                Save
-                            </SaveButton>
-                        </Space>
-                    </Flex>
-                </Form>
-            </Spin>
+                        Save
+                    </Button>
+                </Stack>
+            </DrawerFooter>
         </Drawer>
     );
 };

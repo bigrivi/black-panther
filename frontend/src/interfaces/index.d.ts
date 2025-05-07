@@ -1,5 +1,9 @@
 import type { Column } from "@tanstack/react-table";
 
+export type Nullable<T> = {
+    [P in keyof T]: T[P] | null;
+};
+
 export interface ITag {
     id: number;
     title: string;
