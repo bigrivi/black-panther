@@ -30,7 +30,7 @@ router = APIRouter()
         }
     },
     query={
-        "soft_delete": False,
+        "soft_delete": True,
     },
     params={
         "resource_id": {

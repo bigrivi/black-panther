@@ -1,6 +1,6 @@
 export { Header } from "./header";
 export { PageLoading } from "./pageLoading";
 export { AppSider } from "./sider";
-export { ConfirmButton } from "./confirmButton";
+export { ConfirmDialog } from "./confirmDialog";
 export * from "./form";
 export * from "./ui";

@@ -16,6 +16,7 @@ class Resource(ResourceBase, BaseMixin, table=True):
         sa_relationship_kwargs={"uselist": True,
                                 "order_by": "Action.id.asc()",
                                 "cascade": "all, delete-orphan",
+                                "primaryjoin": 'and_(remote(foreign(Action.resource_id))==Resource.id,or_(remote(foreign(Action.expiry_at)) > func.now(),remote(foreign(Action.expiry_at == None))))',
                                 "lazy": "noload"})
 
 

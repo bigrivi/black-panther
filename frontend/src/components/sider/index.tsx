@@ -150,7 +150,7 @@ export const AppSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
                                         }
                                     }}
                                     sx={{
-                                        pl: isNested ? 4 : 2,
+                                        pl: isNested ? 2 : 2,
                                         justifyContent: "center",
                                     }}
                                 >
@@ -232,7 +232,7 @@ export const AppSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
                                 setMobileSiderOpen(false);
                             }}
                             sx={{
-                                pl: isNested ? 4 : 2,
+                                pl: isNested ? 2 : 2,
                                 py: isNested ? 1.25 : 1,
                                 justifyContent: "center",
                                 color: isSelected

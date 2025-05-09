@@ -1,5 +1,7 @@
+import { FC } from "react";
+import { ActionDropdown } from "./ActionDropdown";
 import { IAction, IResource } from "@/interfaces";
-import { MoreHorizOutlined, Remove } from "@mui/icons-material";
+import { Remove } from "@mui/icons-material";
 import {
     styled,
     TableCell,
@@ -7,12 +9,13 @@ import {
     TableRowProps,
     tableRowClasses,
     IconButton,
+    Stack,
 } from "@mui/material";
-import { FC } from "react";
-
 type ActionRowsProp = {
     resource: IResource;
     actions: IAction[];
+    onEdit: (action: IAction) => void;
+    onDelete: (action: IAction) => void;
 };
 
 const TableRow = styled(({ children, ...rest }: TableRowProps) => {
@@ -26,34 +29,42 @@ const TableRow = styled(({ children, ...rest }: TableRowProps) => {
     },
 }));
 
-export const ActionRows: FC<ActionRowsProp> = ({ actions, resource }) => {
-    return actions?.map((action) => {
-        return (
-            <TableRow key={resource.id + "_" + action.id}>
-                <TableCell
-                    align={"left"}
+export const ActionRows: FC<ActionRowsProp> = ({
+    actions,
+    resource,
+    onEdit,
+    onDelete,
+}) => {
+    return actions?.map((action) => (
+        <TableRow key={resource.id + "_" + action.id}>
+            <TableCell
+                align={"left"}
+                style={{
+                    minWidth: 176,
+                }}
+            >
+                <div
                     style={{
-                        minWidth: 176,
+                        paddingLeft: 40,
                     }}
                 >
-                    <div
-                        style={{
-                            paddingLeft: 40,
-                        }}
-                    >
-                        {action.name}
-                    </div>
-                </TableCell>
-                <TableCell align={"left"}></TableCell>
-                <TableCell style={{ width: 150 }} align={"center"}>
-                    <IconButton>
+                    {action.name}
+                </div>
+            </TableCell>
+            <TableCell align={"left"}></TableCell>
+            <TableCell style={{ width: 150 }} align={"center"}>
+                <Stack direction={"row"}>
+                    <IconButton onClick={() => onDelete(action)} size="small">
                         <Remove />
                     </IconButton>
-                    <IconButton>
-                        <MoreHorizOutlined />
-                    </IconButton>
-                </TableCell>
-            </TableRow>
-        );
-    });
+                    <ActionDropdown
+                        resourceId={resource.id}
+                        onEdit={() => onEdit(action)}
+                        onDelete={() => onDelete(action)}
+                        action={action}
+                    />
+                </Stack>
+            </TableCell>
+        </TableRow>
+    ));
 };

@@ -1,19 +1,11 @@
 import {
     BaseKey,
-    HttpError,
     useCan,
     useDelete,
-    useGo,
     useList,
     useTranslate,
 } from "@refinedev/core";
-import {
-    Fragment,
-    PropsWithChildren,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import { IAction, IResource } from "@/interfaces";
 import { RefineListView } from "@/components/refine-list-view";
 import {
@@ -30,15 +22,18 @@ import {
     Add,
     ChevronRightOutlined,
     ExpandMoreOutlined,
-    MoreHorizOutlined,
 } from "@mui/icons-material";
-import { Paper } from "@/components";
+import {
+    ConfirmDialog as DeleteActionConfirmDialog,
+    Paper,
+} from "@/components";
 import { ActionRows } from "./components/list/ActionRows";
 import { ActionDrawerForm } from "./components/drawer-action-form ";
 import { ResourceDropdown } from "./components/list/ResourceDropdown";
 
 export const ResourceList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
+    const { mutateAsync } = useDelete();
     const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
     const { data: resourceData, refetch } = useList<IResource>({
         resource: "resource",
@@ -50,7 +45,9 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
     }, [resourceData]);
     const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
     const [actionResourceId, setActionResourceId] = useState<BaseKey>();
-    const [actionId, setActionId] = useState<BaseKey>();
+    const [actionRemoveDialogVisible, setActionRemoveDialogVisible] =
+        useState(false);
+    const [action, setAction] = useState<IAction>();
     const [actionDrawerMode, setActionDrawerMode] = useState<
         "create" | "edit"
     >();
@@ -65,6 +62,36 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
         } else {
             setExpandedRowKeys([...expandedRowKeys, resourceId]);
         }
+    };
+
+    const handleAddAction = (resource: IResource) => {
+        setActionDrawerOpen(true);
+        setActionResourceId(resource.id);
+        setActionDrawerMode("create");
+        setAction(undefined);
+    };
+
+    const handleEditAction = (resource: IResource, action: IAction) => {
+        setActionDrawerOpen(true);
+        setActionResourceId(resource.id);
+        setActionDrawerMode("edit");
+        setAction(action);
+    };
+
+    const handleDeleteAction = (resource: IResource, action: IAction) => {
+        setActionResourceId(resource.id);
+        setAction(action);
+        setActionRemoveDialogVisible(true);
+    };
+
+    const doDeleteAction = async () => {
+        await mutateAsync(
+            {
+                id: action!.id,
+                resource: `resource/${actionResourceId}/action`,
+            },
+            { onSuccess: () => refetch() }
+        );
     };
 
     const { data: canCreateAction } = useCan({
@@ -135,6 +162,7 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                                                         <ChevronRightOutlined />
                                                     )}
                                                 </IconButton>
+
                                                 <span
                                                     style={{ fontWeight: 500 }}
                                                 >
@@ -152,19 +180,9 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                                                     {canCreateAction?.can && (
                                                         <IconButton
                                                             size="small"
-                                                            color="primary"
                                                             onClick={() => {
-                                                                setActionDrawerOpen(
-                                                                    true
-                                                                );
-                                                                setActionResourceId(
-                                                                    resource.id
-                                                                );
-                                                                setActionDrawerMode(
-                                                                    "create"
-                                                                );
-                                                                setActionId(
-                                                                    undefined
+                                                                handleAddAction(
+                                                                    resource
                                                                 );
                                                             }}
                                                         >
@@ -176,26 +194,23 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                                                         resource={resource}
                                                     />
                                                 </Stack>
-
-                                                {/* <EditButton
-                                                        hideText
-                                                        size="small"
-                                                        recordItemId={
-                                                            resource.id
-                                                        }
-                                                    />
-                                                    <DeleteButton
-                                                        hideText
-                                                        size="small"
-                                                        recordItemId={
-                                                            resource.id
-                                                        }
-                                                    /> */}
                                             </TableCell>
                                         </TableRow>
                                         {isExpanded && (
                                             <ActionRows
                                                 resource={resource}
+                                                onEdit={(action) =>
+                                                    handleEditAction(
+                                                        resource,
+                                                        action
+                                                    )
+                                                }
+                                                onDelete={(action) => {
+                                                    handleDeleteAction(
+                                                        resource,
+                                                        action
+                                                    );
+                                                }}
                                                 actions={resource.actions!}
                                             />
                                         )}
@@ -207,22 +222,38 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                 </TableContainer>
             </Paper>
             {children}
-            {actionResourceId && (
+            {actionResourceId && action && actionDrawerOpen && (
                 <ActionDrawerForm
                     open={actionDrawerOpen}
                     resourceId={actionResourceId}
                     action={actionDrawerMode!}
-                    id={actionId}
+                    id={action.id}
                     onClose={() => {
                         setActionDrawerOpen(false);
                         setActionResourceId(undefined);
                     }}
                     onMutationSuccess={() => {
                         setActionDrawerOpen(false);
+                        setActionResourceId(undefined);
+                        setAction(undefined);
                         refetch();
                     }}
                 />
             )}
+            <DeleteActionConfirmDialog
+                title="Delete Action"
+                message={
+                    "Are you sure you want to delete the action: " +
+                    action?.name +
+                    "?"
+                }
+                onConfirm={doDeleteAction}
+                open={actionRemoveDialogVisible}
+                onClose={() => {
+                    setActionRemoveDialogVisible(false);
+                    setAction(undefined);
+                }}
+            ></DeleteActionConfirmDialog>
         </RefineListView>
     );
 };
