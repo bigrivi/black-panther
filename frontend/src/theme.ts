@@ -1,6 +1,6 @@
-import { RefineThemes } from "@refinedev/mui";
-import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import gray from "@mui/material/colors/grey";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { RefineThemes } from "@refinedev/mui";
 
 const LightTheme = createTheme({
     ...RefineThemes.Purple,

@@ -1,3 +1,4 @@
+import { ConfirmDialog } from "@/components";
 import { IResource } from "@/interfaces";
 import { Delete, Edit, MoreHorizOutlined } from "@mui/icons-material";
 import {
@@ -9,10 +10,9 @@ import {
     MenuItem,
 } from "@mui/material";
 import { useDelete, useGo, useNavigation } from "@refinedev/core";
-import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import { FC, useState } from "react";
 import { useLocation } from "react-router";
-import { ConfirmDialog } from "@/components";
 
 type ResourceDropdownProps = {
     resource: IResource;

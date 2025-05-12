@@ -1,19 +1,13 @@
-import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
-import { Drawer } from "@/components/drawer/drawer";
-import { IAction, IResource, Nullable } from "@/interfaces";
-import { useSearchParams } from "react-router";
-import { FC } from "react";
-import { useForm } from "@refinedev/react-hook-form";
-import { Control, Field, Help, Label } from "@/components";
+import { Form, FormItem } from "@/components";
 import { DrawerContent, DrawerFooter } from "@/components/drawer";
-import {
-    Autocomplete,
-    Button,
-    OutlinedInput,
-    Stack,
-    TextField,
-} from "@mui/material";
-import { Controller } from "react-hook-form";
+import { Drawer } from "@/components/drawer/drawer";
+import { Nullable } from "@/interfaces";
+import { Button, Stack } from "@mui/material";
+import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
+import { useForm } from "@refinedev/react-hook-form";
+import { FC } from "react";
+import { AutocompleteElement, TextFieldElement } from "react-hook-form-mui";
+import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -33,12 +27,9 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
     const [searchParams] = useSearchParams();
     const go = useGo();
     const {
-        handleSubmit,
-        register,
-        control,
-        formState: { errors },
         refineCore: { onFinish, id },
         saveButtonProps,
+        ...methods
     } = useForm<ResourceFormType, HttpError, Nullable<ResourceFormType>>({
         defaultValues: {
             name: "",
@@ -54,7 +45,7 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
             queryOptions: {
                 select: (data) => {
                     const actions = data.data.actions?.map(
-                        (ele:any) => ele.name
+                        (ele: any) => ele.name
                     );
                     return {
                         data: {
@@ -66,6 +57,8 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
             },
         },
     });
+
+    console.log(methods);
 
     const onDrawerCLose = () => {
         close();
@@ -97,109 +90,53 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
             onClose={onDrawerCLose}
         >
             <DrawerContent>
-                <form
-                    onSubmit={handleSubmit((data) => {
+                <Form
+                    formContext={methods}
+                    onSuccess={(data) => {
                         onFinish(data);
-                    })}
+                    }}
                 >
-                    <Stack spacing={2}>
-                        <Field>
-                            <Label htmlFor="name" required>
-                                Name
-                            </Label>
-                            <Control>
-                                <OutlinedInput
-                                    {...register("name", {
-                                        required: "Resource name is required",
-                                    })}
-                                    id="name"
-                                    error={!!errors?.name?.message}
-                                    fullWidth
-                                />
-                            </Control>
-                            <Help error={!!errors?.name?.message}>
-                                {errors?.name?.message}
-                            </Help>
-                        </Field>
-                        <Field>
-                            <Label htmlFor="key" required>
-                                Key
-                            </Label>
-                            <Control>
-                                <OutlinedInput
-                                    {...register("key", {
-                                        required: "Resource key is required",
-                                    })}
-                                    id="key"
-                                    error={!!errors?.key?.message}
-                                    fullWidth
-                                />
-                            </Control>
-                            <Help error={!!errors?.key?.message}>
-                                {errors?.key?.message ?? (
-                                    <>
-                                        Use this key in your code or when
+                    <FormItem label="Name" required htmlFor="name">
+                        <TextFieldElement
+                            name="name"
+                            id="name"
+                            rules={{
+                                required: "Resource name is required",
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem label="Key" required htmlFor="key">
+                        <TextFieldElement
+                            name="key"
+                            id="key"
+                            helperText="Use this key in your code or when
                                         working with the API. The key is the
                                         unique identifier of the resource within
-                                        a Permit Environment.
-                                    </>
-                                )}
-                            </Help>
-                        </Field>
-                        <Field>
-                            <Label htmlFor="actions" required>
-                                Actions
-                            </Label>
-                            <Control>
-                                <Controller
-                                    control={control}
-                                    name="actions"
-                                    rules={{
-                                        required:
-                                            "Resource actions is required",
-                                    }}
-                                    render={({ field }) => (
-                                        <Autocomplete
-                                            multiple
-                                            {...field}
-                                            getOptionLabel={(option) => option}
-                                            onChange={(_, value) => {
-                                                field.onChange(value);
-                                            }}
-                                            options={defaultActionOptions}
-                                            freeSolo
-                                            disableCloseOnSelect
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    variant="outlined"
-                                                    label={null}
-                                                    placeholder="Add action..."
-                                                    error={
-                                                        !!errors?.actions
-                                                            ?.message
-                                                    }
-                                                    {...params}
-                                                />
-                                            )}
-                                            fullWidth
-                                        />
-                                    )}
-                                />
-                            </Control>
-                            <Help error={!!errors?.actions?.message}>
-                                {errors?.actions?.message ?? (
-                                    <>
-                                        Actions are the ways a user can act on a
+                                        a Permit Environment."
+                            rules={{
+                                required: "Resource key is required",
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem label="Actions" required>
+                        <AutocompleteElement
+                            name="actions"
+                            multiple
+                            options={defaultActionOptions}
+                            rules={{
+                                required: "Resource action is required",
+                            }}
+                            textFieldProps={{
+                                placeholder: "Add action...",
+                                helperText: `Actions are the ways a user can act on a
                                         resource, or access the resource. After
                                         typing the action name into the box,
                                         press Enter or Return on your keyboard
-                                        for the action to be correctly added.
-                                    </>
-                                )}
-                            </Help>
-                        </Field>
-                    </Stack>
-                </form>
+                                        for the action to be correctly added.`,
+                            }}
+                        />
+                    </FormItem>
+                </Form>
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">

@@ -1,18 +1,13 @@
-import {
-    BaseKey,
-    BaseRecord,
-    HttpError,
-    useGetToPath,
-    useGo,
-} from "@refinedev/core";
+import { Form, FormItem } from "@/components";
+import { DrawerContent, DrawerFooter } from "@/components/drawer";
 import { Drawer } from "@/components/drawer/drawer";
-import { IAction, IResource, Nullable } from "@/interfaces";
-import { useSearchParams } from "react-router";
-import { FC } from "react";
-import { DrawerContent, DrawerFooter, DrawerHeader } from "@/components/drawer";
-import { Control, Field, Help, Label } from "@/components";
-import { Button, OutlinedInput, Stack } from "@mui/material";
+import { IAction, Nullable } from "@/interfaces";
+import { Button, Stack } from "@mui/material";
+import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
+import { FC } from "react";
+import { TextFieldElement } from "react-hook-form-mui";
+import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -40,14 +35,9 @@ export const ActionDrawerForm: FC<Props> = ({
     const go = useGo();
 
     const {
-        watch,
-        control,
-        setValue,
-        handleSubmit,
-        register,
-        formState: { errors },
         refineCore: { onFinish, id, formLoading },
         saveButtonProps,
+        ...methods
     } = useForm<IAction, HttpError, Nullable<IAction>>({
         defaultValues: {
             name: "",
@@ -97,30 +87,22 @@ export const ActionDrawerForm: FC<Props> = ({
             onClose={onDrawerCLose}
         >
             <DrawerContent>
-                <form
-                    onSubmit={handleSubmit((data) => {
+                <Form
+                    formContext={methods}
+                    onSuccess={(data) => {
                         onFinish(data);
-                    })}
+                    }}
                 >
-                    <Field>
-                        <Label htmlFor="name" required>
-                            Action Name
-                        </Label>
-                        <Control>
-                            <OutlinedInput
-                                {...register("name", {
-                                    required: "Action name is required",
-                                })}
-                                id="name"
-                                error={!!errors?.name?.message}
-                                fullWidth
-                            />
-                        </Control>
-                        <Help error={!!errors?.name?.message}>
-                            {errors?.name?.message}
-                        </Help>
-                    </Field>
-                </form>
+                    <FormItem label="Name" required htmlFor="name">
+                        <TextFieldElement
+                            name="name"
+                            id="name"
+                            rules={{
+                                required: "Action name is required",
+                            }}
+                        />
+                    </FormItem>
+                </Form>
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">

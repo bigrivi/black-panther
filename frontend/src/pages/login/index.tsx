@@ -1,32 +1,31 @@
-import * as React from "react";
+import { Form, FormItem } from "@/components";
 import { useActiveAuthProvider, useCustom } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FormProvider } from "react-hook-form";
 
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Checkbox from "@mui/material/Checkbox";
+import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import MuiLink from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 
 import {
     type BaseRecord,
     type HttpError,
+    useLink,
     useLogin,
-    useTranslate,
     useRouterContext,
     useRouterType,
-    useLink,
+    useTranslate,
 } from "@refinedev/core";
 import { layoutStyles, titleStyles } from "./styles";
 
 import { ThemedTitleV2 } from "@refinedev/mui";
-import { OutlinedInput } from "@mui/material";
-import { Control, Field, Help, Label } from "@/components";
+import { PasswordElement, TextFieldElement } from "react-hook-form-mui";
 
 export interface LoginFormTypes {
     loginName?: string;
@@ -39,11 +38,6 @@ export interface LoginFormTypes {
 
 export const LoginPage = () => {
     const methods = useForm<BaseRecord, HttpError, LoginFormTypes>({});
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = methods;
 
     const authProvider = useActiveAuthProvider();
     const { mutate: login, isLoading } = useLogin<LoginFormTypes>({
@@ -79,7 +73,7 @@ export const LoginPage = () => {
     );
 
     const Content = (
-        <Card>
+        <Card variant="outlined" sx={{ borderRadius: 2 }}>
             <CardContent
                 sx={{
                     p: "32px",
@@ -96,103 +90,72 @@ export const LoginPage = () => {
                 >
                     {translate("pages.login.title", "Sign in to your account")}
                 </Typography>
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit((data) => {
+                <Form
+                    formContext={methods}
+                    onSuccess={(data) => {
                         return login({ ...data, uuid: captchaData?.data.uuid });
-                    })}
+                    }}
                 >
-                    <Field>
-                        <Label htmlFor="email" required>
-                            Email
-                        </Label>
-                        <Control>
-                            <OutlinedInput
-                                {...register("loginName", {
-                                    required: translate(
-                                        "pages.login.errors.requiredEmail",
-                                        "Login name is required"
+                    <FormItem label="Login Name" required htmlFor="loginName">
+                        <TextFieldElement
+                            name="loginName"
+                            id="loginName"
+                            rules={{
+                                required: translate(
+                                    "pages.login.errors.requiredEmail",
+                                    "Login name is required"
+                                ),
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem label="Password" required htmlFor="password">
+                        <PasswordElement
+                            name="password"
+                            id="password"
+                            rules={{
+                                required: translate(
+                                    "pages.login.errors.requiredPassword",
+                                    "Password is required"
+                                ),
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem label="Captcha Code" required htmlFor="captcha">
+                        <TextFieldElement
+                            name="captcha"
+                            id="captcha"
+                            rules={{
+                                required: "Captcha code is required",
+                            }}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <Button
+                                            variant="text"
+                                            style={{ padding: 0 }}
+                                            size="small"
+                                            onClick={() => refetch()}
+                                        >
+                                            {captchaData && (
+                                                <img
+                                                    style={{
+                                                        width: 120,
+                                                        height: "100%",
+                                                        borderRadius: 8,
+                                                    }}
+                                                    src={
+                                                        "data:image/png;base64," +
+                                                        captchaData?.data.image
+                                                    }
+                                                    alt=""
+                                                />
+                                            )}
+                                        </Button>
                                     ),
-                                })}
-                                id="email"
-                                fullWidth
-                            />
-                        </Control>
-                        <Help error={!!errors?.loginName?.message}>
-                            {errors?.loginName?.message}
-                        </Help>
-                    </Field>
-                    <Field>
-                        <Label htmlFor="password" required>
-                            Password
-                        </Label>
-                        <Control>
-                            <OutlinedInput
-                                {...register("password", {
-                                    required: translate(
-                                        "pages.login.errors.requiredPassword",
-                                        "Password is required"
-                                    ),
-                                })}
-                                id="password"
-                                fullWidth
-                                name="password"
-                                error={!!errors.password}
-                                type="password"
-                                placeholder="●●●●●●●●"
-                                autoComplete="current-password"
-                                sx={{
-                                    mb: 0,
-                                }}
-                            />
-                        </Control>
-                        <Help error={!!errors?.password?.message}>
-                            {errors?.password?.message}
-                        </Help>
-                    </Field>
-
-                    <Field>
-                        <Label required htmlFor="codd">
-                            Captcha Code
-                        </Label>
-                        <Control>
-                            <OutlinedInput
-                                {...register("captcha", {
-                                    required: translate(
-                                        "pages.login.errors.requiredPassword",
-                                        "Password is required"
-                                    ),
-                                })}
-                                size="small"
-                                id="code"
-                                error={!!errors.captcha}
-                                fullWidth
-                                endAdornment={
-                                    <Button
-                                        variant="text"
-                                        style={{ padding: 0 }}
-                                        size="small"
-                                        onClick={() => refetch()}
-                                    >
-                                        {captchaData && (
-                                            <img
-                                                style={{
-                                                    width: 120,
-                                                    height: "100%",
-                                                    borderRadius: 8,
-                                                }}
-                                                src={
-                                                    "data:image/png;base64," +
-                                                    captchaData?.data.image
-                                                }
-                                                alt=""
-                                            />
-                                        )}
-                                    </Button>
-                                }
-                            />
-                        </Control>
-                    </Field>
+                                },
+                            }}
+                        />
+                    </FormItem>
                     <Box
                         component="div"
                         sx={{
@@ -214,7 +177,7 @@ export const LoginPage = () => {
                                 <Checkbox
                                     size="small"
                                     id="remember"
-                                    {...register("remember")}
+                                    {...methods.register("remember")}
                                 />
                             }
                             label={translate(
@@ -246,7 +209,7 @@ export const LoginPage = () => {
                     >
                         {translate("pages.login.signin", "Sign in")}
                     </Button>
-                </Box>
+                </Form>
 
                 <Box
                     sx={{

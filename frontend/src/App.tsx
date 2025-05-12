@@ -1,37 +1,37 @@
-import { Authenticated, CanAccess, HttpError, Refine } from "@refinedev/core";
-import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
-import axios from "axios";
-import { useTranslation } from "react-i18next";
-import routerBindings, {
-    CatchAllNavigate,
-    DocumentTitleHandler,
-    NavigateToResource,
-    UnsavedChangesNotifier,
-} from "@refinedev/react-router";
-import {
-    ErrorComponent,
-    useNotificationProvider,
-    ThemedLayoutV2,
-    RefineSnackbarProvider,
-} from "@refinedev/mui";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router";
-import { AppSider, Header, PageLoading } from "./components";
-import { ForgotPassword } from "./pages/forgotPassword";
+import { TOKEN_KEY } from "@/constants";
+import { useAccessControlProvider } from "@/hooks/useAccessControlProvider";
+import { useAuthProvider } from "@/hooks/useAuthProvider";
 import { LoginPage } from "@/pages/login";
 import { Register } from "@/pages/register";
 import dataProvider from "@/providers/data-provider";
 import { resources } from "@/resources";
-import { TOKEN_KEY } from "@/constants";
-import { useAuthProvider } from "@/hooks/useAuthProvider";
-import { useAccessControlProvider } from "@/hooks/useAccessControlProvider";
+import { CssBaseline, GlobalStyles } from "@mui/material";
+import { Authenticated, CanAccess, HttpError, Refine } from "@refinedev/core";
+import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import {
+    ErrorComponent,
+    RefineSnackbarProvider,
+    ThemedLayoutV2,
+    useNotificationProvider,
+} from "@refinedev/mui";
+import routerBindings, {
+    CatchAllNavigate,
+    DocumentTitleHandler,
+    NavigateToResource,
+} from "@refinedev/react-router";
+import axios from "axios";
+import { useTranslation } from "react-i18next";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import "./App.css";
-import { DashboardPage } from "./pages/dashboard";
-import { PolicyPage } from "./pages/policy";
-import { Box, CssBaseline, GlobalStyles } from "@mui/material";
+import { AppSider, Header, PageLoading } from "./components";
 import { ColorModeContextProvider } from "./contexts";
+import { DashboardPage } from "./pages/dashboard";
+import { ForgotPassword } from "./pages/forgotPassword";
+import { PolicyPage } from "./pages/policy";
 import { ResourceList } from "./pages/resource";
 import { ResourceCreate } from "./pages/resource/create";
 import { ResourceEdit } from "./pages/resource/edit";
+import { UserList } from "./pages/users";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -156,21 +156,7 @@ const App: React.FC = () => {
                                             element={<BlogPostShow />}
                                         />
                                     </Route> */}
-                                    {/* <Route path="/users">
-                                        <Route index element={<UserList />} />
-                                        <Route
-                                            path="create"
-                                            element={<UserCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<UserEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<UserShow />}
-                                        />
-                                    </Route>
+                                    {/*
                                     <Route path="/roles">
                                         <Route index element={<RoleList />} />
                                         <Route
@@ -206,6 +192,22 @@ const App: React.FC = () => {
                                     </Route>
 
                                      */}
+
+                                    <Route path="/users">
+                                        <Route index element={<UserList />} />
+                                        {/* <Route
+                                            path="create"
+                                            element={<UserCreate />}
+                                        />
+                                        <Route
+                                            path="edit/:id"
+                                            element={<UserEdit />}
+                                        />
+                                        <Route
+                                            path="show/:id"
+                                            element={<UserShow />}
+                                        /> */}
+                                    </Route>
 
                                     <Route
                                         path="/resources"

@@ -1,13 +1,14 @@
 import {
-    BaseKey,
-    useCan,
-    useDelete,
-    useList,
-    useTranslate,
-} from "@refinedev/core";
-import { Fragment, PropsWithChildren, useMemo, useState } from "react";
-import { IAction, IResource } from "@/interfaces";
+    ConfirmDialog as DeleteActionConfirmDialog,
+    Paper,
+} from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
+import { IAction, IResource } from "@/interfaces";
+import {
+    Add,
+    ChevronRightOutlined,
+    ExpandMoreOutlined,
+} from "@mui/icons-material";
 import {
     IconButton,
     Stack,
@@ -19,16 +20,15 @@ import {
     TableRow,
 } from "@mui/material";
 import {
-    Add,
-    ChevronRightOutlined,
-    ExpandMoreOutlined,
-} from "@mui/icons-material";
-import {
-    ConfirmDialog as DeleteActionConfirmDialog,
-    Paper,
-} from "@/components";
-import { ActionRows } from "./components/list/ActionRows";
+    BaseKey,
+    useCan,
+    useDelete,
+    useList,
+    useTranslate,
+} from "@refinedev/core";
+import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 import { ActionDrawerForm } from "./components/drawer-action-form ";
+import { ActionRows } from "./components/list/ActionRows";
 import { ResourceDropdown } from "./components/list/ResourceDropdown";
 
 export const ResourceList = ({ children }: PropsWithChildren) => {
@@ -222,12 +222,12 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                 </TableContainer>
             </Paper>
             {children}
-            {actionResourceId && action && actionDrawerOpen && (
+            {actionResourceId  && actionDrawerOpen && (
                 <ActionDrawerForm
                     open={actionDrawerOpen}
                     resourceId={actionResourceId}
                     action={actionDrawerMode!}
-                    id={action.id}
+                    id={action?.id}
                     onClose={() => {
                         setActionDrawerOpen(false);
                         setActionResourceId(undefined);

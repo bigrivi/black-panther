@@ -11,7 +11,7 @@ const FormHelperText = styled(MUIFormHelperText)(({ theme }) => ({
     },
 })) as typeof MUIFormHelperText;
 
-export const Help: FC<PropsWithChildren<FormHelperTextProps>> = ({
+export const FormHelp: FC<PropsWithChildren<FormHelperTextProps>> = ({
     children,
     ...rest
 }) => {

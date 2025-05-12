@@ -48,6 +48,7 @@ interface IDepartment {
 interface IRole {
     id: number;
     name: string;
+    created_at: string;
     actions: IAction[];
 }
 
@@ -64,4 +65,19 @@ interface IResource {
     key: string;
     actions?: IAction[];
     [key: string]: any;
+}
+
+interface IUser {
+    id: number;
+    login_name: string;
+    user_name: string;
+    created_at: string;
+    roles: IRole[];
+}
+
+export interface IUserFilterVariables {
+    q?: string;
+    store?: string;
+    user?: string;
+    status?: string[];
 }

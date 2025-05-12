@@ -7,16 +7,18 @@ import { FC, PropsWithChildren } from "react";
 
 const InputLabel = styled(MUIInputLabel)(({ theme }) => ({
     "&.MuiFormLabel-root": {
-        transform: "translate(0px, -1.5px) scale(0.75)",
-        position: "unset",
+        marginBottom: 8,
+        fontSize: "0.875rem",
+        fontWeight: 700,
+        width: 150,
     },
     "& .MuiFormLabel-asterisk": {
         color: "rgb(185, 28, 28)",
     },
 })) as typeof MUIInputLabel;
 
-type LabelProps = {} & InputLabelProps;
-export const Label: FC<PropsWithChildren<LabelProps>> = ({
+type FormLabelLabelProps = {} & InputLabelProps;
+export const FormLabel: FC<PropsWithChildren<FormLabelLabelProps>> = ({
     children,
     ...rest
 }) => {
