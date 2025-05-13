@@ -1,11 +1,5 @@
-import React, {
-    FC,
-    useState,
-    Fragment,
-    PropsWithChildren,
-    useEffect,
-    SyntheticEvent,
-} from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import WarningIcon from "@mui/icons-material/Warning";
 import {
     Button,
     Dialog,
@@ -15,8 +9,7 @@ import {
     IconButton,
     Stack,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import WarningIcon from "@mui/icons-material/Warning";
+import { FC, PropsWithChildren, SyntheticEvent, useState } from "react";
 
 interface ConfirmDialogProps {
     title?: string;

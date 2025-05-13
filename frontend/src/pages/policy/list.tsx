@@ -1,21 +1,20 @@
+import { FooterToolbar, RefineListView } from "@/components";
+import { IResource, IRole } from "@/interfaces";
+import { Save } from "@mui/icons-material";
+import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
+import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
+import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import {
     useCustomMutation,
     useHandleNotification,
     useList,
 } from "@refinedev/core";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { IResource, IRole } from "@/interfaces";
-import { FooterToolbar } from "@/components/footerToolbar";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import BorderAllOutlinedIcon from "@mui/icons-material/BorderAllOutlined";
-import { NestedEditor } from "./components/nested-editor";
 import { Filter } from "./components/filter";
+import { FlattenEditor } from "./components/flatten-editor";
+import { NestedEditor } from "./components/nested-editor";
 import { PolicyProviderContext } from "./context";
 import { SelectedRoleActionsMap } from "./types";
-import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { RefineListView } from "@/components/refine-list-view";
-import { Save } from "@mui/icons-material";
-import { FlattenEditor } from "./components/flatten-editor";
 
 type ChangeData = Array<{
     roleId: string;

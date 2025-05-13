@@ -5,10 +5,12 @@ import {
     FormContainer,
     FormContainerProps,
 } from "react-hook-form-mui";
+import { FormContext } from "../context";
+import { FormLayout } from "../types";
 
 type FormProps<T extends FieldValues = FieldValues> = PropsWithChildren<
     FormContainerProps<T> & {
-        layout?: "vertical" | "horizontal";
+        layout?: FormLayout;
     } & Pick<StackProps, "spacing">
 >;
 
@@ -19,8 +21,12 @@ export function Form<TFieldValues extends FieldValues = FieldValues>({
     ...rest
 }: PropsWithChildren<FormProps<TFieldValues>>) {
     return (
-        <FormContainer {...rest}>
-            <Stack spacing={spacing}>{children}</Stack>
+        <FormContainer<TFieldValues> {...rest}>
+            <FormContext.Provider value={{ layout }}>
+                <Stack className="Form-root" spacing={spacing}>
+                    {children}
+                </Stack>
+            </FormContext.Provider>
         </FormContainer>
     );
 }

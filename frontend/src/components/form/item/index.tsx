@@ -1,21 +1,27 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
-import { FormControl } from "./control";
-import { FormField, FormFieldBody, FormFieldLabel } from "./field";
-import { FormLabel } from "./label";
+import React, { FC, PropsWithChildren, ReactNode } from "react";
+import { useFormContext } from "../context";
+import { FormControl } from "../control";
+import { FormField, FormFieldBody, FormFieldLabel } from "../field";
+import { FormLabel } from "../label";
+import { FormLayout } from "../types";
 
 type FormItemProps = {
     label?: ReactNode;
     htmlFor?: string;
     required?: boolean;
-    layout?: "vertical" | "horizontal";
+    layout?: FormLayout;
 };
 export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
     children,
     label,
     htmlFor,
     required,
-    layout,
+    layout: layoutProp,
 }) => {
+    let { layout } = useFormContext();
+    if (layoutProp) {
+        layout = layoutProp;
+    }
     const renderLabel = () => {
         return (
             <FormLabel required={required} htmlFor={htmlFor}>
@@ -24,7 +30,13 @@ export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
         );
     };
     const renderControl = () => {
-        return <FormControl>{children}</FormControl>;
+        return (
+            <FormControl>
+                {React.cloneElement(children as React.ReactElement, {
+                    required,
+                })}
+            </FormControl>
+        );
     };
     if (layout == "horizontal") {
         return (

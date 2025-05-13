@@ -38,7 +38,6 @@ export interface LoginFormTypes {
 
 export const LoginPage = () => {
     const methods = useForm<BaseRecord, HttpError, LoginFormTypes>({});
-
     const authProvider = useActiveAuthProvider();
     const { mutate: login, isLoading } = useLogin<LoginFormTypes>({
         v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
@@ -98,7 +97,7 @@ export const LoginPage = () => {
                 >
                     <FormItem label="Login Name" required htmlFor="loginName">
                         <TextFieldElement
-                            name="loginName"
+                            name="loginNamess"
                             id="loginName"
                             rules={{
                                 required: translate(

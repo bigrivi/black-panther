@@ -58,8 +58,6 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
         },
     });
 
-    console.log(methods);
-
     const onDrawerCLose = () => {
         close();
         go({
