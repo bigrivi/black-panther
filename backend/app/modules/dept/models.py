@@ -16,20 +16,9 @@ class DeptBase(SQLModel):
 
 
 class Dept(DeptBase, BaseMixin, table=True):
-    path: Optional[str] = Field(default=None)
+    path: Optional[str] = Field(default=None, index=True, unique=True)
     parent: "Dept" = Relationship(
-        back_populates='children',
         sa_relationship_kwargs={"uselist": False, "remote_side": 'Dept.id', "viewonly": True, "lazy": "noload"})
-    children: Optional[List["Dept"]] = Relationship(
-        back_populates="parent",
-        sa_relationship_kwargs={
-            "lazy": "noload",
-            "join_depth": 100,
-            "viewonly": True,
-            "order_by": "Dept.sort.asc()",
-            "cascade": "delete",
-        },
-    )
 
 
 class DeptPublic(DeptBase):

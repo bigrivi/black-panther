@@ -33,7 +33,7 @@ export interface FilterElementProps {
 }
 
 interface ITreeNode {
-    id: number;
+    id?: number;
     children?: ITreeNode[];
     [key: string]: any;
 }
@@ -42,14 +42,17 @@ interface IDepartment {
     id: number;
     name: string;
     parent_id?: number;
+    created_at: string;
     children?: IDepartment[];
 }
 
 interface IRole {
     id: number;
     name: string;
+    code: string;
+    description?: string;
     created_at: string;
-    actions: IAction[];
+    actions?: IAction[];
 }
 
 interface IAction {
@@ -75,9 +78,10 @@ interface IUser {
     roles: IRole[];
 }
 
-export interface IUserFilterVariables {
-    q?: string;
-    store?: string;
-    user?: string;
-    status?: string[];
+interface IPostion {
+    id: number;
+    name: string;
+    code: string;
+    created_at: string;
+    description?: string;
 }

@@ -1,4 +1,4 @@
-import { Dashboard, Person, Settings } from "@mui/icons-material";
+import { Dashboard, Settings } from "@mui/icons-material";
 import { ResourceProps } from "@refinedev/core";
 
 export const resources: ResourceProps[] = [
@@ -42,7 +42,19 @@ export const resources: ResourceProps[] = [
         },
     },
     {
-        name: "department",
+        name: "position",
+        list: "/positions",
+        create: "/positions/create",
+        edit: "/positions/edit/:id",
+        show: "/positions/show/:id",
+        meta: {
+            canDelete: true,
+            label: "Position",
+            parent: "system_manager",
+        },
+    },
+    {
+        name: "dept",
         list: "/departments",
         create: "/departments/create",
         edit: "/departments/edit/:id",

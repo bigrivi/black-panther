@@ -1,37 +1,23 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
-import { IUser, IUserFilterVariables } from "@/interfaces";
-import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { IUser } from "@/interfaces";
 import { Chip } from "@mui/material";
-import {
-    DataGrid,
-    GridActionsCellItem,
-    type GridColDef,
-} from "@mui/x-data-grid";
-import {
-    type HttpError,
-    useNavigation,
-    useTranslate,
-    useUpdate,
-} from "@refinedev/core";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
+    DeleteButton,
+    EditButton,
     RefreshButton,
     useDataGrid,
 } from "@refinedev/mui";
-import { useMemo } from "react";
+import { PropsWithChildren, useMemo } from "react";
 
-export const UserList = () => {
+export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
-    const { mutate } = useUpdate({ resource: "orders" });
 
-    const { dataGridProps, tableQuery } = useDataGrid<
-        IUser,
-        HttpError,
-        IUserFilterVariables
-    >({
+    const { dataGridProps, tableQuery } = useDataGrid<IUser>({
         initialPageSize: 10,
     });
 
@@ -88,87 +74,57 @@ export const UserList = () => {
             },
             {
                 field: "actions",
-                type: "actions",
                 headerName: t("table.actions"),
                 sortable: false,
+                filterable: false,
+                pinnable: true,
+                align: "center",
+                headerAlign: "center",
+                display: "flex",
                 width: 200,
-                getActions: ({ id }) => [
-                    <GridActionsCellItem
-                        key={1}
-                        icon={<CheckOutlinedIcon color="success" />}
-                        sx={{ padding: "2px 6px" }}
-                        label={t("buttons.accept")}
-                        showInMenu
-                        onClick={() => {
-                            mutate({
-                                id,
-                                values: {
-                                    status: {
-                                        id: 2,
-                                        text: "Ready",
-                                    },
-                                },
-                            });
-                        }}
-                    />,
-                    <GridActionsCellItem
-                        key={2}
-                        icon={<CloseOutlinedIcon color="error" />}
-                        sx={{ padding: "2px 6px" }}
-                        label={t("buttons.reject")}
-                        showInMenu
-                        onClick={() =>
-                            mutate({
-                                id,
-                                values: {
-                                    status: {
-                                        id: 5,
-                                        text: "Cancelled",
-                                    },
-                                },
-                            })
-                        }
-                    />,
-                ],
+                renderCell: function render({ row }) {
+                    return (
+                        <>
+                            <EditButton hideText recordItemId={row.id} />
+                            <DeleteButton hideText recordItemId={row.id} />
+                        </>
+                    );
+                },
             },
         ],
-        [t, mutate]
+        [t]
     );
 
-    const { show } = useNavigation();
-
-    console.log(tableQuery.isLoading);
-
     return (
-        <RefineListView
-            headerButtons={(props) => {
-                return [
-                    <CreateButton key={"create"} />,
-                    <RefreshButton
-                        onClick={() => tableQuery.refetch()}
-                        key={"refresh"}
-                    />,
-                ];
-            }}
-        >
-            <Paper>
-                <DataGrid
-                    {...dataGridProps}
-                    columns={columns}
-                    onRowClick={({ id }) => {
-                        show("orders", id);
-                    }}
-                    pageSizeOptions={[10, 20, 50, 100]}
-                    sx={{
-                        "&.MuiDataGrid-root": {
-                            border: "0px solid !important",
-                        },
-                        "& .MuiDataGrid-row": {
-                            cursor: "pointer",
-                        },
-                    }}
-                />
-            </Paper>
-        </RefineListView>
+        <>
+            <RefineListView
+                headerButtons={(props) => {
+                    return [
+                        <CreateButton key={"create"} />,
+                        <RefreshButton
+                            onClick={() => tableQuery.refetch()}
+                            key={"refresh"}
+                        />,
+                    ];
+                }}
+            >
+                <Paper>
+                    <DataGrid
+                        {...dataGridProps}
+                        columns={columns}
+                        pageSizeOptions={[10, 20, 50, 100]}
+                        sx={{
+                            "&.MuiDataGrid-root": {
+                                border: "0px solid !important",
+                            },
+                            "& .MuiDataGrid-row": {
+                                cursor: "pointer",
+                            },
+                        }}
+                    />
+                </Paper>
+            </RefineListView>
+            {children}
+        </>
     );
 };

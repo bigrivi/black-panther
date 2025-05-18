@@ -4,23 +4,24 @@ from sqlmodel import Field, SQLModel, Relationship, Column, DateTime
 from app.common.model import BaseMixin
 
 
-class PostBase(SQLModel):
+class PositionBase(SQLModel):
     name: str
     code: str
     description: Optional[str] = Field(default=None)
 
 
-class Post(PostBase, BaseMixin, table=True):
+class Position(PositionBase, BaseMixin, table=True):
     pass
 
 
-class PostPublic(PostBase):
+class PositionPublic(PositionBase):
     id: Optional[int]
+    created_at: Optional[datetime] = None
 
 
-class PostCreate(PostBase):
+class PositionCreate(PositionBase):
     pass
 
 
-class PostUpdate(PostBase):
+class PositionUpdate(PositionBase):
     pass

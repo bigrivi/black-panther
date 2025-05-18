@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.mysql import BIGINT
 from sqlmodel import Field, SQLModel, Relationship, Column, DateTime, String, BIGINT
 from app.common.model import BaseMixin
-from app.modules.post.models import Post, PostPublic
+from app.modules.position.models import Position, PositionPublic
 from app.modules.role.models import Role, RolePublic, RolePublicWithoutActions
 from app.utils.common import find
 
@@ -24,8 +24,8 @@ class UserRoleLink(SQLModel, table=True):
     )
 
 
-class UserPostLink(SQLModel, table=True):
-    __tablename__ = "user_post_link"
+class UserPositionLink(SQLModel, table=True):
+    __tablename__ = "user_position_link"
     id: int = Field(
         sa_type=BIGINT,
         primary_key=True,
@@ -35,8 +35,8 @@ class UserPostLink(SQLModel, table=True):
     user_id: Optional[int] = Field(
         default=None, sa_type=BIGINT, foreign_key="user.id"
     )
-    post_id: Optional[int] = Field(
-        default=None, sa_type=BIGINT, foreign_key="post.id"
+    position_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="position.id"
     )
 
 
@@ -53,9 +53,9 @@ class User(UserBase, BaseMixin, table=True):
     dept_id: Optional[int] = Field(
         default=None, sa_type=BIGINT, foreign_key="dept.id"
     )
-    posts: List["Post"] = Relationship(
+    positions: List["Position"] = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
-        link_model=UserPostLink
+        link_model=UserPositionLink
     )
     roles: List["Role"] = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
@@ -83,24 +83,25 @@ class User(UserBase, BaseMixin, table=True):
 
 class UserPublic(UserBase):
     id: int
+    created_at: Optional[datetime] = None
     roles: List[RolePublic] = None
 
 
 class CurrentUser(UserBase):
     id: int
     roles: List[RolePublicWithoutActions] = None
-    posts: List[PostPublic] = None
+    posts: List[PositionPublic] = None
     permissions: List[str] = None
 
 
 class UserCreate(UserBase):
     password: str
     roles: Optional[List[int]] = None
-    posts: Optional[List[int]] = None
+    positions: Optional[List[int]] = None
 
 
 class UserUpdate(UserBase):
     password: Optional[str] = None
     valid_state: Optional[bool] = None
     roles: Optional[List[int]] = None
-    posts: Optional[List[int]] = None
+    positions: Optional[List[int]] = None

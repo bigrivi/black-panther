@@ -1,16 +1,16 @@
-import { FC } from "react";
-import { ActionDropdown } from "./ActionDropdown";
 import { IAction, IResource } from "@/interfaces";
 import { Remove } from "@mui/icons-material";
 import {
+    IconButton,
+    TableRow as MUITableRow,
+    Stack,
     styled,
     TableCell,
-    TableRow as MUITableRow,
-    TableRowProps,
     tableRowClasses,
-    IconButton,
-    Stack,
+    TableRowProps,
 } from "@mui/material";
+import { FC } from "react";
+import { ActionDropdown } from "./ActionDropdown";
 type ActionRowsProp = {
     resource: IResource;
     actions: IAction[];
@@ -24,7 +24,7 @@ const TableRow = styled(({ children, ...rest }: TableRowProps) => {
     [`&.${tableRowClasses.root}`]: {
         background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
     },
-    ["& .MuiTableCell-root:first-child"]: {
+    ["& .MuiTableCell-root:first-of-type"]: {
         background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
     },
 }));

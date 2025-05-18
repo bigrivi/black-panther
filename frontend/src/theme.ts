@@ -13,6 +13,13 @@ const LightTheme = createTheme({
                 },
             },
         },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    textTransform: "none",
+                },
+            },
+        },
         MuiOutlinedInput: {
             styleOverrides: {
                 input: {
@@ -20,6 +27,12 @@ const LightTheme = createTheme({
                 },
                 root: {
                     borderRadius: "6px",
+                    "&.MuiInputBase-multiline": {
+                        padding: 0,
+                        textarea: {
+                            minHeight: 70,
+                        },
+                    },
                 },
             },
         },
@@ -73,4 +86,4 @@ const DarkTheme = createTheme({
 const DarkThemeWithResponsiveFontSizes = responsiveFontSizes(DarkTheme);
 const LightThemeWithResponsiveFontSizes = responsiveFontSizes(LightTheme);
 
-export { LightThemeWithResponsiveFontSizes, DarkThemeWithResponsiveFontSizes };
+export { DarkThemeWithResponsiveFontSizes, LightThemeWithResponsiveFontSizes };

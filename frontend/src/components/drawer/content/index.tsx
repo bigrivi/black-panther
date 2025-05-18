@@ -5,7 +5,7 @@ type Props = {};
 
 export const DrawerContent: FC<PropsWithChildren<Props>> = ({ children }) => {
     return (
-        <Stack padding="24px" sx={{ flex: 1 }}>
+        <Stack bgcolor="background.paper" padding="24px" sx={{ flex: 1 }}>
             {children}
         </Stack>
     );

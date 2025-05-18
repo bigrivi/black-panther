@@ -1,37 +1,25 @@
 import { TOKEN_KEY } from "@/constants";
 import { useAccessControlProvider } from "@/hooks/useAccessControlProvider";
 import { useAuthProvider } from "@/hooks/useAuthProvider";
-import { LoginPage } from "@/pages/login";
-import { Register } from "@/pages/register";
 import dataProvider from "@/providers/data-provider";
 import { resources } from "@/resources";
 import { CssBaseline, GlobalStyles } from "@mui/material";
-import { Authenticated, CanAccess, HttpError, Refine } from "@refinedev/core";
+import { HttpError, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import {
-    ErrorComponent,
     RefineSnackbarProvider,
-    ThemedLayoutV2,
     useNotificationProvider,
 } from "@refinedev/mui";
 import routerBindings, {
-    CatchAllNavigate,
     DocumentTitleHandler,
-    NavigateToResource,
+    UnsavedChangesNotifier,
 } from "@refinedev/react-router";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router";
+import { BrowserRouter } from "react-router";
 import "./App.css";
-import { AppSider, Header, PageLoading } from "./components";
 import { ColorModeContextProvider } from "./contexts";
-import { DashboardPage } from "./pages/dashboard";
-import { ForgotPassword } from "./pages/forgotPassword";
-import { PolicyPage } from "./pages/policy";
-import { ResourceList } from "./pages/resource";
-import { ResourceCreate } from "./pages/resource/create";
-import { ResourceEdit } from "./pages/resource/edit";
-import { UserList } from "./pages/users";
+import { AppRoutes } from "./routes";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -94,178 +82,10 @@ const App: React.FC = () => {
                                 },
                             }}
                         >
-                            <Routes>
-                                <Route
-                                    element={
-                                        <Authenticated
-                                            key="authenticated-inner"
-                                            loading={<PageLoading />}
-                                            fallback={
-                                                <CatchAllNavigate to="/login" />
-                                            }
-                                        >
-                                            <CanAccess
-                                                action="list"
-                                                onUnauthorized={({
-                                                    resource,
-                                                    reason,
-                                                    action,
-                                                    params,
-                                                }) => {
-                                                    console.log(params);
-                                                    console.warn(
-                                                        `You cannot access ${resource}-${params} resource with ${action} action because ${reason}`
-                                                    );
-                                                }}
-                                            >
-                                                <ThemedLayoutV2
-                                                    Header={Header}
-                                                    Sider={AppSider}
-                                                >
-                                                    {/* <Box
-                                                        sx={{
-                                                            maxWidth: "1200px",
-                                                            marginLeft: "auto",
-                                                            marginRight: "auto",
-                                                        }}
-                                                    > */}
-                                                    <Outlet />
-                                                    {/* </Box> */}
-                                                </ThemedLayoutV2>
-                                            </CanAccess>
-                                        </Authenticated>
-                                    }
-                                >
-                                    <Route index element={<DashboardPage />} />
-
-                                    {/* <Route path="/:resource">
-                                        <Route
-                                            index
-                                            element={<BlogPostList />}
-                                        />
-                                        <Route
-                                            path="create"
-                                            element={<BlogPostCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<BlogPostEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<BlogPostShow />}
-                                        />
-                                    </Route> */}
-                                    {/*
-                                    <Route path="/roles">
-                                        <Route index element={<RoleList />} />
-                                        <Route
-                                            path="create"
-                                            element={<RoleCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<RoleEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<RoleShow />}
-                                        />
-                                    </Route>
-                                    <Route path="/departments">
-                                        <Route
-                                            index
-                                            element={<DepartmentList />}
-                                        />
-                                        <Route
-                                            path="create"
-                                            element={<DepartmentCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<DepartmentEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<DepartmentShow />}
-                                        />
-                                    </Route>
-
-                                     */}
-
-                                    <Route path="/users">
-                                        <Route index element={<UserList />} />
-                                        {/* <Route
-                                            path="create"
-                                            element={<UserCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<UserEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<UserShow />}
-                                        /> */}
-                                    </Route>
-
-                                    <Route
-                                        path="/resources"
-                                        element={
-                                            <ResourceList>
-                                                <Outlet />
-                                            </ResourceList>
-                                        }
-                                    >
-                                        <Route
-                                            path="create"
-                                            element={<ResourceCreate />}
-                                        />
-
-                                        <Route
-                                            path="edit/:id"
-                                            element={<ResourceEdit />}
-                                        />
-                                    </Route>
-
-                                    <Route
-                                        path="/policy"
-                                        element={<PolicyPage />}
-                                    />
-
-                                    <Route
-                                        path="*"
-                                        element={<ErrorComponent />}
-                                    />
-                                </Route>
-                                <Route
-                                    element={
-                                        <Authenticated
-                                            key="authenticated-outer"
-                                            fallback={<Outlet />}
-                                        >
-                                            <NavigateToResource />
-                                        </Authenticated>
-                                    }
-                                >
-                                    <Route
-                                        path="/login"
-                                        element={<LoginPage />}
-                                    />
-                                    <Route
-                                        path="/register"
-                                        element={<Register />}
-                                    />
-                                    <Route
-                                        path="/forgot-password"
-                                        element={<ForgotPassword />}
-                                    />
-                                </Route>
-                            </Routes>
-
-                            <RefineKbar />
-                            {/* <UnsavedChangesNotifier /> */}
+                            <AppRoutes />
+                            <UnsavedChangesNotifier />
                             <DocumentTitleHandler />
+                            <RefineKbar />
                         </Refine>
                     </RefineSnackbarProvider>
                 </ColorModeContextProvider>

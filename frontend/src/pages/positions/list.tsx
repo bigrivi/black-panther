@@ -1,6 +1,6 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
-import { IRole } from "@/interfaces";
+import { IPostion } from "@/interfaces";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useTranslate } from "@refinedev/core";
 import {
@@ -13,24 +13,24 @@ import {
 } from "@refinedev/mui";
 import { PropsWithChildren, useMemo } from "react";
 
-export const RoleList = ({ children }: PropsWithChildren) => {
+export const PositionList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
 
-    const { dataGridProps, tableQuery } = useDataGrid<IRole>({
+    const { dataGridProps, tableQuery } = useDataGrid<IPostion>({
         initialPageSize: 10,
     });
 
-    const columns = useMemo<GridColDef<IRole>[]>(
+    const columns = useMemo<GridColDef<IPostion>[]>(
         () => [
             {
                 field: "name",
-                headerName: "Role name",
+                headerName: "Position name",
                 width: 200,
             },
 
             {
                 field: "code",
-                headerName: "Role code",
+                headerName: "Position code",
                 width: 200,
             },
             {

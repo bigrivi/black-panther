@@ -16,12 +16,10 @@ export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
     label,
     htmlFor,
     required,
-    layout: layoutProp,
+    layout,
 }) => {
-    let { layout } = useFormContext();
-    if (layoutProp) {
-        layout = layoutProp;
-    }
+    let { layout: layoutFromContext } = useFormContext();
+    layout = layout || layoutFromContext;
     const renderLabel = () => {
         return (
             <FormLabel required={required} htmlFor={htmlFor}>

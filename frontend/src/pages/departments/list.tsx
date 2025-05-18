@@ -1,112 +1,215 @@
+import { Paper } from "@/components";
+import { RefineListView } from "@/components/refine-list-view";
+import { IDepartment } from "@/interfaces";
+import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
+import {
+    Add,
+    ChevronRightOutlined,
+    Compress,
+    Expand,
+    ExpandMoreOutlined,
+} from "@mui/icons-material";
+import {
+    Box,
+    Button,
+    IconButton,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from "@mui/material";
+import { useGo, useList, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
     DeleteButton,
     EditButton,
-    FilterDropdown,
-    List,
-    ShowButton,
-    TagField,
-    useTable,
-} from "@refinedev/antd";
-import { useGo, useTranslate } from "@refinedev/core";
-import { type BaseRecord } from "@refinedev/core";
-import { Button, Space, Table } from "antd";
-import { Status } from "@/components";
-import { PlusOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { IDepartment } from "@/interfaces";
-import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
+    RefreshButton,
+} from "@refinedev/mui";
+import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 
-export const DepartmentList = () => {
+const INDENT_WIDTH = 24;
+
+export const DeptList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const go = useGo();
-    const [expandedRowKeys, setExpandedRowKeys] = useState([]);
-    const { tableProps } = useTable<IDepartment>({
-        syncWithLocation: true,
+    const [expandAll, setExpandAll] = useState(false);
+    const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
+    const { data: deptData, refetch } = useList<IDepartment>({
+        pagination: {
+            mode: "off",
+        },
         meta: {
             isTree: true,
         },
     });
 
-    useEffect(() => {
-        if (tableProps.dataSource && tableProps.dataSource.length > 0) {
+    const rows = useMemo(() => {
+        return deptData?.data || [];
+    }, [deptData]);
+
+    const toggleRowExpanded = (resourceId: number) => {
+        if (expandedRowKeys.includes(resourceId)) {
             setExpandedRowKeys(
-                getExpandNodeIds<IDepartment>(tableProps?.dataSource[0])
+                expandedRowKeys.filter(
+                    (expandRowKey) => expandRowKey != resourceId
+                )
             );
+        } else {
+            setExpandedRowKeys([...expandedRowKeys, resourceId]);
         }
-    }, [tableProps.dataSource]);
+    };
+
+    const handleExpandClick = () => {
+        setExpandAll(!expandAll);
+        if (expandAll) {
+            setExpandedRowKeys([]);
+        } else {
+            const expandedNodeIds = rows.flatMap((item) =>
+                getExpandNodeIds(item)
+            );
+            setExpandedRowKeys(expandedNodeIds);
+        }
+    };
+
+    const renderChildren = (children: IDepartment[] = [], depth: number) => {
+        return children.map((item) => {
+            const itemChildren = item.children;
+            const hasChildren = !!(itemChildren && itemChildren.length);
+            const isExpanded = expandedRowKeys.includes(item.id);
+            return (
+                <Fragment key={item.id}>
+                    <TableRow hover>
+                        <TableCell
+                            align={"left"}
+                            style={{
+                                minWidth: 200,
+                                width: 200,
+                                zIndex: 100,
+                            }}
+                        >
+                            <Box
+                                display={"flex"}
+                                alignItems={"center"}
+                                style={{ paddingLeft: depth * INDENT_WIDTH }}
+                            >
+                                {hasChildren && (
+                                    <IconButton
+                                        size="small"
+                                        style={{ padding: 0, marginLeft: -10 }}
+                                        onClick={(evt) => {
+                                            evt.stopPropagation();
+                                            toggleRowExpanded(item.id);
+                                        }}
+                                    >
+                                        {isExpanded && <ExpandMoreOutlined />}
+                                        {!isExpanded && (
+                                            <ChevronRightOutlined />
+                                        )}
+                                    </IconButton>
+                                )}
+                                {item.name}
+                            </Box>
+                        </TableCell>
+                        <TableCell align={"left"}>
+                            {
+                                <DateField
+                                    value={item.created_at}
+                                    format="LL / hh:mm a"
+                                />
+                            }
+                        </TableCell>
+                        <TableCell align={"left"}>
+                            <Stack direction="row">
+                                <IconButton
+                                    onClick={() => {
+                                        go({
+                                            to: "/departments/create",
+                                            query: {
+                                                parent_id: item.id,
+                                            },
+                                        });
+                                    }}
+                                    size="small"
+                                >
+                                    <Add color="primary" />
+                                </IconButton>
+                                <EditButton hideText recordItemId={item.id} />
+                                {depth > 0 && (
+                                    <DeleteButton
+                                        hideText
+                                        recordItemId={item.id}
+                                    />
+                                )}
+                            </Stack>
+                        </TableCell>
+                    </TableRow>
+                    {hasChildren &&
+                        isExpanded &&
+                        renderChildren(itemChildren, depth + 1)}
+                </Fragment>
+            );
+        });
+    };
 
     return (
-        <List>
-            <Table
-                {...tableProps}
-                expandable={{
-                    childrenColumnName: "children",
-                    onExpand(expanded, record: any) {
-                        let newRowKeys = expandedRowKeys;
-                        if (expanded) {
-                            newRowKeys = [...newRowKeys, record.id];
-                        } else {
-                            newRowKeys = newRowKeys.filter(
-                                (e) => e !== record.id
-                            );
-                        }
-                        setExpandedRowKeys(newRowKeys);
-                    },
-                    expandedRowKeys,
+        <>
+            <RefineListView
+                headerButtons={(props) => {
+                    return [
+                        <CreateButton key={"create"} />,
+                        <Button
+                            key={"expand"}
+                            onClick={handleExpandClick}
+                            startIcon={expandAll ? <Compress /> : <Expand />}
+                            size="small"
+                        >
+                            {expandAll ? "Collapse" : "Expand"}
+                        </Button>,
+                        <RefreshButton
+                            onClick={() => refetch()}
+                            key={"refresh"}
+                        />,
+                    ];
                 }}
-                rowKey="id"
             >
-                <Table.Column dataIndex="name" title={"Name"} />
-                <Table.Column
-                    dataIndex="valid_state"
-                    title="Status"
-                    render={(value) => {
-                        return <Status value={value} />;
-                    }}
-                />
-                <Table.Column
-                    dataIndex="created_at"
-                    render={(value) => <DateField value={value} format="LLL" />}
-                    title={t(`fields.createdAt`)}
-                />
-                <Table.Column
-                    title={"Actions"}
-                    dataIndex="actions"
-                    render={(_, record: BaseRecord) => (
-                        <Space>
-                            <Button
-                                icon={<PlusOutlined />}
-                                size="small"
-                                onClick={() => {
-                                    go({
-                                        to: "/departments/create",
-                                        query: {
-                                            parent_id: record.id,
-                                        },
-                                    });
-                                }}
-                            ></Button>
-                            <EditButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                            <ShowButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                            <DeleteButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                        </Space>
-                    )}
-                />
-            </Table>
-        </List>
+                <Paper>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell
+                                        align={"left"}
+                                        style={{
+                                            minWidth: 300,
+                                            width: 300,
+                                        }}
+                                    >
+                                        Name
+                                    </TableCell>
+                                    <TableCell align={"left"}>
+                                        {t("orders.fields.createdAt")}
+                                    </TableCell>
+                                    <TableCell
+                                        style={{
+                                            minWidth: 200,
+                                            width: 200,
+                                        }}
+                                        align={"left"}
+                                    >
+                                        {t("table.actions")}
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>{renderChildren(rows, 0)}</TableBody>
+                        </Table>
+                    </TableContainer>
+                </Paper>
+            </RefineListView>
+            {children}
+        </>
     );
 };

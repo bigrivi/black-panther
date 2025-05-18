@@ -16,7 +16,7 @@ type FormProps<T extends FieldValues = FieldValues> = PropsWithChildren<
 
 export function Form<TFieldValues extends FieldValues = FieldValues>({
     children,
-    spacing = 2,
+    spacing = 3,
     layout = "vertical",
     ...rest
 }: PropsWithChildren<FormProps<TFieldValues>>) {

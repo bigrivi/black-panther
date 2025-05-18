@@ -1,28 +1,28 @@
-import { FC, useState } from "react";
-import {
-    Divider,
-    ListItemIcon,
-    ListItemText,
-    IconButton,
-    Menu,
-    MenuItem,
-    TableRow as MUITableRow,
-    styled,
-    TableRowProps,
-} from "@mui/material";
-import { StickColumn } from "./StickColumn";
 import { IResource } from "@/interfaces";
-import { ResourceCell } from "./ResourceCell";
-import { BorderedCell } from "../common/BorderedCell";
 import {
     CheckBoxOutlineBlank,
     ChevronRightOutlined,
     ExpandMoreOutlined,
     LibraryAddCheck,
 } from "@mui/icons-material";
-import { usePolicyProviderContext } from "../../context";
+import {
+    Divider,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    TableRow as MUITableRow,
+    styled,
+    TableRowProps,
+} from "@mui/material";
 import classNames from "classnames";
+import { FC, useState } from "react";
+import { usePolicyProviderContext } from "../../context";
+import { BorderedCell } from "../common/BorderedCell";
 import { useHighLightRowColumnContext } from "./context";
+import { ResourceCell } from "./ResourceCell";
+import { StickColumn } from "./StickColumn";
 type ResourceRowProps = {
     resource: IResource;
     isExpanded: boolean;
@@ -32,7 +32,7 @@ type ResourceRowProps = {
 const TableRow = styled(({ children, ...rest }: TableRowProps) => {
     return <MUITableRow {...rest}>{children}</MUITableRow>;
 })(({ theme }) => ({
-    ["& .MuiTableCell-root:first-child"]: {
+    ["& .MuiTableCell-root:first-of-type"]: {
         background: theme.palette.mode === "light" ? "#fff" : "#1e1e1e",
     },
 }));

@@ -1,17 +1,17 @@
-import { IResource, IRole } from "@/interfaces";
+import { IResource } from "@/interfaces";
 import {
-    styled,
     TableRow as MUITableRow,
     TableRowProps,
+    styled,
     tableRowClasses,
 } from "@mui/material";
-import { FC } from "react";
-import { ActionCell } from "./ActionCell";
-import { BorderedCell } from "../common/BorderedCell";
-import { StickColumn } from "./StickColumn";
-import { usePolicyProviderContext } from "../../context";
-import { useHighLightRowColumnContext } from "./context";
 import classNames from "classnames";
+import { FC } from "react";
+import { usePolicyProviderContext } from "../../context";
+import { BorderedCell } from "../common/BorderedCell";
+import { ActionCell } from "./ActionCell";
+import { useHighLightRowColumnContext } from "./context";
+import { StickColumn } from "./StickColumn";
 
 type ActionRowsProps = {
     resource: IResource;
@@ -23,7 +23,7 @@ const TableRow = styled(({ children, ...rest }: TableRowProps) => {
     [`&.${tableRowClasses.root}`]: {
         background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
     },
-    ["& .MuiTableCell-root:first-child"]: {
+    ["& .MuiTableCell-root:first-of-type"]: {
         background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
     },
 }));

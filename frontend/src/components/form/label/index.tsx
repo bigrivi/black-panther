@@ -7,7 +7,7 @@ import { FC, PropsWithChildren } from "react";
 
 const InputLabel = styled(MUIInputLabel)(({ theme }) => ({
     "&.MuiFormLabel-root": {
-        marginBottom: 8,
+        marginBottom: 4,
         fontSize: "0.875rem",
         fontWeight: 700,
         width: 150,

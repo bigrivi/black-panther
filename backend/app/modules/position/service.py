@@ -1,12 +1,12 @@
 from typing import List
 from app.middleware.fastapi_sqlalchemy import db
 from app.common.service.base import ServiceBase
-from .models import Post
+from .models import Position
 
 
-class PostService(ServiceBase[Post]):
+class PositionService(ServiceBase[Position]):
     def __init__(self):
-        super().__init__(Post)
+        super().__init__(Position)
 
 
-post_service = PostService()
+position_service = PositionService()
