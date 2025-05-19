@@ -33,6 +33,7 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
     } = useForm<ResourceFormType, HttpError, Nullable<ResourceFormType>>({
         defaultValues: {
             name: "",
+            key: "",
             actions: [...defaultActionOptions],
         },
         refineCoreProps: {

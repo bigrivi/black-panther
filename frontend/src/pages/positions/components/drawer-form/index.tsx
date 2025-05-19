@@ -1,6 +1,6 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
-import { IUser, Nullable } from "@/interfaces";
+import { IPostion, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
 import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
@@ -21,8 +21,12 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
         refineCore: { onFinish, id },
         saveButtonProps,
         ...methods
-    } = useForm<IUser, HttpError, Nullable<IUser>>({
-        defaultValues: {},
+    } = useForm<IPostion, HttpError, Nullable<IPostion>>({
+        defaultValues: {
+            name: "",
+            code: "",
+            description: "",
+        },
         refineCoreProps: {
             action,
             redirect: "list",

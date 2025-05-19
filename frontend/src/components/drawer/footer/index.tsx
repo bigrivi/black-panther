@@ -15,6 +15,7 @@ export const DrawerFooter: FC<PropsWithChildren<Props>> = ({ children }) => {
                 alignItems="center"
                 justifyContent="flex-end"
                 px="24px"
+                bgcolor="background.paper"
             >
                 {children}
             </Box>

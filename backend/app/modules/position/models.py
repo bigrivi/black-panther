@@ -17,6 +17,7 @@ class Position(PositionBase, BaseMixin, table=True):
 class PositionPublic(PositionBase):
     id: Optional[int]
     created_at: Optional[datetime] = None
+    valid_state: Optional[bool] = None
 
 
 class PositionCreate(PositionBase):

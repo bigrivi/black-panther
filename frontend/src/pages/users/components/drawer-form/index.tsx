@@ -1,8 +1,15 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
-import { IRole, IUser, Nullable } from "@/interfaces";
+import { TreeSelectFieldElement } from "@/components/form/elements";
+import { IDepartment, IRole, IUser, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
+import {
+    BaseKey,
+    HttpError,
+    useGetToPath,
+    useGo,
+    useList,
+} from "@refinedev/core";
 import { useAutocomplete } from "@refinedev/mui";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
@@ -18,14 +25,9 @@ type Props = {
     action: "create" | "edit";
 };
 
-interface IUserForm {
-    login_name: string;
-    user_name: string;
-    created_at: string;
+interface IUserForm extends IUser {
     password: string;
     confirm_password?: string;
-    email: string;
-    roles: IRole[];
 }
 
 export const UserDrawerForm: FC<Props> = ({ action }) => {
@@ -43,6 +45,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             password: "",
             confirm_password: "",
             email: "",
+            dept_id: null,
             roles: [],
         },
         refineCoreProps: {
@@ -66,6 +69,13 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
     });
     const { autocompleteProps } = useAutocomplete<IRole>({
         resource: "role",
+    });
+
+    const { data: deptTreeData } = useList<IDepartment>({
+        resource: `dept`,
+        meta: {
+            isTree: true,
+        },
     });
 
     const onDrawerCLose = () => {
@@ -142,6 +152,18 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             type="email"
                             name="email"
                             id="email"
+                        />
+                    </FormItem>
+                    <FormItem label="Department" htmlFor="dept_id">
+                        <TreeSelectFieldElement
+                            name="dept_id"
+                            fieldNames={{
+                                label: "name",
+                                value: "id",
+                                children: "children",
+                            }}
+                            treeData={deptTreeData?.data ?? []}
+                            id="dept_id"
                         />
                     </FormItem>
                     <FormItem label="Roles" required>

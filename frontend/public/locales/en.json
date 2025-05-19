@@ -112,10 +112,6 @@
         "placeholder": "Search by Store ID, E-mail, Keyword",
         "more": "more"
     },
-    "status": {
-        "enable": "Enable",
-        "disable": "Disable"
-    },
     "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
     "notifications": {
         "success": "Successful",

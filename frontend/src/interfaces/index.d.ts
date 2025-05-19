@@ -53,6 +53,7 @@ interface IRole {
     description?: string;
     created_at: string;
     actions?: IAction[];
+    valid_state?: boolean;
 }
 
 interface IAction {
@@ -76,6 +77,10 @@ interface IUser {
     user_name: string;
     created_at: string;
     roles: IRole[];
+    is_active?: boolean;
+    email?: string;
+    dept_id?: number;
+    department?: IDepartment;
 }
 
 interface IPostion {
@@ -84,4 +89,5 @@ interface IPostion {
     code: string;
     created_at: string;
     description?: string;
+    valid_state?: boolean;
 }

@@ -1,9 +1,10 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
-import { IUser } from "@/interfaces";
-import { Chip } from "@mui/material";
+import { Status } from "@/components/status";
+import { IDepartment, IUser } from "@/interfaces";
+import { Box, Chip, Stack } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { useTranslate } from "@refinedev/core";
+import { useList, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
@@ -12,13 +13,23 @@ import {
     RefreshButton,
     useDataGrid,
 } from "@refinedev/mui";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren, useMemo, useState } from "react";
+import { OrgSider } from "./components/org-sider";
 
 export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
+    const [selectedDeptId, setSelectedDeptId] = useState<string>("");
+    const { dataGridProps, tableQuery, setFilters, filters } =
+        useDataGrid<IUser>({
+            initialPageSize: 10,
+            syncWithLocation: true,
+        });
 
-    const { dataGridProps, tableQuery } = useDataGrid<IUser>({
-        initialPageSize: 10,
+    const { data: deptTreeData, refetch } = useList<IDepartment>({
+        resource: `dept`,
+        meta: {
+            isTree: true,
+        },
     });
 
     const columns = useMemo<GridColDef<IUser>[]>(
@@ -40,10 +51,21 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 width: 150,
             },
             {
+                field: "department",
+                headerName: "Department",
+                sortable: false,
+                flex: 1,
+                minWidth: 150,
+                renderCell: function render({ row }) {
+                    return row.department?.name ?? "";
+                },
+            },
+            {
                 field: "roles",
                 headerName: "Roles",
                 sortable: false,
                 flex: 1,
+                minWidth: 200,
                 renderCell: function render({ row }) {
                     return (
                         <>
@@ -73,6 +95,16 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 },
             },
             {
+                field: "is_active",
+                headerName: t("users.fields.isActive.label"),
+                width: 150,
+                display: "flex",
+                type: "boolean",
+                renderCell: function render({ row }) {
+                    return <Status value={row.is_active!} />;
+                },
+            },
+            {
                 field: "actions",
                 headerName: t("table.actions"),
                 sortable: false,
@@ -95,6 +127,29 @@ export const UserList = ({ children }: PropsWithChildren) => {
         [t]
     );
 
+    const handleSelectedDeptIdChange = (deptId: string) => {
+        console.log("onChange", deptId);
+        if (deptId != selectedDeptId) {
+            setSelectedDeptId(deptId);
+            setFilters([
+                {
+                    field: "department.path",
+                    value: deptId,
+                    operator: "startswiths",
+                },
+            ]);
+        } else {
+            setSelectedDeptId("");
+            setFilters([
+                {
+                    field: "department.path",
+                    value: undefined,
+                    operator: "startswiths",
+                },
+            ]);
+        }
+    };
+
     return (
         <>
             <RefineListView
@@ -108,21 +163,31 @@ export const UserList = ({ children }: PropsWithChildren) => {
                     ];
                 }}
             >
-                <Paper>
-                    <DataGrid
-                        {...dataGridProps}
-                        columns={columns}
-                        pageSizeOptions={[10, 20, 50, 100]}
-                        sx={{
-                            "&.MuiDataGrid-root": {
-                                border: "0px solid !important",
-                            },
-                            "& .MuiDataGrid-row": {
-                                cursor: "pointer",
-                            },
-                        }}
+                <Stack spacing={2} direction="row">
+                    <OrgSider
+                        onReload={refetch}
+                        deptTreeData={deptTreeData?.data ?? []}
+                        selectedDept={selectedDeptId}
+                        onSelectedDeptChange={handleSelectedDeptIdChange}
                     />
-                </Paper>
+                    <Box sx={{ flex: 1, overflow: "auto" }}>
+                        <Paper>
+                            <DataGrid
+                                {...dataGridProps}
+                                columns={columns}
+                                pageSizeOptions={[10, 20, 50, 100]}
+                                sx={{
+                                    "&.MuiDataGrid-root": {
+                                        border: "0px solid !important",
+                                    },
+                                    "& .MuiDataGrid-row": {
+                                        cursor: "pointer",
+                                    },
+                                }}
+                            />
+                        </Paper>
+                    </Box>
+                </Stack>
             </RefineListView>
             {children}
         </>

@@ -8,7 +8,7 @@ export const getExpandNodeIds = <T extends ITreeNode>(
         node[idKey],
         ...(node.children?.reduce((acc: number[], child) => {
             if (child.children && child.children.length) {
-                return acc.concat([...getExpandNodeIds(child)]);
+                return acc.concat([...getExpandNodeIds(child, idKey)]);
             }
             return acc.concat(child[idKey]);
         }, []) || []),

@@ -33,9 +33,10 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
         ...methods
     } = useForm<IDepartment, HttpError, Nullable<IDepartment>>({
         defaultValues: {
+            name: "",
             parent_id: query.get("parent_id")
                 ? Number(query.get("parent_id"))
-                : undefined,
+                : null,
         },
         refineCoreProps: {
             action,

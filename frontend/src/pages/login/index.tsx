@@ -97,7 +97,7 @@ export const LoginPage = () => {
                 >
                     <FormItem label="Login Name" required htmlFor="loginName">
                         <TextFieldElement
-                            name="loginNamess"
+                            name="loginName"
                             id="loginName"
                             rules={{
                                 required: translate(

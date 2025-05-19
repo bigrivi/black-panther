@@ -1,8 +1,7 @@
-import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
 import Box from "@mui/material/Box";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 
 export type TreeNode = {
     disabled?: boolean;
@@ -18,6 +17,8 @@ type TreeViewProps = {
         children: string;
     };
     onChange: (value: string | null) => void;
+    expandedItems: string[];
+    onExpandedItemsChange: (itemIds: string[]) => void;
 };
 
 export const TreeView: FC<TreeViewProps> = ({
@@ -25,14 +26,14 @@ export const TreeView: FC<TreeViewProps> = ({
     fieldNames,
     value,
     onChange,
+    expandedItems,
+    onExpandedItemsChange,
 }) => {
-    const [expandedItems, setExpandedItems] = useState<string[]>([]);
-
     const handleExpandedItemsChange = (
         event: React.SyntheticEvent,
         itemIds: string[]
     ) => {
-        setExpandedItems(itemIds);
+        onExpandedItemsChange(itemIds);
     };
 
     const handleSelectedItemsChange = (
@@ -44,15 +45,6 @@ export const TreeView: FC<TreeViewProps> = ({
             onChange(itemIds);
         }
     };
-
-    useEffect(() => {
-        if (treeData.length && value) {
-            const expandedNodeIds = treeData.flatMap((item) =>
-                getExpandNodeIds(item, fieldNames["value"])
-            );
-            setExpandedItems(expandedNodeIds.map((nodeId) => nodeId + ""));
-        }
-    }, [treeData, value]);
 
     const renderChildren = (children: TreeNode[]) => {
         return (
@@ -83,6 +75,7 @@ export const TreeView: FC<TreeViewProps> = ({
     return (
         <Box>
             <SimpleTreeView
+                expansionTrigger="iconContainer"
                 expandedItems={expandedItems}
                 selectedItems={value}
                 onExpandedItemsChange={handleExpandedItemsChange}

@@ -1,3 +1,5 @@
+import { TreeNode, TreeView } from "@/components/ui/tree-view";
+import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
 import { ArrowDropDown, ArrowDropUp, Close } from "@mui/icons-material";
 import {
     Box,
@@ -16,6 +18,7 @@ import {
     ReactNode,
     Ref,
     RefAttributes,
+    useEffect,
     useMemo,
     useState,
 } from "react";
@@ -29,7 +32,6 @@ import {
     UseControllerProps,
 } from "react-hook-form";
 import { useFormError, useTransform } from "react-hook-form-mui";
-import { TreeNode, TreeView } from "./tree-view";
 
 type FieldNames = {
     label: string;
@@ -120,7 +122,7 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
     const errorMsgFn = useFormError();
     const customErrorFn = parseError || errorMsgFn;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+    const [expandedItems, setExpandedItems] = useState<string[]>([]);
     const rulesTmp = {
         ...rules,
         ...(required &&
@@ -196,6 +198,15 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
 
     const open = Boolean(anchorEl);
 
+    useEffect(() => {
+        if (treeData?.length && value) {
+            const expandedNodeIds = treeData?.flatMap((item) =>
+                getExpandNodeIds(item, fieldNames["value"])
+            );
+            setExpandedItems(expandedNodeIds.map((nodeId) => nodeId + ""));
+        }
+    }, [treeData, value]);
+
     return (
         <>
             <OutlinedInput
@@ -268,6 +279,8 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
                             }}
                         >
                             <TreeView
+                                expandedItems={expandedItems}
+                                onExpandedItemsChange={setExpandedItems}
                                 fieldNames={fieldNames}
                                 value={value as string}
                                 onChange={(value) => {

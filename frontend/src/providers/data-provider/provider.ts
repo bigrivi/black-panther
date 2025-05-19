@@ -1,11 +1,11 @@
-import { CrudFilters, CrudOperators, DataProvider } from "@refinedev/core";
+import { DataProvider } from "@refinedev/core";
 import restDataProvider from "@refinedev/simple-rest";
-import { stringify } from "query-string";
 import { AxiosInstance } from "axios";
+import { stringify } from "query-string";
+import { API_URL } from "../../constants";
 import { BetterCRUDQuery } from "./types";
 import { handleFilter, handlePagination, handleSort } from "./utils";
 import { transformHttpError } from "./utils/transformHttpError";
-import { API_URL } from "../../constants";
 
 export const dataProvider = (axios: AxiosInstance): DataProvider => {
     return {

@@ -1,5 +1,6 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
+import { Status } from "@/components/status";
 import { IRole } from "@/interfaces";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useTranslate } from "@refinedev/core";
@@ -51,6 +52,16 @@ export const RoleList = ({ children }: PropsWithChildren) => {
                             format="LL / hh:mm a"
                         />
                     );
+                },
+            },
+            {
+                field: "valid_state",
+                headerName: t("fields.status.label"),
+                width: 150,
+                display: "flex",
+                type: "boolean",
+                renderCell: function render({ row }) {
+                    return <Status value={row.valid_state!} />;
                 },
             },
             {

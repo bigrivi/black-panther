@@ -23,6 +23,7 @@ class Dept(DeptBase, BaseMixin, table=True):
 
 class DeptPublic(DeptBase):
     id: Optional[int]
+    path: str
     valid_state: Optional[bool] = Field(default=None)
     children: Optional[List["DeptPublic"]] = None
     created_at: Optional[datetime] = None
