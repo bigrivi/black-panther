@@ -54,7 +54,7 @@ export const resources: ResourceProps[] = [
         },
     },
     {
-        name: "dept",
+        name: "department",
         list: "/departments",
         create: "/departments/create",
         edit: "/departments/edit/:id",

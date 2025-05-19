@@ -79,7 +79,7 @@ interface IUser {
     roles: IRole[];
     is_active?: boolean;
     email?: string;
-    dept_id?: number;
+    department_id?: number;
     department?: IDepartment;
 }
 

@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.mysql import BIGINT
 from sqlmodel import Field, SQLModel, Relationship, Column, DateTime, String, BIGINT
 from app.common.model import BaseMixin
-from app.modules.dept.models import Dept, DeptPublic
+from app.modules.department.models import Department, DepartmentPublic
 from app.modules.position.models import Position, PositionPublic
 from app.modules.role.models import Role, RolePublic, RolePublicWithoutActions
 from app.utils.common import find
@@ -51,10 +51,10 @@ class UserBase(SQLModel):
 
 class User(UserBase, BaseMixin, table=True):
     password: str
-    dept_id: Optional[int] = Field(
-        default=None, sa_type=BIGINT, foreign_key="dept.id"
+    department_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="department.id"
     )
-    department: Dept = Relationship(
+    department: Department = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
     )
     positions: List["Position"] = Relationship(
@@ -89,8 +89,8 @@ class UserPublic(UserBase):
     id: int
     created_at: Optional[datetime] = None
     roles: List[RolePublic] = None
-    dept_id: Optional[int] = None
-    department: Optional[DeptPublic] = None
+    department_id: Optional[int] = None
+    department: Optional[DepartmentPublic] = None
 
 
 class CurrentUser(UserBase):
@@ -104,7 +104,7 @@ class UserCreate(UserBase):
     password: str
     roles: Optional[List[int]] = None
     positions: Optional[List[int]] = None
-    dept_id: Optional[int] = None
+    department_id: Optional[int] = None
 
 
 class UserUpdate(UserBase):
@@ -112,4 +112,4 @@ class UserUpdate(UserBase):
     valid_state: Optional[bool] = None
     roles: Optional[List[int]] = None
     positions: Optional[List[int]] = None
-    dept_id: Optional[int] = None
+    department_id: Optional[int] = None

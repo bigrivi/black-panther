@@ -19,14 +19,13 @@ import { OrgSider } from "./components/org-sider";
 export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const [selectedDeptId, setSelectedDeptId] = useState<string>("");
-    const { dataGridProps, tableQuery, setFilters, filters } =
-        useDataGrid<IUser>({
-            initialPageSize: 10,
-            syncWithLocation: true,
-        });
+    const { dataGridProps, tableQuery, setFilters } = useDataGrid<IUser>({
+        initialPageSize: 10,
+        syncWithLocation: true,
+    });
 
     const { data: deptTreeData, refetch } = useList<IDepartment>({
-        resource: `dept`,
+        resource: "department",
         meta: {
             isTree: true,
         },

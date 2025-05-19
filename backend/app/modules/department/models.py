@@ -4,34 +4,34 @@ from sqlmodel import Field, SQLModel, Relationship, BIGINT
 from app.common.model import BaseMixin
 
 
-class DeptBase(SQLModel):
+class DepartmentBase(SQLModel):
     name: str
     sort: Optional[int] = Field(default=0)
     leader: Optional[str] = Field(default=None)
     parent_id: Optional[int] = Field(
         default=None,
-        foreign_key="dept.id",
+        foreign_key="department.id",
         sa_type=BIGINT
     )
 
 
-class Dept(DeptBase, BaseMixin, table=True):
+class Department(DepartmentBase, BaseMixin, table=True):
     path: Optional[str] = Field(default=None, index=True, unique=True)
-    parent: "Dept" = Relationship(
-        sa_relationship_kwargs={"uselist": False, "remote_side": 'Dept.id', "viewonly": True, "lazy": "noload"})
+    parent: "Department" = Relationship(
+        sa_relationship_kwargs={"uselist": False, "remote_side": 'Department.id', "viewonly": True, "lazy": "noload"})
 
 
-class DeptPublic(DeptBase):
+class DepartmentPublic(DepartmentBase):
     id: Optional[int]
     path: str
     valid_state: Optional[bool] = Field(default=None)
-    children: Optional[List["DeptPublic"]] = None
+    children: Optional[List["DepartmentPublic"]] = None
     created_at: Optional[datetime] = None
 
 
-class DeptCreate(DeptBase):
+class DepartmentCreate(DepartmentBase):
     pass
 
 
-class DeptUpdate(DeptBase):
+class DepartmentUpdate(DepartmentBase):
     pass

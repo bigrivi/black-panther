@@ -45,7 +45,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             password: "",
             confirm_password: "",
             email: "",
-            dept_id: null,
+            department_id: null,
             roles: [],
         },
         refineCoreProps: {
@@ -72,7 +72,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
     });
 
     const { data: deptTreeData } = useList<IDepartment>({
-        resource: `dept`,
+        resource: `department`,
         meta: {
             isTree: true,
         },
@@ -154,16 +154,16 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             id="email"
                         />
                     </FormItem>
-                    <FormItem label="Department" htmlFor="dept_id">
+                    <FormItem label="Department" htmlFor="department_id">
                         <TreeSelectFieldElement
-                            name="dept_id"
+                            name="department_id"
                             fieldNames={{
                                 label: "name",
                                 value: "id",
                                 children: "children",
                             }}
                             treeData={deptTreeData?.data ?? []}
-                            id="dept_id"
+                            id="department_id"
                         />
                     </FormItem>
                     <FormItem label="Roles" required>

@@ -2,6 +2,6 @@ from .api import router
 from app.registrar import register_router
 
 
-@register_router("/dept", ["sys"])
+@register_router("/department", ["sys"])
 def setup():
     return router

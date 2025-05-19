@@ -3,21 +3,21 @@ from typing import List
 from sqlalchemy import and_
 from app.middleware.fastapi_sqlalchemy import db
 from app.common.service.base import ServiceBase
-from .models import Dept
+from .models import Department
 
 
-class DeptService(ServiceBase[Dept]):
+class DepartmentService(ServiceBase[Department]):
     def __init__(self):
-        super().__init__(Dept)
+        super().__init__(Department)
 
-    async def on_after_create(self, dept: Dept, **kwargs):
+    async def on_after_create(self, dept: Department, **kwargs):
         if dept.parent_id:
             parent_node = await self.get_by_id(dept.parent_id)
             dept.path = f"{parent_node.path}{dept.id},"
         else:
             dept.path = f",{dept.id},"
 
-    async def on_after_update(self, dept: Dept, **kwargs):
+    async def on_after_update(self, dept: Department, **kwargs):
         old_path = dept.path
         if dept.parent_id:
             parent_node = await self.get_by_id(dept.parent_id)
@@ -35,11 +35,12 @@ class DeptService(ServiceBase[Dept]):
                 db.session.add(descendant)
             await db.session.commit()
 
-    async def get_descendants(self, path: str) -> List[Dept]:
+    async def get_descendants(self, path: str) -> List[Department]:
         stmt = []
-        stmt.append(and_(Dept.path.like(path+"%"), Dept.path != path))
+        stmt.append(and_(Department.path.like(
+            path+"%"), Department.path != path))
         descendants = await self.get_list(stmt)
         return descendants
 
 
-dept_service = DeptService()
+department_service = DepartmentService()
