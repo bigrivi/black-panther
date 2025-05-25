@@ -1,5 +1,7 @@
-import { TreeNode, TreeView } from "@/components/ui/tree-view";
-import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
+import SearchInput from "@/components/ui/search-input";
+import { TreeView } from "@/components/ui/tree-view";
+import { ITreeNode } from "@/interfaces";
+import { filterTree, getExpandFilteredNodeIds } from "@/utils/tree";
 import { ArrowDropDown, ArrowDropUp, Close } from "@mui/icons-material";
 import {
     Box,
@@ -18,6 +20,7 @@ import {
     ReactNode,
     Ref,
     RefAttributes,
+    useCallback,
     useEffect,
     useMemo,
     useState,
@@ -40,10 +43,10 @@ type FieldNames = {
 };
 
 export const findNodeById = (
-    treeData: TreeNode[],
+    treeData: ITreeNode[],
     nodeId: any,
     fieldNames: FieldNames
-): TreeNode | null => {
+): ITreeNode | null => {
     for (const item of treeData) {
         if (item[fieldNames["value"]] == nodeId) {
             return item;
@@ -64,7 +67,7 @@ export type TreeSelectFieldElementProps<
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue = unknown
 > = {
-    treeData: TreeNode[];
+    treeData: ITreeNode[];
     fieldNames?: FieldNames;
     id?: string;
     required?: boolean;
@@ -123,6 +126,8 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
     const customErrorFn = parseError || errorMsgFn;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
+    const [filterText, setFilterText] = useState("");
+
     const rulesTmp = {
         ...rules,
         ...(required &&
@@ -183,7 +188,36 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
         close();
     };
 
-    const selectedItem: TreeNode | null = useMemo(() => {
+    const filteredTree = useMemo(() => {
+        if (filterText) {
+            const filteredTree = filterTree(treeData, filterText, fieldNames);
+            console.log(filteredTree);
+            return filteredTree;
+        } else {
+            return treeData;
+        }
+    }, [treeData, filterText]);
+
+    const handleFilter = useCallback(
+        (value: string) => {
+            console.log(value);
+            setFilterText(value);
+            if (value) {
+                const expandedNodeIds: string[] = getExpandFilteredNodeIds(
+                    treeData,
+                    value,
+                    fieldNames
+                );
+                console.log("expandedNodeIds", expandedNodeIds);
+                setExpandedItems(expandedNodeIds.map(String));
+            } else {
+                setExpandedItems([]);
+            }
+        },
+        [treeData]
+    );
+
+    const selectedItem: ITreeNode | null = useMemo(() => {
         if (value) {
             return findNodeById(treeData, value, fieldNames);
         }
@@ -200,10 +234,16 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
 
     useEffect(() => {
         if (treeData?.length && value) {
-            const expandedNodeIds = treeData?.flatMap((item) =>
-                getExpandNodeIds(item, fieldNames["value"])
+            const expandedNodeIds: string[] = getExpandFilteredNodeIds(
+                treeData,
+                "",
+                fieldNames,
+                (_, node, fieldNames) => {
+                    return node[fieldNames.value] == value;
+                }
             );
-            setExpandedItems(expandedNodeIds.map((nodeId) => nodeId + ""));
+            console.log("expandedNodeIds", expandedNodeIds);
+            setExpandedItems(expandedNodeIds.map(String));
         }
     }, [treeData, value]);
 
@@ -257,10 +297,17 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
                         <Box
                             display="flex"
                             borderRadius="0"
-                            height="50px"
+                            height="60px"
+                            sx={{ padding: "10px" }}
                             alignItems="center"
                             bgcolor="#f9fafb"
                         >
+                            <SearchInput
+                                autoFocus
+                                value={filterText}
+                                placeholder="Search"
+                                onChange={handleFilter}
+                            />
                             <IconButton
                                 onClick={close}
                                 sx={{
@@ -279,6 +326,7 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
                             }}
                         >
                             <TreeView
+                                filterText={filterText}
                                 expandedItems={expandedItems}
                                 onExpandedItemsChange={setExpandedItems}
                                 fieldNames={fieldNames}
@@ -287,7 +335,7 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
                                     onChange(value);
                                     close();
                                 }}
-                                treeData={treeData}
+                                treeData={filteredTree}
                             />
                         </Box>
                     </Paper>

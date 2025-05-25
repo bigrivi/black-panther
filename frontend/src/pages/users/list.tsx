@@ -1,10 +1,10 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
-import { IDepartment, IUser } from "@/interfaces";
+import { IUser } from "@/interfaces";
 import { Box, Chip, Stack } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { useList, useTranslate } from "@refinedev/core";
+import { useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
@@ -22,13 +22,6 @@ export const UserList = ({ children }: PropsWithChildren) => {
     const { dataGridProps, tableQuery, setFilters } = useDataGrid<IUser>({
         initialPageSize: 10,
         syncWithLocation: true,
-    });
-
-    const { data: deptTreeData, refetch } = useList<IDepartment>({
-        resource: "department",
-        meta: {
-            isTree: true,
-        },
     });
 
     const columns = useMemo<GridColDef<IUser>[]>(
@@ -164,8 +157,6 @@ export const UserList = ({ children }: PropsWithChildren) => {
             >
                 <Stack spacing={2} direction="row">
                     <OrgSider
-                        onReload={refetch}
-                        deptTreeData={deptTreeData?.data ?? []}
                         selectedDept={selectedDeptId}
                         onSelectedDeptChange={handleSelectedDeptIdChange}
                     />

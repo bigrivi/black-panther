@@ -1,6 +1,11 @@
 import { TreeView } from "@/components";
+import SearchInput from "@/components/ui/search-input";
 import { IDepartment } from "@/interfaces";
-import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
+import {
+    filterTree,
+    getExpandFilteredNodeIds,
+    getTreeExpandAllNodeIds,
+} from "@/utils/tree";
 import { ExpandMoreOutlined, Group, Refresh } from "@mui/icons-material";
 import {
     Box,
@@ -9,47 +14,83 @@ import {
     CardHeader,
     Divider,
     IconButton,
+    Stack,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { useList } from "@refinedev/core";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 type OrgSiderProps = {
-    onReload: () => void;
-    deptTreeData: IDepartment[];
     selectedDept?: string;
     onSelectedDeptChange: (deptId: string) => void;
 };
 export const OrgSider: FC<OrgSiderProps> = ({
-    onReload,
-    deptTreeData,
     selectedDept,
     onSelectedDeptChange,
 }) => {
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
     const [expandAll, setExpandAll] = useState(true);
+    const [filterText, setFilterText] = useState("");
+
+    const { data: deptTreeData, refetch } = useList<IDepartment>({
+        resource: "department",
+        meta: {
+            isTree: true,
+        },
+    });
+
+    const treeData = deptTreeData?.data ?? [];
+
+    const handleFilter = useCallback(
+        (value: string) => {
+            setFilterText(value);
+            if (value) {
+                const expandedNodeIds = getExpandFilteredNodeIds<
+                    string,
+                    IDepartment
+                >(treeData, value, {
+                    children: "children",
+                    label: "name",
+                    value: "path",
+                });
+                console.log("expand nodes", expandedNodeIds);
+                setExpandedItems(expandedNodeIds);
+            } else {
+                setExpandedItems([]);
+            }
+        },
+        [treeData]
+    );
 
     const handleExpandClick = () => {
         setExpandAll(!expandAll);
-        if (expandAll) {
-            setExpandedItems([]);
-        } else {
-            const expandedNodeIds = deptTreeData?.flatMap((item) =>
-                getExpandNodeIds(item, "path")
-            );
-            setExpandedItems(expandedNodeIds!.map((nodeId) => nodeId + ""));
-        }
     };
 
     useEffect(() => {
-        if (deptTreeData?.length) {
-            const expandedNodeIds = deptTreeData?.flatMap((item) =>
-                getExpandNodeIds(item, "path")
+        if (expandAll) {
+            const expandedNodeIds = getTreeExpandAllNodeIds<string>(
+                treeData,
+                "path"
             );
-            setExpandedItems(expandedNodeIds.map((nodeId) => nodeId + ""));
+            setExpandedItems(expandedNodeIds);
+        } else {
+            setExpandedItems([]);
         }
-    }, [deptTreeData]);
+    }, [expandAll, treeData]);
+
+    const filteredTree = useMemo(() => {
+        if (filterText) {
+            return filterTree(treeData, filterText, {
+                children: "children",
+                label: "name",
+                value: "path",
+            });
+        } else {
+            return treeData;
+        }
+    }, [treeData, filterText]);
 
     return (
-        <Card variant="outlined" sx={{ width: 300 }}>
+        <Card variant="outlined" sx={{ width: 300, borderRadius: 2 }}>
             <CardHeader
                 title={
                     <Box display="flex" alignItems="center">
@@ -68,40 +109,49 @@ export const OrgSider: FC<OrgSiderProps> = ({
                                 />
                             )}
                         </IconButton>
-                        <IconButton size="small" onClick={onReload}>
+                        <IconButton size="small" onClick={() => refetch()}>
                             <Refresh fontSize="small" />
                         </IconButton>
                     </>
                 }
             ></CardHeader>
             <Divider />
-            <CardContent
-                sx={{
-                    p: "32px",
-                }}
-            >
-                <Box
+            <CardContent>
+                <Stack
                     sx={{
                         height: "calc(100vh - 270px)",
                         padding: "12px",
-                        overflow: "auto",
                     }}
                 >
-                    <TreeView
-                        expandedItems={expandedItems}
-                        onExpandedItemsChange={setExpandedItems}
-                        fieldNames={{
-                            label: "name",
-                            value: "path",
-                            children: "children",
-                        }}
-                        value={selectedDept as string}
-                        onChange={(value) => {
-                            onSelectedDeptChange(value as string);
-                        }}
-                        treeData={deptTreeData}
+                    <SearchInput
+                        value={filterText}
+                        placeholder="Search"
+                        onChange={handleFilter}
                     />
-                </Box>
+                    <Box
+                        sx={{
+                            flex: 1,
+                            marginTop: 1,
+                            overflow: "auto",
+                        }}
+                    >
+                        <TreeView
+                            filterText={filterText}
+                            expandedItems={expandedItems}
+                            onExpandedItemsChange={setExpandedItems}
+                            fieldNames={{
+                                label: "name",
+                                value: "path",
+                                children: "children",
+                            }}
+                            value={selectedDept as string}
+                            onChange={(value) => {
+                                onSelectedDeptChange(value as string);
+                            }}
+                            treeData={filteredTree}
+                        />
+                    </Box>
+                </Stack>
             </CardContent>
         </Card>
     );

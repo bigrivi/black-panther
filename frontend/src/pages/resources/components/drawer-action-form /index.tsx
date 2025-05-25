@@ -58,7 +58,6 @@ export const ActionDrawerForm: FC<Props> = ({
             onClose();
             return;
         }
-        close();
         go({
             to:
                 searchParams.get("to") ??

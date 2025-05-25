@@ -4,6 +4,13 @@ export type Nullable<T> = {
     [P in keyof T]: T[P] | null;
 };
 
+interface ITreeNode {
+    label?: string;
+    value?: string | number;
+    children?: ITreeNode[];
+    [key: string]: any;
+}
+
 export interface ITag {
     id: number;
     title: string;
@@ -32,17 +39,12 @@ export interface FilterElementProps {
     onChange: (value: any) => void; // eslint-disable-line
 }
 
-interface ITreeNode {
-    id?: number;
-    children?: ITreeNode[];
-    [key: string]: any;
-}
-
 interface IDepartment {
     id: number;
     name: string;
     parent_id?: number;
     created_at: string;
+    path?: string;
     children?: IDepartment[];
 }
 

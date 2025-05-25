@@ -1,7 +1,7 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { IDepartment } from "@/interfaces";
-import { getExpandNodeIds } from "@/utils/getExpandNodeIds";
+import { getTreeExpandAllNodeIds } from "@/utils/tree";
 import {
     Add,
     ChevronRightOutlined,
@@ -29,7 +29,13 @@ import {
     EditButton,
     RefreshButton,
 } from "@refinedev/mui";
-import { Fragment, PropsWithChildren, useMemo, useState } from "react";
+import {
+    Fragment,
+    PropsWithChildren,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 
 const INDENT_WIDTH = 24;
 
@@ -65,15 +71,15 @@ export const DeptList = ({ children }: PropsWithChildren) => {
 
     const handleExpandClick = () => {
         setExpandAll(!expandAll);
-        if (expandAll) {
-            setExpandedRowKeys([]);
-        } else {
-            const expandedNodeIds = rows.flatMap((item) =>
-                getExpandNodeIds(item)
-            );
-            setExpandedRowKeys(expandedNodeIds);
-        }
     };
+
+    useEffect(() => {
+        if (expandAll) {
+            setExpandedRowKeys(getTreeExpandAllNodeIds<number>(rows));
+        } else {
+            setExpandedRowKeys([]);
+        }
+    }, [expandAll]);
 
     const renderChildren = (children: IDepartment[] = [], depth: number) => {
         return children.map((item) => {

@@ -48,7 +48,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
     });
 
     const { data: deptTreeData } = useCustom<IDepartment[]>({
-        url: `dept/tree`,
+        url: `department/tree`,
         method: "get",
         config: {
             query: {
@@ -58,13 +58,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
     });
 
     const treeData = useMemo(() => {
-        return [
-            {
-                id: null,
-                name: "Root",
-                children: [...(deptTreeData?.data ?? [])],
-            },
-        ];
+        return deptTreeData?.data ?? [];
     }, [deptTreeData]);
 
     const onDrawerCLose = () => {

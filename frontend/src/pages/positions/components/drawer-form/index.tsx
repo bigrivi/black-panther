@@ -46,7 +46,6 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
     });
 
     const onDrawerCLose = () => {
-        close();
         go({
             to:
                 searchParams.get("to") ??

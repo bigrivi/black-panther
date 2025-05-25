@@ -25,9 +25,10 @@ type Props = {
     action: "create" | "edit";
 };
 
-interface IUserForm extends IUser {
+interface IUserForm extends Omit<IUser, "roles"> {
     password: string;
     confirm_password?: string;
+    roles: number[];
 }
 
 export const UserDrawerForm: FC<Props> = ({ action }) => {
@@ -79,7 +80,6 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
     });
 
     const onDrawerCLose = () => {
-        close();
         go({
             to:
                 searchParams.get("to") ??
@@ -154,7 +154,11 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             id="email"
                         />
                     </FormItem>
-                    <FormItem label="Department" htmlFor="department_id">
+                    <FormItem
+                        label="Department"
+                        required
+                        htmlFor="department_id"
+                    >
                         <TreeSelectFieldElement
                             name="department_id"
                             fieldNames={{

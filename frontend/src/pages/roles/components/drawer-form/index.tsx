@@ -46,7 +46,6 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
     console.log(methods.getValues());
 
     const onDrawerCLose = () => {
-        close();
         go({
             to:
                 searchParams.get("to") ??

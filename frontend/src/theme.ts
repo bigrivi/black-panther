@@ -24,6 +24,9 @@ const LightTheme = createTheme({
             styleOverrides: {
                 input: {
                     padding: "10px 12px",
+                    "&.MuiInputBase-inputSizeSmall": {
+                        padding: "6px 8px",
+                    },
                 },
                 root: {
                     borderRadius: "6px",
