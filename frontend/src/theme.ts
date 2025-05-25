@@ -54,6 +54,22 @@ const LightTheme = createTheme({
                 variant: "body2",
             },
         },
+        MuiAutocomplete: {
+            styleOverrides: {
+                root: {
+                    "& .MuiOutlinedInput-root": {
+                        padding: "0px 30px 0px 8px",
+                        minHeight: 43,
+                        "& .MuiChip-root": {
+                            height: 28,
+                        },
+                    },
+                    "& .MuiAutocomplete-option": {
+                        padding: 10,
+                    },
+                },
+            },
+        },
     },
 });
 
