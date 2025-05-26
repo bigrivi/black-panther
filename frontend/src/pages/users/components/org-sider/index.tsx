@@ -90,7 +90,7 @@ export const OrgSider: FC<OrgSiderProps> = ({
     }, [treeData, filterText]);
 
     return (
-        <Card variant="outlined" sx={{ width: 300, borderRadius: 2 }}>
+        <Card variant="outlined" sx={{ width: "100%", borderRadius: 2 }}>
             <CardHeader
                 title={
                     <Box display="flex" alignItems="center">

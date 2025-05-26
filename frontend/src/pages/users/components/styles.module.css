@@ -1,0 +1,16 @@
+.ResizeHandle{
+    flex: 0 0 1em;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid rgba(224, 224, 224, 1);
+    transition: background-color 0.2s linear;
+        background-color: rgba(255, 255, 255, 0.3);
+
+}
+.ResizeHandle:hover{
+    background-color: rgba(255, 255, 255, 0.9);
+}
+

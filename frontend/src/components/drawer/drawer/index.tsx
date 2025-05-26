@@ -1,6 +1,5 @@
 import { useColorModeContext } from "@/contexts";
 import { Stack } from "@mui/material";
-import gray from "@mui/material/colors/grey";
 import BaseDrawer, { type DrawerProps } from "@mui/material/Drawer";
 import type { PropsWithChildren } from "react";
 import { DrawerHeader } from "../header";
@@ -15,7 +14,7 @@ export const Drawer = ({ children, ...props }: PropsWithChildren<Props>) => {
             {...props}
             sx={{
                 "& .MuiDrawer-paper": {
-                    backgroundColor: mode === "light" ? gray[100] : "#000",
+                    backgroundColor: mode === "light" ? "#f5f5f5" : "#000",
                 },
                 ...props.sx,
             }}

@@ -4,7 +4,7 @@ import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
 import { useTable } from "@/hooks";
 import { IRole, IUser } from "@/interfaces";
-import { Box, Chip, Stack } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import { useList, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
@@ -15,7 +15,9 @@ import {
 } from "@refinedev/mui";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo, useState } from "react";
+import { Panel, PanelGroup } from "react-resizable-panels";
 import { OrgSider } from "./components/org-sider";
+import ResizeHandle from "./components/ResizeHandle";
 
 export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
@@ -184,15 +186,22 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 }}
             >
                 <Stack spacing={2} direction="row">
-                    <OrgSider
-                        selectedDept={selectedDeptId}
-                        onSelectedDeptChange={handleSelectedDeptIdChange}
-                    />
-                    <Box sx={{ flex: 1, overflow: "auto" }}>
-                        <Paper>
-                            <MaterialReactTable table={table} />
-                        </Paper>
-                    </Box>
+                    <PanelGroup autoSaveId="persistence" direction="horizontal">
+                        <Panel collapsible defaultSize={20} minSize={10}>
+                            <OrgSider
+                                selectedDept={selectedDeptId}
+                                onSelectedDeptChange={
+                                    handleSelectedDeptIdChange
+                                }
+                            />
+                        </Panel>
+                        <ResizeHandle />
+                        <Panel>
+                            <Paper>
+                                <MaterialReactTable table={table} />
+                            </Paper>
+                        </Panel>
+                    </PanelGroup>
                 </Stack>
             </RefineListView>
             {children}

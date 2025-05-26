@@ -1,4 +1,4 @@
-import gray from "@mui/material/colors/grey";
+// import gray from "@mui/material/colors/grey";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { RefineThemes } from "@refinedev/mui";
 
@@ -42,10 +42,10 @@ const LightTheme = createTheme({
         MuiCssBaseline: {
             styleOverrides: {
                 "main.MuiBox-root": {
-                    backgroundColor: gray[100],
+                    backgroundColor: "#f5f5f5",
                 },
                 body: {
-                    backgroundColor: gray[100],
+                    backgroundColor: "#f5f5f5",
                 },
             },
         },
