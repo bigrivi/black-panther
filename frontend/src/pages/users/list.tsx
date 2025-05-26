@@ -2,7 +2,7 @@ import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
-import { useTable } from "@/hooks/useTable";
+import { useTable } from "@/hooks";
 import { IRole, IUser } from "@/interfaces";
 import { Box, Chip, Stack } from "@mui/material";
 import { useList, useTranslate } from "@refinedev/core";
@@ -81,7 +81,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
             {
                 accessorKey: "created_at",
                 accessorFn: (row) => new Date(row.created_at),
-                header: t("orders.fields.createdAt"),
+                header: t("fields.createdAt"),
                 size: 200,
                 filterFn: "between",
                 filterVariant: "datetime-range",

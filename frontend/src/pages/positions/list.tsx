@@ -1,8 +1,9 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
+import { defaultDataTimeFormat } from "@/constants";
+import { useTable } from "@/hooks";
 import { IPostion } from "@/interfaces";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useTranslate } from "@refinedev/core";
 import {
     CreateButton,
@@ -10,74 +11,83 @@ import {
     DeleteButton,
     EditButton,
     RefreshButton,
-    useDataGrid,
 } from "@refinedev/mui";
+import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo } from "react";
 
 export const PositionList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
 
-    const { dataGridProps, tableQuery } = useDataGrid<IPostion>({
-        initialPageSize: 10,
-    });
-
-    const columns = useMemo<GridColDef<IPostion>[]>(
+    const columns = useMemo<MRT_ColumnDef<IPostion>[]>(
         () => [
             {
-                field: "name",
-                headerName: "Position name",
-                width: 200,
-            },
-
-            {
-                field: "code",
-                headerName: "Position code",
-                width: 200,
+                accessorKey: "name",
+                header: "Position Name",
+                size: 200,
             },
             {
-                field: "description",
-                headerName: "Description",
-                width: 150,
-            },
-
-            {
-                field: "created_at",
-                headerName: t("orders.fields.createdAt"),
+                accessorKey: "code",
+                header: "Position Code",
                 width: 200,
-                display: "flex",
-                renderCell: function render({ row }) {
+            },
+            {
+                accessorKey: "description",
+                header: "Description",
+                width: 200,
+            },
+            {
+                accessorKey: "created_at",
+                accessorFn: (row) => new Date(row.created_at),
+                header: t("fields.createdAt"),
+                size: 200,
+                filterFn: "between",
+                filterVariant: "datetime-range",
+                Cell: function render({ row }) {
                     return (
                         <DateField
-                            value={row.created_at}
-                            format="LL / hh:mm a"
+                            value={row.original.created_at}
+                            format={defaultDataTimeFormat}
                         />
                     );
                 },
             },
             {
-                field: "valid_state",
-                headerName: t("fields.status.label"),
-                width: 150,
-                display: "flex",
-                type: "boolean",
-                renderCell: function render({ row }) {
-                    return <Status value={row.valid_state!} />;
+                accessorKey: "valid_state",
+                enableColumnFilterModes: false,
+                filterSelectOptions: [
+                    {
+                        label: t(`fields.status.true`),
+                        value: "1",
+                    },
+                    {
+                        label: t(`fields.status.false`),
+                        value: "0",
+                    },
+                ],
+                filterVariant: "select",
+                header: t("users.fields.isActive.label"),
+                size: 150,
+                Cell: ({ row }) => {
+                    return <Status value={row.original.valid_state!} />;
                 },
             },
             {
-                field: "actions",
-                headerName: t("table.actions"),
-                sortable: false,
-                filterable: false,
-                align: "center",
-                headerAlign: "center",
-                display: "flex",
-                width: 200,
-                renderCell: function render({ row }) {
+                accessorKey: "actions",
+                header: t("table.actions"),
+                enableColumnFilter: false,
+                enableSorting: false,
+                size: 150,
+                Cell: function render({ row }) {
                     return (
                         <>
-                            <EditButton hideText recordItemId={row.id} />
-                            <DeleteButton hideText recordItemId={row.id} />
+                            <EditButton
+                                hideText
+                                recordItemId={row.original.id}
+                            />
+                            <DeleteButton
+                                hideText
+                                recordItemId={row.original.id}
+                            />
                         </>
                     );
                 },
@@ -85,6 +95,15 @@ export const PositionList = ({ children }: PropsWithChildren) => {
         ],
         [t]
     );
+
+    const {
+        refineCore: { tableQuery },
+        ...table
+    } = useTable({
+        columns,
+        enableColumnPinning: true,
+        initialState: { columnPinning: { right: ["actions"] } },
+    });
 
     return (
         <>
@@ -100,19 +119,7 @@ export const PositionList = ({ children }: PropsWithChildren) => {
                 }}
             >
                 <Paper>
-                    <DataGrid
-                        {...dataGridProps}
-                        columns={columns}
-                        pageSizeOptions={[10, 20, 50, 100]}
-                        sx={{
-                            "&.MuiDataGrid-root": {
-                                border: "0px solid !important",
-                            },
-                            "& .MuiDataGrid-row": {
-                                cursor: "pointer",
-                            },
-                        }}
-                    />
+                    <MaterialReactTable table={table} />
                 </Paper>
             </RefineListView>
             {children}

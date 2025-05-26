@@ -9,7 +9,6 @@
         "@mui/icons-material": "^7.1.0",
         "@mui/lab": "^6.0.0-beta.14",
         "@mui/material": "^7.1.0",
-        "@mui/x-data-grid": "^7.22.2",
         "@mui/x-date-pickers": "^8.4.0",
         "@mui/x-tree-view": "^7.0.0",
         "@refinedev/cli": "^2.16.21",
