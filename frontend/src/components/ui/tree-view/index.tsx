@@ -47,7 +47,7 @@ export const TreeView = <T extends TreeNode>({
         itemIds: string | null
     ) => {
         var element = event.target as HTMLElement;
-        if (element.tagName === "DIV") {
+        if (element.tagName.toUpperCase() !== "SVG") {
             onChange(itemIds);
         }
     };

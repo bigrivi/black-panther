@@ -1,126 +1,154 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
-import { IUser } from "@/interfaces";
+import { defaultDataTimeFormat } from "@/constants";
+import { useTable } from "@/hooks/useTable";
+import { IRole, IUser } from "@/interfaces";
 import { Box, Chip, Stack } from "@mui/material";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { useTranslate } from "@refinedev/core";
+import { useList, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
     DeleteButton,
     EditButton,
     RefreshButton,
-    useDataGrid,
 } from "@refinedev/mui";
+import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { OrgSider } from "./components/org-sider";
 
 export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const [selectedDeptId, setSelectedDeptId] = useState<string>("");
-    const { dataGridProps, tableQuery, setFilters } = useDataGrid<IUser>({
-        initialPageSize: 10,
-        syncWithLocation: true,
+    const { data: rolesData } = useList<IRole>({
+        resource: "role",
+        pagination: { mode: "off" },
     });
 
-    const columns = useMemo<GridColDef<IUser>[]>(
+    const columns = useMemo<MRT_ColumnDef<IUser>[]>(
         () => [
             {
-                field: "login_name",
-                headerName: "LoginName",
-                width: 150,
-            },
-
-            {
-                field: "user_name",
-                headerName: "UserName",
-                width: 150,
+                accessorKey: "login_name",
+                header: "LoginName",
+                size: 200,
             },
             {
-                field: "email",
-                headerName: "Email",
+                accessorKey: "user_name",
+                header: "UserName",
+                width: 200,
+            },
+            {
+                accessorKey: "email",
+                header: "Email",
                 width: 150,
             },
             {
-                field: "department",
-                headerName: "Department",
-                sortable: false,
-                flex: 1,
-                minWidth: 150,
-                renderCell: function render({ row }) {
-                    return row.department?.name ?? "";
+                accessorKey: "department",
+                header: "Department",
+                enableColumnFilter: false,
+                enableSorting: false,
+                Cell: function render({ row }) {
+                    return row.original.department?.name ?? "";
                 },
             },
             {
-                field: "roles",
-                headerName: "Roles",
-                sortable: false,
-                flex: 1,
-                minWidth: 200,
-                renderCell: function render({ row }) {
+                accessorKey: "roles",
+                header: "Roles",
+                enableSorting: false,
+                filterFn: "any",
+                enableColumnFilterModes: false,
+                filterSelectOptions:
+                    rolesData?.data.map((item) => {
+                        return { label: item.name, value: item.id + "" };
+                    }) ?? [],
+                filterVariant: "select",
+                grow: true,
+                Cell: function render({ row }) {
                     return (
-                        <>
-                            {row.roles.map((role) => (
+                        <div>
+                            {row.original.roles.map((role) => (
                                 <Chip
                                     size="small"
                                     key={role.id}
                                     label={role.name}
                                 />
                             ))}
-                        </>
+                        </div>
                     );
                 },
             },
+
             {
-                field: "createdAt",
-                headerName: t("orders.fields.createdAt"),
-                width: 200,
-                display: "flex",
-                renderCell: function render({ row }) {
+                accessorKey: "created_at",
+                accessorFn: (row) => new Date(row.created_at),
+                header: t("orders.fields.createdAt"),
+                size: 200,
+                filterFn: "between",
+                filterVariant: "datetime-range",
+                Cell: function render({ row }) {
                     return (
                         <DateField
-                            value={row.created_at}
-                            format="LL / hh:mm a"
+                            value={row.original.created_at}
+                            format={defaultDataTimeFormat}
                         />
                     );
                 },
             },
             {
-                field: "is_active",
-                headerName: t("users.fields.isActive.label"),
-                width: 150,
-                display: "flex",
-                type: "boolean",
-                renderCell: function render({ row }) {
-                    return <Status value={row.is_active!} />;
+                accessorKey: "is_active",
+                enableColumnFilterModes: false,
+                filterSelectOptions: [
+                    {
+                        label: t(`fields.status.true`),
+                        value: "1",
+                    },
+                    {
+                        label: t(`fields.status.false`),
+                        value: "0",
+                    },
+                ],
+                filterVariant: "select",
+                header: t("users.fields.isActive.label"),
+                size: 150,
+                Cell: ({ row }) => {
+                    return <Status value={row.original.is_active!} />;
                 },
             },
             {
-                field: "actions",
-                headerName: t("table.actions"),
-                sortable: false,
-                filterable: false,
-                pinnable: true,
-                align: "center",
-                headerAlign: "center",
-                display: "flex",
-                width: 200,
-                renderCell: function render({ row }) {
+                accessorKey: "actions",
+                header: t("table.actions"),
+                enableColumnFilter: false,
+                enableSorting: false,
+                size: 150,
+                Cell: function render({ row }) {
                     return (
                         <>
-                            <EditButton hideText recordItemId={row.id} />
-                            <DeleteButton hideText recordItemId={row.id} />
+                            <EditButton
+                                hideText
+                                recordItemId={row.original.id}
+                            />
+                            <DeleteButton
+                                hideText
+                                recordItemId={row.original.id}
+                            />
                         </>
                     );
                 },
             },
         ],
-        [t]
+        [t, rolesData]
     );
 
+    const {
+        refineCore: { setFilters, tableQuery },
+        ...table
+    } = useTable({
+        columns,
+        enableColumnPinning: true,
+        initialState: { columnPinning: { right: ["actions"] } },
+    });
+
     const handleSelectedDeptIdChange = (deptId: string) => {
-        console.log("onChange", deptId);
         if (deptId != selectedDeptId) {
             setSelectedDeptId(deptId);
             setFilters([
@@ -162,19 +190,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                     />
                     <Box sx={{ flex: 1, overflow: "auto" }}>
                         <Paper>
-                            <DataGrid
-                                {...dataGridProps}
-                                columns={columns}
-                                pageSizeOptions={[10, 20, 50, 100]}
-                                sx={{
-                                    "&.MuiDataGrid-root": {
-                                        border: "0px solid !important",
-                                    },
-                                    "& .MuiDataGrid-row": {
-                                        cursor: "pointer",
-                                    },
-                                }}
-                            />
+                            <MaterialReactTable table={table} />
                         </Paper>
                     </Box>
                 </Stack>

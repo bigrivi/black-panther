@@ -4,6 +4,8 @@ import { useAuthProvider } from "@/hooks/useAuthProvider";
 import dataProvider from "@/providers/data-provider";
 import { resources } from "@/resources";
 import { CssBaseline, GlobalStyles } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { HttpError, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import {
@@ -59,36 +61,38 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <RefineKbarProvider>
-                <ColorModeContextProvider>
-                    <CssBaseline />
-                    <GlobalStyles
-                        styles={{ html: { WebkitFontSmoothing: "auto" } }}
-                    />
-                    <RefineSnackbarProvider>
-                        <Refine
-                            i18nProvider={i18nProvider}
-                            accessControlProvider={accessControlProvider}
-                            dataProvider={dataProvider(axiosInstance)}
-                            notificationProvider={useNotificationProvider}
-                            routerProvider={routerBindings}
-                            authProvider={authProvider}
-                            resources={resources}
-                            options={{
-                                syncWithLocation: true,
-                                warnWhenUnsavedChanges: true,
-                                useNewQueryKeys: true,
-                                title: {
-                                    text: "Photinia",
-                                },
-                            }}
-                        >
-                            <AppRoutes />
-                            <UnsavedChangesNotifier />
-                            <DocumentTitleHandler />
-                            <RefineKbar />
-                        </Refine>
-                    </RefineSnackbarProvider>
-                </ColorModeContextProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <ColorModeContextProvider>
+                        <CssBaseline />
+                        <GlobalStyles
+                            styles={{ html: { WebkitFontSmoothing: "auto" } }}
+                        />
+                        <RefineSnackbarProvider>
+                            <Refine
+                                i18nProvider={i18nProvider}
+                                accessControlProvider={accessControlProvider}
+                                dataProvider={dataProvider(axiosInstance)}
+                                notificationProvider={useNotificationProvider}
+                                routerProvider={routerBindings}
+                                authProvider={authProvider}
+                                resources={resources}
+                                options={{
+                                    syncWithLocation: true,
+                                    warnWhenUnsavedChanges: true,
+                                    useNewQueryKeys: true,
+                                    title: {
+                                        text: "Photinia",
+                                    },
+                                }}
+                            >
+                                <AppRoutes />
+                                <UnsavedChangesNotifier />
+                                <DocumentTitleHandler />
+                                <RefineKbar />
+                            </Refine>
+                        </RefineSnackbarProvider>
+                    </ColorModeContextProvider>
+                </LocalizationProvider>
             </RefineKbarProvider>
         </BrowserRouter>
     );
