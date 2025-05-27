@@ -1,5 +1,7 @@
 import { Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
+import { Status } from "@/components/status";
+import { defaultDataTimeFormat } from "@/constants";
 import { IDepartment } from "@/interfaces";
 import { getTreeExpandAllNodeIds } from "@/utils/tree";
 import {
@@ -121,12 +123,13 @@ export const DeptList = ({ children }: PropsWithChildren) => {
                             </Box>
                         </TableCell>
                         <TableCell align={"left"}>
-                            {
-                                <DateField
-                                    value={item.created_at}
-                                    format="LL / hh:mm a"
-                                />
-                            }
+                            <DateField
+                                value={item.created_at}
+                                format={defaultDataTimeFormat}
+                            />
+                        </TableCell>
+                        <TableCell align={"left"}>
+                            <Status value={item.valid_state!} />
                         </TableCell>
                         <TableCell align={"left"}>
                             <Stack direction="row">
@@ -198,6 +201,9 @@ export const DeptList = ({ children }: PropsWithChildren) => {
                                     </TableCell>
                                     <TableCell align={"left"}>
                                         {t("orders.fields.createdAt")}
+                                    </TableCell>
+                                    <TableCell align={"left"}>
+                                        {t("fields.status.label")}
                                     </TableCell>
                                     <TableCell
                                         style={{

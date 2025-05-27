@@ -46,6 +46,7 @@ interface IDepartment {
     created_at: string;
     path?: string;
     children?: IDepartment[];
+    valid_state?: boolean;
 }
 
 interface IRole {

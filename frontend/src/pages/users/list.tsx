@@ -110,7 +110,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                     },
                 ],
                 filterVariant: "select",
-                header: t("users.fields.isActive.label"),
+                header: t("fields.status.label"),
                 size: 150,
                 Cell: ({ row }) => {
                     return <Status value={row.original.is_active!} />;
