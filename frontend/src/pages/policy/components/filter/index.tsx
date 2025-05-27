@@ -1,15 +1,12 @@
-import React, { FC, SyntheticEvent, useMemo } from "react";
-import { usePolicyProviderContext } from "../../context";
+import { Search } from "@mui/icons-material";
 import {
-    Autocomplete as MUIAutoComplete,
     AutocompleteProps,
-    IconButton,
-    InputAdornment,
-    OutlinedInput,
+    Autocomplete as MUIAutoComplete,
     styled,
     TextField,
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { FC, SyntheticEvent, useMemo } from "react";
+import { usePolicyProviderContext } from "../../context";
 type FilterProps = {
     onChange: (value: string[]) => void;
 };

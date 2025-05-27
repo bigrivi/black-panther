@@ -1,34 +1,32 @@
-import { useState, useEffect, useContext, type ReactNode } from "react";
+import { IUser } from "@/interfaces";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import BrightnessHighIcon from "@mui/icons-material/BrightnessHigh";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import AppBar from "@mui/material/AppBar";
+import Autocomplete from "@mui/material/Autocomplete";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import {
-    useList,
-    useTranslate,
     useGetIdentity,
     useGetLocale,
     useSetLocale,
+    useTranslate,
 } from "@refinedev/core";
 import {
-    type RefineThemedLayoutV2HeaderProps,
     HamburgerMenu,
+    type RefineThemedLayoutV2HeaderProps,
 } from "@refinedev/mui";
-import AppBar from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
-import Autocomplete from "@mui/material/Autocomplete";
-import Stack from "@mui/material/Stack";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import SearchOutlined from "@mui/icons-material/SearchOutlined";
-import BrightnessHighIcon from "@mui/icons-material/BrightnessHigh";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import i18n from "../../i18n";
-import type { IOrder, IStore, ICourier, IIdentity } from "../../interfaces";
+import { useContext, useState, type ReactNode } from "react";
 import { ColorModeContext } from "../../contexts";
+import i18n from "../../i18n";
 
 interface IOptions {
     label: string;
@@ -46,7 +44,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
     const changeLanguage = useSetLocale();
     const locale = useGetLocale();
     const currentLocale = locale();
-    const { data: user } = useGetIdentity<IIdentity | null>();
+    const { data: user } = useGetIdentity<IUser | null>();
 
     const t = useTranslate();
 
@@ -270,9 +268,9 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                                 }}
                                 variant="subtitle2"
                             >
-                                {user?.name}
+                                {user?.user_name}
                             </Typography>
-                            <Avatar src={user?.avatar} alt={user?.name} />
+                            <Avatar alt={user?.user_name} />
                         </Stack>
                     </Stack>
                 </Stack>
