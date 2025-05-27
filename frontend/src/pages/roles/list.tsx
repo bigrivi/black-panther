@@ -61,7 +61,7 @@ export const RoleList = ({ children }: PropsWithChildren) => {
                 ],
                 filterVariant: "select",
                 header: t("users.fields.isActive.label"),
-                size: 150,
+                glow: true,
                 Cell: ({ row }) => {
                     return <Status value={row.original.valid_state!} />;
                 },

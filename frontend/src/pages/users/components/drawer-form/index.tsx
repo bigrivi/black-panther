@@ -117,31 +117,39 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                     <FormItem label="Login Name" required htmlFor="login_name">
                         <TextFieldElement name="login_name" id="login_name" />
                     </FormItem>
-                    <FormItem
-                        label="Password"
-                        required={action == "create"}
-                        htmlFor="password"
-                    >
-                        <PasswordElement name="password" id="password" />
-                    </FormItem>
+
                     {action == "create" && (
-                        <FormItem
-                            label="Confirm Password"
-                            required
-                            htmlFor="confirm_password"
-                        >
-                            <PasswordElement
-                                rules={{
-                                    validate: (val) => {
-                                        if (methods.watch("password") != val) {
-                                            return "Confirm password do no match password";
-                                        }
-                                    },
-                                }}
-                                name="confirm_password"
-                                id="confirm_password"
-                            />
-                        </FormItem>
+                        <>
+                            <FormItem
+                                label="Password"
+                                required={action == "create"}
+                                htmlFor="password"
+                            >
+                                <PasswordElement
+                                    name="password"
+                                    id="password"
+                                />
+                            </FormItem>
+                            <FormItem
+                                label="Confirm Password"
+                                required
+                                htmlFor="confirm_password"
+                            >
+                                <PasswordElement
+                                    rules={{
+                                        validate: (val) => {
+                                            if (
+                                                methods.watch("password") != val
+                                            ) {
+                                                return "Confirm password do no match password";
+                                            }
+                                        },
+                                    }}
+                                    name="confirm_password"
+                                    id="confirm_password"
+                                />
+                            </FormItem>
+                        </>
                     )}
 
                     <FormItem label="User Name" required htmlFor="user_name">

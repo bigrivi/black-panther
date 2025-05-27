@@ -187,7 +187,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
             >
                 <Stack spacing={2} direction="row">
                     <PanelGroup autoSaveId="persistence" direction="horizontal">
-                        <Panel collapsible defaultSize={20} minSize={10}>
+                        <Panel collapsible defaultSize={20} minSize={20}>
                             <OrgSider
                                 selectedDept={selectedDeptId}
                                 onSelectedDeptChange={

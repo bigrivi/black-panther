@@ -1,11 +1,9 @@
-// import gray from "@mui/material/colors/grey";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { RefineThemes } from "@refinedev/mui";
-
 const LightTheme = createTheme({
-    ...RefineThemes.Purple,
+    ...RefineThemes.Magenta,
     components: {
-        ...RefineThemes.PurpleDark.components,
+        ...RefineThemes.Magenta.components,
         MuiChip: {
             styleOverrides: {
                 labelSmall: {
