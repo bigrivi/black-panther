@@ -72,19 +72,23 @@ export const getExpandFilteredNodeIds = <T, Y extends BasicDataNode>(
         }, []);
 };
 
-export const getTreeExpandAllNodeIds = <T extends BasicDataNode>(
-    nodes: T[],
+export const getTreeExpandAllNodeIds = <T>(
+    nodes: BasicDataNode[],
     idKey: string = "id",
     childrenKey: string = "children"
 ): T[] => {
     return nodes.reduce((acc: T[], item) => {
         if (item[childrenKey] && item[childrenKey].length) {
             return acc.concat(item[idKey], [
-                ...getTreeExpandAllNodeIds<T>(item[childrenKey], idKey),
+                ...getTreeExpandAllNodeIds<T>(
+                    item[childrenKey] as BasicDataNode[],
+                    idKey,
+                    childrenKey
+                ),
             ]);
         }
         return acc;
-    }, []);
+    }, []) as T[];
 };
 
 export const filterTree = <T extends BasicDataNode>(
