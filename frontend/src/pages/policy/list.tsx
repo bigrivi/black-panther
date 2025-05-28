@@ -143,7 +143,7 @@ export const PolicyPage = () => {
                 roleData?.data.reduce((acc, curr) => {
                     return {
                         ...acc,
-                        [curr.id + ""]: curr.actions.map((item) => item.id),
+                        [curr.id + ""]: curr.actions?.map((item) => item.id),
                     };
                 }, {});
             serverInitialRoleActionsRef.current = Object.keys(

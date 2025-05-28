@@ -21,7 +21,7 @@ const LightTheme = createTheme({
         MuiOutlinedInput: {
             styleOverrides: {
                 input: {
-                    padding: "10px 12px",
+                    padding: "9px 12px",
                     "&.MuiInputBase-inputSizeSmall": {
                         padding: "6px 8px",
                     },

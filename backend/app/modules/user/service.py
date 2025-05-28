@@ -74,7 +74,6 @@ class UserService(ServiceBase[User]):
         entity = await self.get_by_id(id)
         hash_password = get_hashed_password(new_password)
         entity.password = hash_password
-        entity.password_valid = 1
         db.session.add(entity)
         await db.session.flush()
         await db.session.commit()

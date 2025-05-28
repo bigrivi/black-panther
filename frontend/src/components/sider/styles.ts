@@ -19,6 +19,8 @@ const useStyles = makeStyles()((theme) => {
         menu: {
             "& .MuiListItemButton-root": {
                 transition: "background 300ms linear",
+                paddingTop: 4,
+                paddingBottom: 4,
                 "&.isSubMenuActive": {
                     "& .MuiListItemIcon-root": {},
                 },

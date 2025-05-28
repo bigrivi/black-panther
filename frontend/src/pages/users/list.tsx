@@ -4,8 +4,9 @@ import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
 import { useTable } from "@/hooks";
 import { IRole, IUser } from "@/interfaces";
-import { Chip, Stack } from "@mui/material";
-import { useList, useTranslate } from "@refinedev/core";
+import { KeyOutlined } from "@mui/icons-material";
+import { Chip, IconButton, Stack } from "@mui/material";
+import { useList, useModal, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
@@ -17,11 +18,15 @@ import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo, useState } from "react";
 import { Panel, PanelGroup } from "react-resizable-panels";
 import { OrgSider } from "./components/org-sider";
+import { PasswordModifyForm } from "./components/password";
 import ResizeHandle from "./components/ResizeHandle";
 
 export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const [selectedDeptId, setSelectedDeptId] = useState<string>("");
+    const { visible, show, close } = useModal();
+    const [editId, setEditId] = useState<number>();
+
     const { data: rolesData } = useList<IRole>({
         resource: "role",
         pagination: { mode: "off" },
@@ -133,6 +138,15 @@ export const UserList = ({ children }: PropsWithChildren) => {
                                 hideText
                                 recordItemId={row.original.id}
                             />
+                            <IconButton
+                                onClick={() => {
+                                    setEditId(row.original.id);
+                                    show();
+                                }}
+                                color="primary"
+                            >
+                                <KeyOutlined />
+                            </IconButton>
                         </>
                     );
                 },
@@ -204,6 +218,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                     </PanelGroup>
                 </Stack>
             </RefineListView>
+            <PasswordModifyForm id={editId} isOpen={visible} onClose={close} />
             {children}
         </>
     );

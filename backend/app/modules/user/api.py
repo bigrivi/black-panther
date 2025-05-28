@@ -46,12 +46,12 @@ class UserController():
         current_user: User = await self.service.get_by_id(request.user.identity)
         if verify_password(old_pwd, current_user.password):
             await self.service.update_password(current_user.user_id, new_pwd)
-            return True
+            return response_base.success()
         raise errors.BadRequestError(msg="The original password is incorrect")
 
     @router.put("/{id}/update_password", dependencies=[
         DependsJwtAuth,
-        Depends(RequestPermission("user.update_password")),
+        Depends(RequestPermission("user:update_password")),
         DependsRBAC
     ])
     async def update_password(self, request: Request, id: int = Path(..., title="The ID of the item to get"), new_pwd: str = Body(..., min_length=4)):
@@ -59,3 +59,4 @@ class UserController():
         update user password
         '''
         await self.service.update_password(id, new_pwd)
+        return response_base.success()
