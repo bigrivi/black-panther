@@ -7,17 +7,15 @@ import {
     MRT_ColumnDef,
     useMaterialReactTable,
 } from "material-react-table";
-import { FC, useMemo } from "react";
+import { useMemo } from "react";
 import { useFieldArray } from "react-hook-form";
 import { TextFieldElement } from "react-hook-form-mui";
-type Props = {};
 
-export const EnumOptionsField: FC<Props> = ({}) => {
+export const EnumOptionsField = () => {
     const { fields, append, remove, move } = useFieldArray({
         name: "items",
         keyName: "key",
     });
-    console.log("fields", fields);
     const columns = useMemo<MRT_ColumnDef<IEnumOption>[]>(
         () => [
             {
