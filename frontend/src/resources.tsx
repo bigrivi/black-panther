@@ -85,4 +85,14 @@ export const resources: ResourceProps[] = [
             parent: "system_manager",
         },
     },
+    {
+        name: "enum",
+        list: "/enums",
+        create: "/enums/create",
+        edit: "/enums/edit/:id",
+        meta: {
+            label: "Enum",
+            parent: "system_manager",
+        },
+    },
 ];

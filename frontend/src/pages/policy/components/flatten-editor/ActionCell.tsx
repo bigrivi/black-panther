@@ -1,8 +1,8 @@
+import { BorderedCell } from "@/components";
 import { IAction } from "@/interfaces";
-import { FC } from "react";
-import { BorderedCell } from "../common/BorderedCell";
-import { usePolicyProviderContext } from "../../context";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { FC } from "react";
+import { usePolicyProviderContext } from "../../context";
 
 type ActionCellProps = {
     data?: IAction;

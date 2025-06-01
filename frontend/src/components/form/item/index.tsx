@@ -28,6 +28,9 @@ export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
         );
     };
     const renderControl = () => {
+        if (!children) {
+            return null;
+        }
         return (
             <FormControl>
                 {React.cloneElement(children as React.ReactElement, {

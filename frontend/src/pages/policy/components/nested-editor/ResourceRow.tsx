@@ -1,3 +1,4 @@
+import { BorderedCell } from "@/components";
 import { IResource } from "@/interfaces";
 import {
     CheckBoxOutlineBlank,
@@ -19,7 +20,6 @@ import {
 import classNames from "classnames";
 import { FC, useState } from "react";
 import { usePolicyProviderContext } from "../../context";
-import { BorderedCell } from "../common/BorderedCell";
 import { useHighLightRowColumnContext } from "./context";
 import { ResourceCell } from "./ResourceCell";
 import { StickColumn } from "./StickColumn";

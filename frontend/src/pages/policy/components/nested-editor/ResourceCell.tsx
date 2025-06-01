@@ -1,10 +1,10 @@
-import { FC, MouseEventHandler } from "react";
-import { BorderedCell } from "../common/BorderedCell";
+import { BorderedCell } from "@/components";
 import { IAction, IResource, IRole } from "@/interfaces";
 import { Checkbox } from "@mui/material";
+import classNames from "classnames";
+import { FC } from "react";
 import { usePolicyProviderContext } from "../../context";
 import { useHighLightRowColumnContext } from "./context";
-import classNames from "classnames";
 type ResourceCellProps = {
     resource: IResource;
     role: IRole;

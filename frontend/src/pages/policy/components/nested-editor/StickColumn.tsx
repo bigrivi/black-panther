@@ -1,6 +1,6 @@
+import { BorderedCell } from "@/components";
 import { styled } from "@mui/material";
 import { tableCellClasses, TableCellProps } from "@mui/material/TableCell";
-import { BorderedCell } from "../common/BorderedCell";
 export const StickColumn = styled(({ children, ...rest }: TableCellProps) => {
     return <BorderedCell {...rest}>{children}</BorderedCell>;
 })(({ theme }) => ({

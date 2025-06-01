@@ -1,36 +1,36 @@
-import { FC, PropsWithChildren, useMemo, useState } from "react";
+import { BorderedCell } from "@/components";
 import { IResource, IRole } from "@/interfaces";
 import { zip } from "@/utils/zip";
-import { usePolicyProviderContext } from "../../context";
+import { CheckBoxOutlineBlank, LibraryAddCheck } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
-    Card as MCard,
+    alpha,
     CardContent,
-    CardHeader as MCardHeader,
+    CardHeaderProps,
+    CardProps,
+    darken,
+    Divider,
     IconButton,
+    lighten,
+    ListItemIcon,
+    ListItemText,
+    Card as MCard,
+    CardHeader as MCardHeader,
+    Menu,
+    MenuItem,
+    styled,
     Table,
+    TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    styled,
-    CardProps,
-    lighten,
-    darken,
-    alpha,
-    CardHeaderProps,
-    TableBody,
-    Menu,
-    MenuItem,
-    ListItemText,
-    Divider,
-    ListItemIcon,
 } from "@mui/material";
 import { cardClasses } from "@mui/material/Card";
 import { cardHeaderClasses } from "@mui/material/CardHeader";
-import { BorderedCell } from "../common/BorderedCell";
+import { FC, PropsWithChildren, useMemo, useState } from "react";
+import { usePolicyProviderContext } from "../../context";
 import { ActionCell } from "./ActionCell";
-import { CheckBoxOutlineBlank, LibraryAddCheck } from "@mui/icons-material";
 
 type RoleEditorProps = {
     role: IRole;

@@ -1,4 +1,3 @@
-import { Padding } from "@mui/icons-material";
 import { alpha, darken, lighten, styled, TableCell } from "@mui/material";
 import { tableCellClasses, TableCellProps } from "@mui/material/TableCell";
 

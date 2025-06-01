@@ -94,3 +94,21 @@ interface IPostion {
     description?: string;
     valid_state?: boolean;
 }
+
+interface IEnum {
+    id: number;
+    name: string;
+    key: string;
+    description?: string;
+    created_at: string;
+    valid_state?: boolean;
+    items?: IEnumOption[];
+}
+
+interface IEnumOption {
+    key?: string;
+    id: number;
+    name: string;
+    value: string;
+    description?: string;
+}

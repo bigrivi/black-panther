@@ -1,3 +1,4 @@
+import { BorderedCell } from "@/components";
 import { IResource } from "@/interfaces";
 import {
     TableRow as MUITableRow,
@@ -8,7 +9,6 @@ import {
 import classNames from "classnames";
 import { FC } from "react";
 import { usePolicyProviderContext } from "../../context";
-import { BorderedCell } from "../common/BorderedCell";
 import { ActionCell } from "./ActionCell";
 import { useHighLightRowColumnContext } from "./context";
 import { StickColumn } from "./StickColumn";

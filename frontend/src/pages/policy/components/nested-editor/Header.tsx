@@ -1,3 +1,6 @@
+import { BorderedCell } from "@/components";
+import { IAction, IRole } from "@/interfaces";
+import { CheckBoxOutlineBlank, LibraryAddCheck } from "@mui/icons-material";
 import {
     Divider,
     ListItemIcon,
@@ -6,14 +9,11 @@ import {
     MenuItem,
     TableRow,
 } from "@mui/material";
-import { StickColumn } from "./StickColumn";
-import { usePolicyProviderContext } from "../../context";
-import { BorderedCell } from "../common/BorderedCell";
 import classNames from "classnames";
-import { useHighLightRowColumnContext } from "./context";
-import { CheckBoxOutlineBlank, LibraryAddCheck } from "@mui/icons-material";
 import { useState } from "react";
-import { IAction, IRole } from "@/interfaces";
+import { usePolicyProviderContext } from "../../context";
+import { useHighLightRowColumnContext } from "./context";
+import { StickColumn } from "./StickColumn";
 
 export const Header = () => {
     const { filteredRoles, filteredResources, handleActionSelectionChange } =

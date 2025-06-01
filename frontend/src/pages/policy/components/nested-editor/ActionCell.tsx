@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { BorderedCell } from "@/components";
 import { IAction, IRole } from "@/interfaces";
-import { BorderedCell } from "../common/BorderedCell";
 import { Checkbox } from "@mui/material";
+import classNames from "classnames";
+import { FC } from "react";
 import { usePolicyProviderContext } from "../../context";
 import { useHighLightRowColumnContext } from "./context";
-import classNames from "classnames";
 type ActionCellProps = {
     role: IRole;
     action: IAction;

@@ -1,6 +1,7 @@
 import { AppSider, Header, PageLoading } from "@/components";
 import { DashboardPage } from "@/pages/dashboard";
 import { DeptCreate, DeptEdit, DeptList } from "@/pages/departments";
+import { EnumCreate, EnumEdit, EnumList } from "@/pages/enums";
 import { ForgotPassword } from "@/pages/forgotPassword";
 import { LoginPage } from "@/pages/login";
 import { PolicyPage } from "@/pages/policy";
@@ -135,6 +136,18 @@ export const AppRoutes = () => {
                 </Route>
 
                 <Route path="/policy" element={<PolicyPage />} />
+
+                <Route
+                    path="/enums"
+                    element={
+                        <EnumList>
+                            <Outlet />
+                        </EnumList>
+                    }
+                >
+                    <Route path="create" element={<EnumCreate />} />
+                    <Route path="edit/:id" element={<EnumEdit />} />
+                </Route>
 
                 <Route path="*" element={<ErrorComponent />} />
             </Route>
