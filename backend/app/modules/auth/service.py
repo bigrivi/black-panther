@@ -32,8 +32,8 @@ class AuthService():
             user = await user_service.get_one(User.login_name == login_name)
             if not user:
                 raise NotFoundError(msg="用户名或密码有误")
-            if not user.valid_state:
-                raise BadRequestError(msg='用户已被锁定, 请联系统管理员')
+            if not user.is_active:
+                raise BadRequestError(msg='用户未激活, 请联系统管理员')
             num_error_login = int(
                 user.num_error_login) if user.num_error_login is not None else 0
             lock_time_value = settings.LOGIN_LOCK_TIME_VALUE

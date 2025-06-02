@@ -1,4 +1,4 @@
-import { Paper } from "@/components";
+import { DeleteButton, Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
@@ -8,7 +8,6 @@ import { useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
-    DeleteButton,
     EditButton,
     RefreshButton,
 } from "@refinedev/mui";
@@ -79,10 +78,7 @@ export const EnumList = ({ children }: PropsWithChildren) => {
                                 hideText
                                 recordItemId={row.original.id}
                             />
-                            <DeleteButton
-                                hideText
-                                recordItemId={row.original.id}
-                            />
+                            <DeleteButton recordItemId={row.original.id} />
                         </>
                     );
                 },

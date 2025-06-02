@@ -16,6 +16,7 @@ import { FC } from "react";
 import {
     AutocompleteElement,
     PasswordElement,
+    SwitchElement,
     TextFieldElement,
 } from "react-hook-form-mui";
 import { useSearchParams } from "react-router";
@@ -47,6 +48,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             confirm_password: "",
             email: "",
             department_id: null,
+            is_active: null,
             roles: [],
         },
         refineCoreProps: {
@@ -196,6 +198,9 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                                         (value?.id ?? value)?.toString(),
                             }}
                         />
+                    </FormItem>
+                    <FormItem label="Status">
+                        <SwitchElement label="Enable" name={`is_active`} />
                     </FormItem>
                 </Form>
             </DrawerContent>

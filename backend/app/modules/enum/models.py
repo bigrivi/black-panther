@@ -29,7 +29,9 @@ class EnumPublic(EnumBase):
 
 class EnumCreate(EnumBase):
     items: List[EnumItemCreate] = None
+    valid_state: Optional[bool] = None
 
 
 class EnumUpdate(EnumBase):
     items: List[EnumItemUpdate] = None
+    valid_state: Optional[bool] = None

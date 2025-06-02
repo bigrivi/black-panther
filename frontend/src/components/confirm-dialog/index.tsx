@@ -12,20 +12,23 @@ import {
 import { FC, PropsWithChildren, SyntheticEvent, useState } from "react";
 
 interface ConfirmDialogProps {
+    loading?: boolean;
     title?: string;
     message?: string;
     open: boolean;
     onConfirm: (event?: any, param?: any) => void | Promise<any>;
     onClose?: () => void;
+    autoClose?: boolean;
 }
 
 export const ConfirmDialog: FC<PropsWithChildren<ConfirmDialogProps>> = ({
     title = "Delete Confirmation",
     message = "Are you sure?",
     onConfirm,
-    children,
     open,
     onClose,
+    loading,
+    autoClose = true,
 }) => {
     const [requesting, setRequesting] = useState(false);
 
@@ -43,13 +46,17 @@ export const ConfirmDialog: FC<PropsWithChildren<ConfirmDialogProps>> = ({
             try {
                 await onConfirm();
                 setRequesting(false);
-                onClose && onClose();
+                if (autoClose) {
+                    onClose && onClose();
+                }
             } catch (e) {
                 setRequesting(false);
             }
         } else {
             onConfirm();
-            onClose && onClose();
+            if (autoClose) {
+                onClose && onClose();
+            }
         }
     };
 
@@ -74,15 +81,15 @@ export const ConfirmDialog: FC<PropsWithChildren<ConfirmDialogProps>> = ({
                 <CloseIcon />
             </IconButton>
             <DialogContent dividers>
-                <div>{message}</div>
+                <div style={{ minWidth: 300 }}>{message}</div>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCancel}>No</Button>
                 <Button
                     color="primary"
                     variant="contained"
-                    loading={requesting}
-                    disabled={requesting}
+                    loading={requesting || loading}
+                    disabled={requesting || loading}
                     onClick={handleConfirm}
                 >
                     Yes

@@ -25,4 +25,4 @@ class PositionCreate(PositionBase):
 
 
 class PositionUpdate(PositionBase):
-    pass
+    valid_state: Optional[bool] = None

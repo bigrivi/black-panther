@@ -1,16 +1,12 @@
-import { Paper } from "@/components";
+import { DeleteButton, Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
+import { Status } from "@/components/status";
 import { useTable } from "@/hooks";
 import { IDepartment } from "@/interfaces";
 import { Add } from "@mui/icons-material";
 import { IconButton, Stack } from "@mui/material";
 import { useGo, useTranslate } from "@refinedev/core";
-import {
-    CreateButton,
-    DeleteButton,
-    EditButton,
-    RefreshButton,
-} from "@refinedev/mui";
+import { CreateButton, EditButton, RefreshButton } from "@refinedev/mui";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo } from "react";
 
@@ -25,6 +21,26 @@ export const DeptList = ({ children }: PropsWithChildren) => {
                 header: "Department Name",
                 enableSorting: false,
                 grow: true,
+            },
+            {
+                accessorKey: "valid_state",
+                enableColumnFilterModes: false,
+                filterSelectOptions: [
+                    {
+                        label: t(`fields.status.true`),
+                        value: "1",
+                    },
+                    {
+                        label: t(`fields.status.false`),
+                        value: "0",
+                    },
+                ],
+                filterVariant: "select",
+                header: t("users.fields.isActive.label"),
+                glow: true,
+                Cell: ({ row }) => {
+                    return <Status value={row.original.valid_state!} />;
+                },
             },
             {
                 accessorKey: "actions",

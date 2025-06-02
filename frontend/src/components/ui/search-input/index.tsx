@@ -53,7 +53,6 @@ const SearchInput: FC<SearchInputProps> = ({
         <FormControl
             fullWidth
             style={{
-                background: "#fff",
                 ...style,
             }}
             className={classNames(className, {

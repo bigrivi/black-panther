@@ -1,4 +1,6 @@
+export { ConfirmButton } from "./confirm-button";
 export { ConfirmDialog } from "./confirm-dialog";
+export { DeleteButton } from "./delete";
 export { FooterToolbar } from "./footer-toolbar";
 export * from "./form";
 export { Header } from "./header";

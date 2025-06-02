@@ -13,6 +13,7 @@ import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
 import {
     SubmitHandler,
+    SwitchElement,
     TextareaAutosizeElement,
     TextFieldElement,
 } from "react-hook-form-mui";
@@ -39,6 +40,7 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
             name: "",
             description: "",
             items: [],
+            valid_state: null,
         },
         refineCoreProps: {
             action,
@@ -77,11 +79,12 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
         onFinish({
             ...data,
             items: data.items!.map(
-                ({ name, value, id, description }, index) => {
+                ({ name, value, id, description, valid_state }, index) => {
                     return {
                         name,
                         value,
                         description,
+                        valid_state,
                         sort: index + 1,
                         id,
                     };
@@ -121,6 +124,9 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
                             maxRows={3}
                             id="description"
                         />
+                    </FormItem>
+                    <FormItem label="Status">
+                        <SwitchElement label="Enable" name={`valid_state`} />
                     </FormItem>
                     <FormItem label="Enum Options">
                         <EnumOptionsField />

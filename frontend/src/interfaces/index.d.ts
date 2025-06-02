@@ -110,5 +110,6 @@ interface IEnumOption {
     id: number;
     name: string;
     value: string;
+    valid_state?: boolean;
     description?: string;
 }

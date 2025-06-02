@@ -1,4 +1,4 @@
-import { Paper } from "@/components";
+import { DeleteButton, Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
@@ -10,7 +10,6 @@ import { useList, useModal, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
-    DeleteButton,
     EditButton,
     RefreshButton,
 } from "@refinedev/mui";

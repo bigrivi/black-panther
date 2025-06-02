@@ -29,7 +29,7 @@ class EnumItemPublic(EnumItemBase):
 
 
 class EnumItemCreate(EnumItemBase):
-    pass
+    valid_state: Optional[bool] = None
 
 
 class EnumItemUpdate(EnumItemBase):

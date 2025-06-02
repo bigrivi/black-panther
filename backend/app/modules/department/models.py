@@ -30,8 +30,8 @@ class DepartmentPublic(DepartmentBase):
 
 
 class DepartmentCreate(DepartmentBase):
-    pass
+    valid_state: Optional[bool] = None
 
 
 class DepartmentUpdate(DepartmentBase):
-    pass
+    valid_state: Optional[bool] = None

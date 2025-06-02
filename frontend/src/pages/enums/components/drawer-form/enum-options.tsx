@@ -1,4 +1,4 @@
-import { Paper } from "@/components";
+import { ConfirmButton, Paper } from "@/components";
 import { IEnumOption } from "@/interfaces";
 import { Add, Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
@@ -9,7 +9,7 @@ import {
 } from "material-react-table";
 import { useMemo } from "react";
 import { useFieldArray } from "react-hook-form";
-import { TextFieldElement } from "react-hook-form-mui";
+import { SwitchElement, TextFieldElement } from "react-hook-form-mui";
 
 export const EnumOptionsField = () => {
     const { fields, append, remove, move } = useFieldArray({
@@ -63,6 +63,20 @@ export const EnumOptionsField = () => {
                 },
             },
             {
+                accessorKey: "valid_state",
+                enableHiding: false,
+                header: "Status",
+                enableColumnActions: false,
+                Cell: function render({ row, staticRowIndex }) {
+                    return (
+                        <SwitchElement
+                            label="Enable"
+                            name={`items.${staticRowIndex}.valid_state`}
+                        />
+                    );
+                },
+            },
+            {
                 accessorKey: "actions",
                 header: "",
                 enableHiding: false,
@@ -85,12 +99,17 @@ export const EnumOptionsField = () => {
                 enableSorting: false,
                 Cell: function render({ row, staticRowIndex }) {
                     return (
-                        <IconButton
-                            size="small"
-                            onClick={() => remove(staticRowIndex)}
+                        <ConfirmButton
+                            title="Delete Option"
+                            message={
+                                "Are you sure you want to delete the option?"
+                            }
+                            onConfirm={() => remove(staticRowIndex)}
                         >
-                            <Delete />
-                        </IconButton>
+                            <IconButton size="small">
+                                <Delete />
+                            </IconButton>
+                        </ConfirmButton>
                     );
                 },
             },

@@ -13,7 +13,7 @@ import {
 } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC, useMemo } from "react";
-import { TextFieldElement } from "react-hook-form-mui";
+import { SwitchElement, TextFieldElement } from "react-hook-form-mui";
 import { useSearchParams } from "react-router";
 
 type Props = {
@@ -34,6 +34,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
     } = useForm<IDepartment, HttpError, Nullable<IDepartment>>({
         defaultValues: {
             name: "",
+            valid_state: null,
             parent_id: query.get("parent_id")
                 ? Number(query.get("parent_id"))
                 : null,
@@ -98,6 +99,9 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
                 >
                     <FormItem label="Department Name" required htmlFor="name">
                         <TextFieldElement name="name" id="name" />
+                    </FormItem>
+                    <FormItem label="Status">
+                        <SwitchElement label="Enable" name={`valid_state`} />
                     </FormItem>
                     <FormItem label="Parent" htmlFor="parent_id">
                         <TreeSelectFieldElement

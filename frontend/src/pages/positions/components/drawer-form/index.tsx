@@ -5,7 +5,11 @@ import { Button, Stack } from "@mui/material";
 import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
-import { TextareaAutosizeElement, TextFieldElement } from "react-hook-form-mui";
+import {
+    SwitchElement,
+    TextareaAutosizeElement,
+    TextFieldElement,
+} from "react-hook-form-mui";
 import { useSearchParams } from "react-router";
 
 type Props = {
@@ -26,6 +30,7 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
             name: "",
             code: "",
             description: "",
+            valid_state: null,
         },
         refineCoreProps: {
             action,
@@ -92,6 +97,9 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
                             name="description"
                             id="description"
                         />
+                    </FormItem>
+                    <FormItem label="Status">
+                        <SwitchElement label="Enable" name={`valid_state`} />
                     </FormItem>
                 </Form>
             </DrawerContent>

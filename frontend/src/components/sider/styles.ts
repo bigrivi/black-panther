@@ -26,7 +26,6 @@ const useStyles = makeStyles()((theme) => {
                 },
 
                 "& .MuiListItemIcon-root": {
-                    color: "#798EAD",
                     padding: 0,
                     marginRight: 15,
                     justifyContent: "center",

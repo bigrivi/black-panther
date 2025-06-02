@@ -11,7 +11,11 @@ import {
 } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
-import { TextareaAutosizeElement, TextFieldElement } from "react-hook-form-mui";
+import {
+    SwitchElement,
+    TextareaAutosizeElement,
+    TextFieldElement,
+} from "react-hook-form-mui";
 import { useSearchParams } from "react-router";
 
 type Props = {
@@ -33,6 +37,7 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
             code: "",
             name: "",
             description: "",
+            valid_state: null,
         },
         refineCoreProps: {
             action,
@@ -94,6 +99,9 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
                             maxRows={3}
                             id="description"
                         />
+                    </FormItem>
+                    <FormItem label="Status">
+                        <SwitchElement label="Enable" name={`valid_state`} />
                     </FormItem>
                 </Form>
             </DrawerContent>
