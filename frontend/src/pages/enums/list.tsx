@@ -93,6 +93,10 @@ export const EnumList = ({ children }: PropsWithChildren) => {
     } = useTable({
         columns,
         enableColumnPinning: true,
+        enableRowSelection: true,
+        getRowId: (originalRow) => {
+            return originalRow.id + "";
+        },
         initialState: { columnPinning: { right: ["actions"] } },
     });
 

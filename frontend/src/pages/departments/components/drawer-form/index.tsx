@@ -1,7 +1,7 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import { TreeSelectFieldElement } from "@/components/form/elements";
-import { useQuery } from "@/hooks/useQuery";
+import { useUrlSearchQuery } from "@/hooks";
 import { IDepartment, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
 import {
@@ -25,7 +25,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const go = useGo();
-    const query = useQuery();
+    const query = useUrlSearchQuery();
 
     const {
         refineCore: { onFinish, id },

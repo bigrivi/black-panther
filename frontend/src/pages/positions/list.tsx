@@ -101,6 +101,10 @@ export const PositionList = ({ children }: PropsWithChildren) => {
     } = useTable({
         columns,
         enableColumnPinning: true,
+        enableRowSelection: (row) => true,
+        getRowId: (originalRow) => {
+            return originalRow.id + "";
+        },
         initialState: { columnPinning: { right: ["actions"] } },
     });
 

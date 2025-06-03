@@ -96,6 +96,10 @@ export const RoleList = ({ children }: PropsWithChildren) => {
     } = useTable({
         columns,
         enableColumnPinning: true,
+        enableRowSelection: (row) => row.original.code !== "admin",
+        getRowId: (originalRow) => {
+            return originalRow.id + "";
+        },
         initialState: { columnPinning: { right: ["actions"] } },
     });
 

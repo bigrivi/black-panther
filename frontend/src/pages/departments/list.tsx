@@ -96,6 +96,10 @@ export const DeptList = ({ children }: PropsWithChildren) => {
         },
         getSubRows: (originalRow) => originalRow.children,
         initialState: { columnPinning: { right: ["actions"] }, expanded: true },
+        enableRowSelection: true,
+        getRowId: (originalRow) => {
+            return originalRow.id + "";
+        },
         refineCoreProps: {
             meta: {
                 isTree: true,

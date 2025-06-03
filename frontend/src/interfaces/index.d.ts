@@ -81,6 +81,7 @@ interface IUser {
     created_at: string;
     roles: IRole[];
     is_active?: boolean;
+    is_superuser?: boolean;
     email?: string;
     department_id?: number;
     department?: IDepartment;

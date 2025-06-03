@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import type { AuthProvider } from "@refinedev/core";
 import { AxiosInstance } from "axios";
-import { API_URL, TOKEN_KEY } from "../constants";
+import { useCallback, useState } from "react";
+import { API_URL, TOKEN_KEY } from "../../constants";
 
-export interface AuthProviderHookResult {
+interface AuthProviderHookResult {
     authProvider: AuthProvider;
     user: any;
 }

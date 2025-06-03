@@ -134,10 +134,12 @@ export const UserList = ({ children }: PropsWithChildren) => {
                                 recordItemId={row.original.id}
                             />
                             <DeleteButton
+                                disabled={row.original.is_superuser}
                                 hideText
                                 recordItemId={row.original.id}
                             />
                             <IconButton
+                                disabled={row.original.is_superuser}
                                 onClick={() => {
                                     setEditId(row.original.id);
                                     show();
@@ -160,6 +162,10 @@ export const UserList = ({ children }: PropsWithChildren) => {
     } = useTable({
         columns,
         enableColumnPinning: true,
+        enableRowSelection: (row) => !row.original.is_superuser!,
+        getRowId: (originalRow) => {
+            return originalRow.id + "";
+        },
         initialState: { columnPinning: { right: ["actions"] } },
     });
 

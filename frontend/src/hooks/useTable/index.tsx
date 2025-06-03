@@ -23,6 +23,7 @@ import {
 import isEqual from "lodash/isEqual";
 import { useEffect, useState } from "react";
 
+import { DeleteButton } from "@/components";
 import {
     columnFiltersToCrudFilters,
     crudFiltersToColumnFilters,
@@ -42,10 +43,6 @@ export type UseTableProps<
     TError extends HttpError = HttpError,
     TData extends BaseRecord = TQueryFnData
 > = {
-    /**
-     * Configuration object for the core of the [useTable](/docs/api-reference/core/hooks/useTable/)
-     * @type [`useTablePropsCore<TQueryFnData, TError>`](/docs/api-reference/core/hooks/useTable/#properties)
-     */
     refineCoreProps?: useTablePropsCore<TQueryFnData, TError, TData>;
 } & Pick<MRT_TableOptions<TData>, "columns"> &
     Partial<Omit<MRT_TableOptions<TData>, "columns">>;
@@ -89,7 +86,7 @@ export function useTable<
         setFilters,
         pageCount,
     } = useTableResult;
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]); // can set initial column filter state here
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const reactTableResult = useMaterialReactTable<TData>({
         data: data?.data ?? [],
@@ -144,6 +141,23 @@ export function useTable<
             sx: {
                 display: isTopToolbar ? "block" : "none", //hide bottom progress bar
             },
+        }),
+        positionToolbarAlertBanner: "bottom",
+        ...(rest.enableRowSelection && {
+            renderTopToolbarCustomActions: ({ table }) => (
+                <DeleteButton
+                    disabled={table.getSelectedRowModel().flatRows.length === 0}
+                    variant="contained"
+                    onSuccess={() => {
+                        table.resetRowSelection();
+                    }}
+                    getRecordItemIds={() =>
+                        table
+                            .getSelectedRowModel()
+                            .flatRows.map((row) => row.original.id!)
+                    }
+                />
+            ),
         }),
         ...rest,
     });

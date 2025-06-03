@@ -1,6 +1,6 @@
 import { type AccessControlProvider } from "@refinedev/core";
 
-export interface AccessControlProviderHookResult {
+interface AccessControlProviderHookResult {
     accessControlProvider: AccessControlProvider;
 }
 export const useAccessControlProvider = (
