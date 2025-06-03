@@ -114,3 +114,13 @@ interface IEnumOption {
     valid_state?: boolean;
     description?: string;
 }
+
+interface IParameter {
+    id: number;
+    name: string;
+    key: string;
+    value: string;
+    description?: string;
+    created_at: string;
+    is_system?: boolean;
+}

@@ -95,4 +95,14 @@ export const resources: ResourceProps[] = [
             parent: "system_manager",
         },
     },
+    {
+        name: "parameter",
+        list: "/parameters",
+        create: "/parameters/create",
+        edit: "/parameters/edit/:id",
+        meta: {
+            label: "Parameter Setting",
+            parent: "system_manager",
+        },
+    },
 ];

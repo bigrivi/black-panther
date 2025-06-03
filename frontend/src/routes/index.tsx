@@ -4,6 +4,11 @@ import { DeptCreate, DeptEdit, DeptList } from "@/pages/departments";
 import { EnumCreate, EnumEdit, EnumList } from "@/pages/enums";
 import { ForgotPassword } from "@/pages/forgotPassword";
 import { LoginPage } from "@/pages/login";
+import {
+    ParameterCreate,
+    ParameterEdit,
+    ParameterList,
+} from "@/pages/parameter";
 import { PolicyPage } from "@/pages/policy";
 import { PositionCreate, PositionEdit, PositionList } from "@/pages/positions";
 import { Register } from "@/pages/register";
@@ -147,6 +152,18 @@ export const AppRoutes = () => {
                 >
                     <Route path="create" element={<EnumCreate />} />
                     <Route path="edit/:id" element={<EnumEdit />} />
+                </Route>
+
+                <Route
+                    path="/parameters"
+                    element={
+                        <ParameterList>
+                            <Outlet />
+                        </ParameterList>
+                    }
+                >
+                    <Route path="create" element={<ParameterCreate />} />
+                    <Route path="edit/:id" element={<ParameterEdit />} />
                 </Route>
 
                 <Route path="*" element={<ErrorComponent />} />
