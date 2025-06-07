@@ -21,17 +21,17 @@ export const ParameterList = ({ children }: PropsWithChildren) => {
         () => [
             {
                 accessorKey: "name",
-                header: "Name",
+                header: t("parameterSettings.fields.name"),
                 size: 200,
             },
             {
                 accessorKey: "key",
-                header: "Key",
+                header: t("parameterSettings.fields.key"),
                 width: 200,
             },
             {
                 accessorKey: "value",
-                header: "Value",
+                header: t("parameterSettings.fields.value"),
                 width: 200,
             },
 
@@ -50,14 +50,14 @@ export const ParameterList = ({ children }: PropsWithChildren) => {
                     },
                 ],
                 filterVariant: "select",
-                header: t("System build-in"),
+                header: t("parameterSettings.fields.builtIn"),
                 Cell: ({ row }) => {
                     return row.original.is_system ? "Yes" : "No";
                 },
             },
             {
                 accessorKey: "description",
-                header: t("Description"),
+                header: t("parameterSettings.fields.description"),
                 size: 200,
                 Cell: function render({ row }) {
                     return (

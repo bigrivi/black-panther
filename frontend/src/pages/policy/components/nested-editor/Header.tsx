@@ -9,6 +9,7 @@ import {
     MenuItem,
     TableRow,
 } from "@mui/material";
+import { useTranslate } from "@refinedev/core";
 import classNames from "classnames";
 import { useState } from "react";
 import { usePolicyProviderContext } from "../../context";
@@ -18,6 +19,7 @@ import { StickColumn } from "./StickColumn";
 export const Header = () => {
     const { filteredRoles, filteredResources, handleActionSelectionChange } =
         usePolicyProviderContext();
+    const t = useTranslate();
     const { column: highlightColumn } = useHighLightRowColumnContext();
     const [openRole, setOpenRole] = useState<IRole>();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -62,7 +64,7 @@ export const Header = () => {
                         zIndex: 100,
                     }}
                 >
-                    Resource
+                    {t("policy.resource")}
                 </StickColumn>
                 {filteredRoles.map((role, col) => {
                     return (

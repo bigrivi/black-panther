@@ -1,17 +1,15 @@
+import { ColorModeContext } from "@/contexts";
+import i18n from "@/i18n";
 import { IUser } from "@/interfaces";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import BrightnessHighIcon from "@mui/icons-material/BrightnessHigh";
-import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import AppBar from "@mui/material/AppBar";
-import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {
@@ -24,21 +22,9 @@ import {
     HamburgerMenu,
     type RefineThemedLayoutV2HeaderProps,
 } from "@refinedev/mui";
-import { useContext, useState, type ReactNode } from "react";
-import { ColorModeContext } from "../../contexts";
-import i18n from "../../i18n";
-
-interface IOptions {
-    label: string;
-    avatar?: ReactNode;
-    link: string;
-    category: string;
-}
+import { useContext } from "react";
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
-    const [value, setValue] = useState("");
-    const [options, setOptions] = useState<IOptions[]>([]);
-
     const { mode, setMode } = useContext(ColorModeContext);
 
     const changeLanguage = useSetLocale();
@@ -98,93 +84,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                         sm: "24px",
                     }}
                 >
-                    <Stack direction="row" flex={1}>
-                        <Autocomplete
-                            sx={{
-                                maxWidth: 550,
-                            }}
-                            id="search-autocomplete"
-                            options={options}
-                            filterOptions={(x) => x}
-                            disableClearable
-                            freeSolo
-                            fullWidth
-                            size="small"
-                            onInputChange={(event, value) => {
-                                if (event?.type === "change") {
-                                    setValue(value);
-                                }
-                            }}
-                            groupBy={(option) => option.category}
-                            renderOption={(props, option: IOptions) => {
-                                return (
-                                    <Link href={option.link} underline="none">
-                                        <Box
-                                            {...props}
-                                            component="li"
-                                            sx={{
-                                                display: "flex",
-                                                padding: "10px",
-                                                alignItems: "center",
-                                                gap: "10px",
-                                            }}
-                                        >
-                                            {option?.avatar && option.avatar}
-                                            <Typography
-                                                sx={{
-                                                    fontSize: {
-                                                        md: "14px",
-                                                        lg: "16px",
-                                                    },
-                                                }}
-                                            >
-                                                {option.label}
-                                            </Typography>
-                                        </Box>
-                                    </Link>
-                                );
-                            }}
-                            renderInput={(params) => {
-                                return (
-                                    <Box
-                                        position="relative"
-                                        sx={{
-                                            "& .MuiFormLabel-root": {
-                                                paddingRight: "24px",
-                                            },
-                                            display: {
-                                                xs: "none",
-                                                sm: "block",
-                                            },
-                                        }}
-                                    >
-                                        <TextField
-                                            {...params}
-                                            label={t("search.placeholder")}
-                                            slotProps={{
-                                                input: {
-                                                    ...params.InputProps,
-                                                },
-                                            }}
-                                        />
-                                        <IconButton
-                                            sx={{
-                                                position: "absolute",
-                                                right: 0,
-                                                top: 0,
-                                                "&:hover": {
-                                                    backgroundColor:
-                                                        "transparent",
-                                                },
-                                            }}
-                                        >
-                                            <SearchOutlined />
-                                        </IconButton>
-                                    </Box>
-                                );
-                            }}
-                        />
-                    </Stack>
+                    <Stack direction="row" flex={1}></Stack>
                     <Stack
                         direction="row"
                         alignItems="center"
@@ -194,7 +94,6 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                         }}
                     >
                         <Select
-                            size="small"
                             defaultValue={currentLocale}
                             slotProps={{
                                 input: {
@@ -206,6 +105,9 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                                 width: {
                                     xs: "120px",
                                     sm: "160px",
+                                },
+                                "& .MuiSelect-outlined": {
+                                    minHeight: "auto !important",
                                 },
                             }}
                         >
@@ -221,11 +123,23 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                                         }}
                                         value={lang}
                                     >
-                                        <Typography color="text.secondary">
-                                            {lang === "en"
-                                                ? "English"
-                                                : "German"}
-                                        </Typography>
+                                        <Stack direction="row">
+                                            <img
+                                                loading="lazy"
+                                                src={
+                                                    "images/flags/" +
+                                                    lang +
+                                                    ".svg"
+                                                }
+                                                width="20"
+                                                style={{ marginRight: 6 }}
+                                            ></img>
+                                            <Typography color="text.secondary">
+                                                {lang === "en"
+                                                    ? "English"
+                                                    : "简体中文"}
+                                            </Typography>
+                                        </Stack>
                                     </MenuItem>
                                 ))}
                         </Select>

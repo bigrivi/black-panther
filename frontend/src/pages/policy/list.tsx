@@ -8,6 +8,7 @@ import {
     useCustomMutation,
     useHandleNotification,
     useList,
+    useTranslate,
 } from "@refinedev/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Filter } from "./components/filter";
@@ -32,6 +33,7 @@ const diffActions = (oldActions: number[], newActions: number[]) => {
 };
 
 export const PolicyPage = () => {
+    const t = useTranslate();
     const serverInitialRoleActionsRef = useRef<Record<string, number[]>>();
     const handleNotification = useHandleNotification();
     const { mutateAsync: addOrRemovePermissions, isLoading } =
@@ -285,8 +287,10 @@ export const PolicyPage = () => {
                 {changedCount > 0 && (
                     <FooterToolbar>
                         <Box>
-                            {changedCount} unsaved changes
-                            <Button onClick={handleReset}>Reset</Button>
+                            {t("policy.unSaveChangesCounts", { changedCount })}
+                            <Button onClick={handleReset}>
+                                {t("buttons.reset")}
+                            </Button>
                             <Button
                                 onClick={handleSave}
                                 color="primary"
@@ -294,7 +298,7 @@ export const PolicyPage = () => {
                                 loading={isLoading}
                                 startIcon={<Save />}
                             >
-                                Save Changes
+                                {t("buttons.saveChanges")}
                             </Button>
                         </Box>
                     </FooterToolbar>

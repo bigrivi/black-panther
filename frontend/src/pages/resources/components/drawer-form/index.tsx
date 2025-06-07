@@ -3,7 +3,13 @@ import { DrawerContent, DrawerFooter } from "@/components/drawer";
 import { Drawer } from "@/components/drawer/drawer";
 import { Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
+import {
+    BaseKey,
+    HttpError,
+    useGetToPath,
+    useGo,
+    useTranslate,
+} from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
 import { AutocompleteElement, TextFieldElement } from "react-hook-form-mui";
@@ -26,6 +32,8 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const go = useGo();
+    const t = useTranslate();
+
     const {
         refineCore: { onFinish, id },
         saveButtonProps,
@@ -84,7 +92,9 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={id ? "Edit Resource" : "Create Resource"}
+            title={
+                id ? t("resources.actions.edit") : t("resources.actions.add")
+            }
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -95,43 +105,33 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Name" required htmlFor="name">
-                        <TextFieldElement
-                            name="name"
-                            id="name"
-                            rules={{
-                                required: "Resource name is required",
-                            }}
-                        />
+                    <FormItem
+                        label={t("resources.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
+                        <TextFieldElement name="name" id="name" />
                     </FormItem>
                     <FormItem label="Key" required htmlFor="key">
                         <TextFieldElement
                             name="key"
                             id="key"
-                            helperText="Use this key in your code or when
-                                        working with the API. The key is the
-                                        unique identifier of the resource within
-                                        a Permit Environment."
-                            rules={{
-                                required: "Resource key is required",
-                            }}
+                            helperText={t("resources.fields.key.tips")}
                         />
                     </FormItem>
-                    <FormItem label="Actions" required>
+                    <FormItem
+                        label={t("resources.fields.actions.label")}
+                        required
+                    >
                         <AutocompleteElement
                             name="actions"
                             multiple
                             options={defaultActionOptions}
-                            rules={{
-                                required: "Resource action is required",
-                            }}
                             textFieldProps={{
-                                placeholder: "Add action...",
-                                helperText: `Actions are the ways a user can act on a
-                                        resource, or access the resource. After
-                                        typing the action name into the box,
-                                        press Enter or Return on your keyboard
-                                        for the action to be correctly added.`,
+                                placeholder: t(
+                                    "resources.fields.actions.placeholder"
+                                ),
+                                helperText: t("resources.fields.actions.tips"),
                             }}
                         />
                     </FormItem>
@@ -139,14 +139,16 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>Cancel</Button>
+                    <Button onClick={onDrawerCLose}>
+                        {t("buttons.cancel")}
+                    </Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"
                         color="primary"
                         type="submit"
                     >
-                        Save
+                        {t("buttons.save")}
                     </Button>
                 </Stack>
             </DrawerFooter>

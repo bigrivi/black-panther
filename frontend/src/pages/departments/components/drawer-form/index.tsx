@@ -10,6 +10,7 @@ import {
     useCustom,
     useGetToPath,
     useGo,
+    useTranslate,
 } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC, useMemo } from "react";
@@ -26,6 +27,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
     const [searchParams] = useSearchParams();
     const go = useGo();
     const query = useUrlSearchQuery();
+    const t = useTranslate();
 
     const {
         refineCore: { onFinish, id },
@@ -34,7 +36,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
     } = useForm<IDepartment, HttpError, Nullable<IDepartment>>({
         defaultValues: {
             name: "",
-            valid_state: null,
+            valid_state: true,
             parent_id: query.get("parent_id")
                 ? Number(query.get("parent_id"))
                 : null,
@@ -86,7 +88,11 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={id ? "Edit Department" : "Create Department"}
+            title={
+                id
+                    ? t("departments.actions.edit")
+                    : t("departments.actions.add")
+            }
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -97,13 +103,23 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Department Name" required htmlFor="name">
+                    <FormItem
+                        label={t("departments.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
                         <TextFieldElement name="name" id="name" />
                     </FormItem>
-                    <FormItem label="Status">
-                        <SwitchElement label="Enable" name={`valid_state`} />
+                    <FormItem label={t("fields.status.label")}>
+                        <SwitchElement
+                            label={t("fields.status.true")}
+                            name={`valid_state`}
+                        />
                     </FormItem>
-                    <FormItem label="Parent" htmlFor="parent_id">
+                    <FormItem
+                        label={t("departments.fields.parent")}
+                        htmlFor="parent_id"
+                    >
                         <TreeSelectFieldElement
                             name="parent_id"
                             placeholder="Root"

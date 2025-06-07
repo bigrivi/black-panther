@@ -2,16 +2,21 @@ import { ConfirmButton, Paper } from "@/components";
 import { IEnumOption } from "@/interfaces";
 import { Add, Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { useGetLocale, useTranslate } from "@refinedev/core";
 import {
     MaterialReactTable,
     MRT_ColumnDef,
     useMaterialReactTable,
 } from "material-react-table";
+import { MRT_Localization_EN } from "material-react-table/locales/en";
+import { MRT_Localization_ZH_HANS } from "material-react-table/locales/zh-Hans";
 import { useMemo } from "react";
 import { useFieldArray } from "react-hook-form";
 import { SwitchElement, TextFieldElement } from "react-hook-form-mui";
-
 export const EnumOptionsField = () => {
+    const t = useTranslate();
+    const locale = useGetLocale();
+    const currentLocale = locale();
     const { fields, append, remove, move } = useFieldArray({
         name: "items",
         keyName: "key",
@@ -20,7 +25,7 @@ export const EnumOptionsField = () => {
         () => [
             {
                 accessorKey: "name",
-                header: "Name",
+                header: t("enums.fields.enumOptions.fields.name"),
                 enableHiding: false,
                 enableColumnActions: false,
                 Cell: function render({ row, staticRowIndex }) {
@@ -36,7 +41,7 @@ export const EnumOptionsField = () => {
             {
                 accessorKey: "value",
                 enableHiding: false,
-                header: "Value",
+                header: t("enums.fields.enumOptions.fields.value"),
                 enableColumnActions: false,
                 Cell: function render({ row, staticRowIndex }) {
                     return (
@@ -51,7 +56,7 @@ export const EnumOptionsField = () => {
             {
                 accessorKey: "description",
                 enableHiding: false,
-                header: "Description",
+                header: t("enums.fields.enumOptions.fields.description"),
                 enableColumnActions: false,
                 Cell: function render({ row, staticRowIndex }) {
                     return (
@@ -65,12 +70,12 @@ export const EnumOptionsField = () => {
             {
                 accessorKey: "valid_state",
                 enableHiding: false,
-                header: "Status",
+                header: t("fields.status.label"),
                 enableColumnActions: false,
                 Cell: function render({ row, staticRowIndex }) {
                     return (
                         <SwitchElement
-                            label="Enable"
+                            label={t("fields.status.true")}
                             name={`items.${staticRowIndex}.valid_state`}
                         />
                     );
@@ -122,6 +127,10 @@ export const EnumOptionsField = () => {
         data: fields,
         enablePagination: false,
         enableRowOrdering: true,
+        localization:
+            currentLocale == "zh"
+                ? MRT_Localization_ZH_HANS
+                : MRT_Localization_EN,
         enableFilters: false,
         enableTopToolbar: false,
         enableBottomToolbar: false,

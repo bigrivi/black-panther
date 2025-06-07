@@ -34,9 +34,7 @@ import useStyles from "./styles";
 
 export const AppSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     Title: TitleFromProps,
-    render,
     meta,
-    activeItemDisabled = false,
 }) => {
     const {
         siderCollapsed,
@@ -55,7 +53,6 @@ export const AppSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
     const Link = useLink();
     const { Link: LegacyLink } = useRouterContext();
     const ActiveLink = routerType === "legacy" ? LegacyLink : Link;
-    const translate = useTranslate();
     const { classes } = useStyles();
 
     const { menuItems, selectedKey, defaultOpenKeys } = useMenu({ meta });
@@ -141,7 +138,7 @@ export const AppSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
             onClick={handleLogout}
             id="logout"
             icon={<Logout />}
-            label="Logout"
+            label={t("buttons.logout")}
         />
     );
 

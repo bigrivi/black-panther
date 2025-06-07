@@ -21,17 +21,17 @@ export const PositionList = ({ children }: PropsWithChildren) => {
         () => [
             {
                 accessorKey: "name",
-                header: "Position Name",
+                header: t("positions.fields.name"),
                 size: 200,
             },
             {
                 accessorKey: "code",
-                header: "Position Code",
+                header: t("positions.fields.code"),
                 width: 200,
             },
             {
                 accessorKey: "description",
-                header: "Description",
+                header: t("positions.fields.description"),
                 width: 200,
             },
             {
@@ -64,7 +64,7 @@ export const PositionList = ({ children }: PropsWithChildren) => {
                     },
                 ],
                 filterVariant: "select",
-                header: t("users.fields.isActive.label"),
+                header: t("fields.status.label"),
                 size: 150,
                 Cell: ({ row }) => {
                     return <Status value={row.original.valid_state!} />;

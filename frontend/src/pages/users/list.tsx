@@ -35,22 +35,22 @@ export const UserList = ({ children }: PropsWithChildren) => {
         () => [
             {
                 accessorKey: "login_name",
-                header: "LoginName",
+                header: t("users.fields.loginName"),
                 size: 200,
             },
             {
                 accessorKey: "user_name",
-                header: "UserName",
+                header: t("users.fields.userName"),
                 width: 200,
             },
             {
                 accessorKey: "email",
-                header: "Email",
+                header: t("users.fields.email"),
                 width: 150,
             },
             {
                 accessorKey: "department",
-                header: "Department",
+                header: t("users.fields.department"),
                 enableColumnFilter: false,
                 enableSorting: false,
                 Cell: function render({ row }) {
@@ -59,7 +59,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
             },
             {
                 accessorKey: "roles",
-                header: "Roles",
+                header: t("users.fields.roles"),
                 enableSorting: false,
                 filterFn: "any",
                 enableColumnFilterModes: false,

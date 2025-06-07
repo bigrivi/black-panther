@@ -40,19 +40,13 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
             name: "",
             description: "",
             items: [],
-            valid_state: null,
+            valid_state: true,
         },
         refineCoreProps: {
             action,
             redirect: "list",
             onMutationSuccess: () => {
                 onDrawerCLose();
-            },
-            updateMutationOptions: {
-                onSettled: (variables) => {
-                    console.log("111", variables);
-                    return {};
-                },
             },
         },
     });
@@ -99,7 +93,7 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "720px" } } },
             }}
             open={true}
-            title={id ? "Edit Enum" : "Create Enum"}
+            title={id ? t("enums.actions.edit") : t("enums.actions.add")}
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -110,14 +104,25 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Name" required htmlFor="name">
+                    <FormItem
+                        label={t("enums.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
                         <TextFieldElement name="name" id="name" />
                     </FormItem>
 
-                    <FormItem label="Key" required htmlFor="key">
+                    <FormItem
+                        label={t("enums.fields.key")}
+                        required
+                        htmlFor="key"
+                    >
                         <TextFieldElement name="key" id="key" />
                     </FormItem>
-                    <FormItem label="Description" htmlFor="description">
+                    <FormItem
+                        label={t("enums.fields.description")}
+                        htmlFor="description"
+                    >
                         <TextareaAutosizeElement
                             name="description"
                             hiddenLabel
@@ -125,10 +130,13 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
                             id="description"
                         />
                     </FormItem>
-                    <FormItem label="Status">
-                        <SwitchElement label="Enable" name={`valid_state`} />
+                    <FormItem label={t("fields.status.label")}>
+                        <SwitchElement
+                            label={t("fields.status.true")}
+                            name={`valid_state`}
+                        />
                     </FormItem>
-                    <FormItem label="Enum Options">
+                    <FormItem label={t("enums.fields.enumOptions.label")}>
                         <EnumOptionsField />
                     </FormItem>
                 </Form>

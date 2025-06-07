@@ -5,6 +5,7 @@ import {
     styled,
     TextField,
 } from "@mui/material";
+import { useTranslate } from "@refinedev/core";
 import { FC, SyntheticEvent, useMemo } from "react";
 import { usePolicyProviderContext } from "../../context";
 type FilterProps = {
@@ -34,6 +35,7 @@ export const Autocomplete = styled(
 
 export const Filter: FC<FilterProps> = ({ onChange }) => {
     const { resources, roles } = usePolicyProviderContext();
+    const t = useTranslate();
     const handleChange = (
         event: SyntheticEvent,
         value: AutocompleteValue[]
@@ -46,14 +48,14 @@ export const Filter: FC<FilterProps> = ({ onChange }) => {
             return [
                 ...roles.map((item) => {
                     return {
-                        group: "Roles",
+                        group: t("policy.filter.roles"),
                         label: item.name,
                         value: "role_" + item.id,
                     };
                 }),
                 ...resources.map((item) => {
                     return {
-                        group: "Resources",
+                        group: t("policy.filter.resources"),
                         label: item.name,
                         value: "resource_" + item.id,
                     };
@@ -61,7 +63,7 @@ export const Filter: FC<FilterProps> = ({ onChange }) => {
             ];
         }
         return [];
-    }, [resources, roles]);
+    }, [resources, roles, t]);
     return (
         <Autocomplete
             multiple
@@ -77,7 +79,7 @@ export const Filter: FC<FilterProps> = ({ onChange }) => {
                     <TextField
                         variant="outlined"
                         label={null}
-                        placeholder="Filter Policies"
+                        placeholder={t("policy.filter.placeholder")}
                         {...params}
                     />
                 );

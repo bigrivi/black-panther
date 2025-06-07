@@ -95,7 +95,11 @@ export const LoginPage = () => {
                         return login({ ...data, uuid: captchaData?.data.uuid });
                     }}
                 >
-                    <FormItem label="Login Name" required htmlFor="loginName">
+                    <FormItem
+                        label={translate("pages.login.fields.loginName")}
+                        required
+                        htmlFor="loginName"
+                    >
                         <TextFieldElement
                             name="loginName"
                             id="loginName"
@@ -107,7 +111,11 @@ export const LoginPage = () => {
                             }}
                         />
                     </FormItem>
-                    <FormItem label="Password" required htmlFor="password">
+                    <FormItem
+                        label={translate("pages.login.fields.password")}
+                        required
+                        htmlFor="password"
+                    >
                         <PasswordElement
                             name="password"
                             id="password"
@@ -119,7 +127,11 @@ export const LoginPage = () => {
                             }}
                         />
                     </FormItem>
-                    <FormItem label="Captcha Code" required htmlFor="captcha">
+                    <FormItem
+                        label={translate("pages.login.fields.captchaCode")}
+                        required
+                        htmlFor="captcha"
+                    >
                         <TextFieldElement
                             name="captcha"
                             id="captcha"

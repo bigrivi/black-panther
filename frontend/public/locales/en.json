@@ -1,4 +1,16 @@
 {
+    "menus": {
+        "dashboard": "Dashboard",
+        "system": "System",
+        "system.user": "User",
+        "system.role": "Role",
+        "system.position": "Position",
+        "system.department": "Department",
+        "system.resource": "Resource",
+        "system.policy": "Policy",
+        "system.enum": "Enum",
+        "system.parameterSetting": "Parameter Setting"
+    },
     "pages": {
         "login": {
             "title": "Sign in to your account",
@@ -7,9 +19,9 @@
             "signinLock": "You can log in again after {{countdown}}",
             "divider": "or",
             "fields": {
-                "email": "Email",
                 "loginName": "Login name",
-                "password": "Password"
+                "password": "Password",
+                "captchaCode": "Captcha Code"
             },
             "errors": {
                 "validEmail": "Invalid email address",
@@ -80,13 +92,16 @@
         "add": "Add",
         "create": "Create",
         "save": "Save",
+        "saveChanges": "Save Changes",
         "logout": "Logout",
         "delete": "Delete",
         "edit": "Edit",
         "cancel": "Cancel",
+        "deleteConfirm": "Delete Confirmation",
         "confirm": "Are you sure?",
         "filter": "Filter",
         "clear": "Clear",
+        "reset": "Reset",
         "refresh": "Refresh",
         "show": "Show",
         "undo": "Undo",
@@ -105,12 +120,14 @@
         "clone": "Clone"
     },
     "table": {
-        "actions": "Actions",
-        "inTotal": "in total"
+        "actions": "Actions"
     },
     "search": {
         "placeholder": "Search by Store ID, E-mail, Keyword",
         "more": "more"
+    },
+    "errors": {
+        "required": "This field is required"
     },
     "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
     "notifications": {
@@ -128,336 +145,123 @@
     "fields": {
         "status": {
             "label": "Status",
-            "true": "Enabled",
-            "false": "Disabled"
+            "true": "Enable",
+            "false": "Disable"
         },
         "createdAt": "Created At"
     },
-    "categories": {
-        "categories": "Categories",
-        "titles": {
-            "list": "Categories"
-        },
-        "fields": {
-            "id": "ID",
-            "title": "Title",
-            "products": "Products",
-            "isActive": {
-                "label": "Status",
-                "true": "Visible",
-                "false": "Invisible"
-            }
-        }
+    "dashboard": {
+        "title": "Dashboard"
     },
-    "couriers": {
-        "couriers": "Couriers",
-        "titles": {
-            "create": "Create Courier",
-            "list": "Couriers",
-            "edit": "Edit Courier"
-        },
+    "enum": {},
+    "users": {
         "fields": {
-            "id": "ID",
-            "avatar": {
-                "label": "Avatar",
-                "description": "Click or drag avatar image to this area to upload."
-            },
-            "name": {
-                "label": "Name",
-                "placeholder": "Please enter courier name"
-            },
-            "surname": {
-                "label": "Surname",
-                "placeholder": "Please enter courier surname"
-            },
-            "gender": {
-                "label": "Gender",
-                "male": "Male",
-                "female": "Female"
-            },
-            "gsm": {
-                "label": "Gsm",
-                "placeholder": "Please enter courier gsm"
-            },
-            "email": {
-                "label": "Email",
-                "placeholder": "Please enter courier email"
-            },
-            "address": {
-                "label": "Address",
-                "placeholder": "Please enter courier address"
-            },
-            "createdAt": "Created At",
-            "status": {
-                "label": "Status",
-                "Available": "Available",
-                "Offline": "Offline",
-                "On delivery": "On delivery"
-            },
-            "vehicleType": {
-                "label": "Vehicle Type",
-                "placeholder": "Please enter Vehicle Type"
-            },
-            "licensePlate": {
-                "label": "Vehicle ID",
-                "placeholder": "Please enter Vehicle ID",
-                "patternMessage": "Please enter valid Vehicle ID. Example: ABC 123"
-            },
-            "rating": {
-                "label": "Rating",
-                "placeholder": "Please enter rating"
-            },
-            "images": {
-                "label": "Images",
-                "description": "Add user picture",
-                "validation": "must be 480x480 px"
-            },
-            "store": {
-                "label": "Store",
-                "placeholder": "Select Store"
-            },
-            "vehicle": {
-                "label": "Vehicle",
-                "placeholder": "Select Vehicle"
-            },
-            "accountNumber": {
-                "label": "Account No",
-                "placeholder": "Please enter account no"
-            }
-        },
-        "filter": {
-            "title": "Filters",
-            "name": {
-                "label": "Name",
-                "placeholder": "Search Name"
-            },
-            "licensePlate": {
-                "label": "Name",
-                "placeholder": "Search Name"
-            },
-            "gsm": {
-                "label": "Gsm",
-                "placeholder": "Search Gsm"
-            },
-            "email": {
-                "label": "Email",
-                "placeholder": "Search Email"
-            },
-            "submit": "Filter"
-        },
-        "steps": {
-            "personal": "Personal",
-            "company": "Company",
-            "vehicle": "Vehicle"
+            "loginName": "Login Name",
+            "userName": "User Name",
+            "password": "Password",
+            "confirmPassword": "Confirm Password",
+            "email": "Email",
+            "department": "Department",
+            "roles": "Roles"
         },
         "actions": {
-            "add": "Add new courier",
-            "edit": "Edit courier"
+            "add": "Create User",
+            "edit": "Edit User"
+        },
+        "errors": {
+            "passwordMismatched": "Confirm password do no match password"
         }
     },
-    "dashboard": {
-        "title": "Dashboard",
-        "overview": {
-            "title": "Overview"
-        },
-        "filter": {
-            "title": "Filters",
-            "date": {
-                "lastWeek": "Last Week",
-                "lastMonth": "Last Month",
-                "lastYear": "Last Year"
-            }
-        },
-        "deliveryMap": {
-            "title": "Delivery Map"
-        },
-        "orders": {
-            "title": "Orders"
-        },
-        "revenue": {
-            "title": "Revenue"
-        },
-        "totalSales": {
-            "title": "Total Sales"
-        },
-        "dailyRevenue": {
-            "title": "Daily Revenue"
-        },
-        "dailyOrders": {
-            "title": "Daily Orders"
-        },
-        "newCustomers": {
-            "title": "New Customers"
-        },
-        "timeline": {
-            "title": "Timeline",
-            "orderStatuses": {
-                "pending": "Preparing order",
-                "ready": "Order is ready",
-                "on the way": "Order is on the way",
-                "delivered": "Order is delivered",
-                "cancelled": "Order is cancelled"
-            }
-        },
-        "recentOrders": {
-            "title": "Recent Orders"
-        },
-        "trendingMenus": {
-            "title": "Daily Trending Menus"
-        },
-        "trendingProducts": {
-            "title": "Trending Products"
-        }
-    },
-    "enum": {
-        "orderStatuses": {
-            "Pending": "Pending",
-            "Ready": "Ready",
-            "On The Way": "On the way",
-            "Delivered": "Delivered",
-            "Cancelled": "Cancelled"
-        }
-    },
-    "orders": {
-        "orders": "Orders",
-        "order": "Order",
-        "titles": {
-            "deliveryMap": "Delivery Map",
-            "deliveryDetails": "Delivery Details",
-            "products": "Products",
-            "list": "Orders",
-            "show": "Order"
-        },
+    "roles": {
         "fields": {
-            "orderNumber": "Order Number",
-            "orderID": "Order ID",
-            "status": "Status",
-            "store": "Store",
-            "user": "User",
-            "products": "Products",
-            "createdAt": "CreatedAt",
-            "amount": "Amount",
-            "itemsAmount": "{{amount}} items",
-            "order": "Order",
-            "customer": "Customer",
-            "courier": "Courier",
-            "phone": "Phone",
-            "deliveryTime": "Delivery Time"
+            "name": "Role Name",
+            "code": "Role Code",
+            "description": "Description"
         },
-        "filter": {
-            "title": "Filters",
-            "search": {
-                "label": "Search",
-                "placeholder": "Order Number, User, etc."
-            },
-            "status": {
-                "label": "Status",
-                "placeholder": "Order Status"
-            },
-            "store": {
-                "label": "Store",
-                "placeholder": "Search Stores"
-            },
-            "user": {
-                "label": "User",
-                "placeholder": "Search Users"
-            },
-            "customer": {
-                "label": "Customer",
-                "placeholder": "Search Customers"
-            },
-            "createdAt": {
-                "label": "Created At"
-            },
-            "orderNumber": {
-                "label": "Order Number",
-                "placeholder": "Search Order Number"
-            },
-            "submit": "Filter"
-        },
-        "courier": {
-            "deliveryTime": "Delivery Time",
-            "phone": "Phone"
-        },
-        "deliverables": {
-            "deliverables": "Deliverables",
-            "fields": {
-                "items": "Items",
-                "quantity": "Quantity",
-                "price": "Price",
-                "total": "Total"
-            },
-            "mainTotal": "MAIN TOTAL"
+        "actions": {
+            "add": "Create Role",
+            "edit": "Edit Role"
         }
     },
-    "users": {
-        "users": "Customers",
-        "titles": {
-            "edit": "Edit Customer",
-            "list": "Customers",
-            "show": "Customer Detail"
-        },
+    "positions": {
         "fields": {
-            "id": "ID",
-            "avatar": {
-                "label": "Avatar",
-                "description": "Click or drag avatar image to this area to upload."
+            "name": "Position Name",
+            "code": "Position Code",
+            "description": "Description"
+        },
+        "actions": {
+            "add": "Create Position",
+            "edit": "Edit Position"
+        }
+    },
+    "departments": {
+        "fields": {
+            "name": "Department Name",
+            "parent": "Parent"
+        },
+        "actions": {
+            "add": "Create Department",
+            "edit": "Edit Department"
+        }
+    },
+    "resources": {
+        "fields": {
+            "name": "Resource Name",
+            "key": {
+                "label": "Key",
+                "tips": "Use this key in your code or when working with the API. The key is the unique identifier of the resource within a Permit Environment."
             },
-            "firstName": "First Name",
-            "lastName": "Last Name",
-            "name": "Name",
-            "gender": {
-                "label": "Gender",
-                "Male": "Male",
-                "Female": "Female"
-            },
-            "gsm": "Gsm No",
-            "createdAt": "Created At",
-            "addresses": "Addresses",
-            "isActive": {
-                "label": "Status",
-                "true": "Active",
-                "false": "Idle"
+            "actions": {
+                "label": "Actions",
+                "placeholder": "Add action...",
+                "tips": "Actions are the ways a user can act on a resource, or access the resource. After typing the action name into the box,press Enter or Return on your keyboard for the action to be correctly added."
             }
         },
-        "filter": {
-            "title": "Filters",
-            "id": {
-                "label": "ID",
-                "placeholder": "Search ID"
-            },
-            "name": {
-                "label": "Name",
-                "placeholder": "Search Name"
-            },
-            "gsm": {
-                "label": "Gsm",
-                "placeholder": "Search Gsm"
-            },
-            "search": {
-                "label": "Search",
-                "placeholder": "FirstName, lastName, gsm, etc."
-            },
-            "createdAt": {
-                "label": "Created At"
-            },
-            "gender": {
-                "label": "Gender",
-                "placeholder": "Gender",
-                "male": "Male",
-                "female": "Female"
-            },
-            "isActive": {
-                "label": "Active",
-                "placeholder": "Select Status",
-                "true": "Yes",
-                "false": "No"
-            },
-            "submit": "Filter"
-        },
-        "addresses": {
-            "addresses": "Addresses",
-            "address": "Address"
+        "actions": {
+            "add": "Create Resource",
+            "edit": "Edit Resource"
         }
+    },
+    "parameterSettings": {
+        "fields": {
+            "name": "Parameter Name",
+            "key": "Key",
+            "value": "Value",
+            "builtIn": "System built-in",
+            "description": "Description"
+        },
+        "actions": {
+            "add": "Create Parameter",
+            "edit": "Edit Parameter"
+        }
+    },
+    "enums": {
+        "fields": {
+            "name": "Enum Name",
+            "key": "Key",
+            "description": "Description",
+            "enumOptions": {
+                "label": "Enum Options",
+                "fields": {
+                    "move": "Move",
+                    "name": "Name",
+                    "value": "Value",
+                    "description": "Description"
+                }
+            }
+        },
+        "actions": {
+            "add": "Create Enum",
+            "edit": "Edit Enum"
+        }
+    },
+    "policy": {
+        "resource": "Resource",
+        "filter": {
+            "placeholder": "Filter Policies",
+            "roles": "Roles",
+            "resources": "Resources"
+        },
+        "unSaveChangesCounts": "{{changedCount}} unsaved changes"
     }
 }

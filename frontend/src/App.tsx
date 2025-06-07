@@ -53,7 +53,7 @@ const App: React.FC = () => {
     const { authProvider, user } = useAuthProvider(axiosInstance);
     const { accessControlProvider } = useAccessControlProvider(user);
     const i18nProvider = {
-        translate: (key: string, params: object) => t(key, params),
+        translate: (key: string, params?: any) => t(key, params),
         changeLocale: (lang: string) => i18n.changeLanguage(lang),
         getLocale: () => i18n.language,
     };
@@ -75,7 +75,7 @@ const App: React.FC = () => {
                                 notificationProvider={useNotificationProvider}
                                 routerProvider={routerBindings}
                                 authProvider={authProvider}
-                                resources={resources}
+                                resources={resources(t)}
                                 options={{
                                     syncWithLocation: true,
                                     warnWhenUnsavedChanges: true,

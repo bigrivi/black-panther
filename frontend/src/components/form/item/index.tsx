@@ -1,4 +1,6 @@
+import { useTranslate } from "@refinedev/core";
 import React, { FC, PropsWithChildren, ReactNode } from "react";
+import { UseControllerProps } from "react-hook-form";
 import { useFormContext } from "../context";
 import { FormControl } from "../control";
 import { FormField, FormFieldBody, FormFieldLabel } from "../field";
@@ -10,6 +12,7 @@ type FormItemProps = {
     htmlFor?: string;
     required?: boolean;
     layout?: FormLayout;
+    rules?: UseControllerProps["rules"];
 };
 export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
     children,
@@ -17,7 +20,9 @@ export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
     htmlFor,
     required,
     layout,
+    rules,
 }) => {
+    const t = useTranslate();
     let { layout: layoutFromContext } = useFormContext();
     layout = layout || layoutFromContext;
     const renderLabel = () => {
@@ -35,6 +40,10 @@ export const FormItem: FC<PropsWithChildren<FormItemProps>> = ({
             <FormControl>
                 {React.cloneElement(children as React.ReactElement, {
                     required,
+                    rules: {
+                        ...(required && { required: t("errors.required") }),
+                        ...rules,
+                    },
                 })}
             </FormControl>
         );

@@ -18,7 +18,7 @@ export const DeptList = ({ children }: PropsWithChildren) => {
         () => [
             {
                 accessorKey: "name",
-                header: "Department Name",
+                header: t(`departments.fields.name`),
                 enableSorting: false,
                 grow: true,
             },
@@ -36,7 +36,7 @@ export const DeptList = ({ children }: PropsWithChildren) => {
                     },
                 ],
                 filterVariant: "select",
-                header: t("users.fields.isActive.label"),
+                header: t("fields.status.label"),
                 glow: true,
                 Cell: ({ row }) => {
                     return <Status value={row.original.valid_state!} />;

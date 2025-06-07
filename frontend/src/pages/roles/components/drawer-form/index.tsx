@@ -37,7 +37,7 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
             code: "",
             name: "",
             description: "",
-            valid_state: null,
+            valid_state: true,
         },
         refineCoreProps: {
             action,
@@ -47,8 +47,6 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
             },
         },
     });
-    console.log("get values");
-    console.log(methods.getValues());
 
     const onDrawerCLose = () => {
         go({
@@ -74,7 +72,7 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={id ? "Edit Position" : "Create Position"}
+            title={id ? t("roles.actions.edit") : t("roles.actions.add")}
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -85,14 +83,25 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Position Name" required htmlFor="name">
+                    <FormItem
+                        label={t("roles.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
                         <TextFieldElement name="name" id="name" />
                     </FormItem>
 
-                    <FormItem label="Position Code" required htmlFor="code">
+                    <FormItem
+                        label={t("roles.fields.code")}
+                        required
+                        htmlFor="code"
+                    >
                         <TextFieldElement name="code" id="code" />
                     </FormItem>
-                    <FormItem label="Description" htmlFor="description">
+                    <FormItem
+                        label={t("roles.fields.description")}
+                        htmlFor="description"
+                    >
                         <TextareaAutosizeElement
                             name="description"
                             hiddenLabel
@@ -100,8 +109,11 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
                             id="description"
                         />
                     </FormItem>
-                    <FormItem label="Status">
-                        <SwitchElement label="Enable" name={`valid_state`} />
+                    <FormItem label={t("fields.status.label")}>
+                        <SwitchElement
+                            label={t("fields.status.true")}
+                            name={`valid_state`}
+                        />
                     </FormItem>
                 </Form>
             </DrawerContent>

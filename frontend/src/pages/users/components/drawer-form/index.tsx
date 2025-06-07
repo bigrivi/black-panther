@@ -9,6 +9,7 @@ import {
     useGetToPath,
     useGo,
     useList,
+    useTranslate,
 } from "@refinedev/core";
 import { useAutocomplete } from "@refinedev/mui";
 import { useForm } from "@refinedev/react-hook-form";
@@ -35,6 +36,7 @@ interface IUserForm extends Omit<IUser, "roles"> {
 export const UserDrawerForm: FC<Props> = ({ action }) => {
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
+    const t = useTranslate();
     const go = useGo();
     const {
         refineCore: { onFinish, id },
@@ -48,7 +50,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             confirm_password: "",
             email: "",
             department_id: null,
-            is_active: null,
+            is_active: true,
             roles: [],
         },
         refineCoreProps: {
@@ -105,7 +107,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={id ? "Edit User" : "Create User"}
+            title={id ? t("users.actions.edit") : t("users.actions.add")}
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -116,14 +118,18 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Login Name" required htmlFor="login_name">
+                    <FormItem
+                        label={t("users.fields.loginName")}
+                        required
+                        htmlFor="login_name"
+                    >
                         <TextFieldElement name="login_name" id="login_name" />
                     </FormItem>
 
                     {action == "create" && (
                         <>
                             <FormItem
-                                label="Password"
+                                label={t("users.fields.password")}
                                 required={action == "create"}
                                 htmlFor="password"
                             >
@@ -133,20 +139,20 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                                 />
                             </FormItem>
                             <FormItem
-                                label="Confirm Password"
+                                label={t("users.fields.confirmPassword")}
                                 required
                                 htmlFor="confirm_password"
+                                rules={{
+                                    validate: (val) => {
+                                        if (methods.watch("password") != val) {
+                                            return t(
+                                                "users.errors.passwordMismatched"
+                                            );
+                                        }
+                                    },
+                                }}
                             >
                                 <PasswordElement
-                                    rules={{
-                                        validate: (val) => {
-                                            if (
-                                                methods.watch("password") != val
-                                            ) {
-                                                return "Confirm password do no match password";
-                                            }
-                                        },
-                                    }}
                                     name="confirm_password"
                                     id="confirm_password"
                                 />
@@ -154,10 +160,18 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         </>
                     )}
 
-                    <FormItem label="User Name" required htmlFor="user_name">
+                    <FormItem
+                        label={t("users.fields.userName")}
+                        required
+                        htmlFor="user_name"
+                    >
                         <TextFieldElement name="user_name" id="user_name" />
                     </FormItem>
-                    <FormItem label="Email" required htmlFor="email">
+                    <FormItem
+                        label={t("users.fields.email")}
+                        required
+                        htmlFor="email"
+                    >
                         <TextFieldElement
                             type="email"
                             name="email"
@@ -165,7 +179,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         />
                     </FormItem>
                     <FormItem
-                        label="Department"
+                        label={t("users.fields.department")}
                         required
                         htmlFor="department_id"
                     >
@@ -180,7 +194,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             id="department_id"
                         />
                     </FormItem>
-                    <FormItem label="Roles" required>
+                    <FormItem label={t("users.fields.roles")} required>
                         <AutocompleteElement
                             name="roles"
                             multiple
@@ -199,21 +213,26 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             }}
                         />
                     </FormItem>
-                    <FormItem label="Status">
-                        <SwitchElement label="Enable" name={`is_active`} />
+                    <FormItem label={t("fields.status.label")}>
+                        <SwitchElement
+                            label={t("fields.status.true")}
+                            name={`is_active`}
+                        />
                     </FormItem>
                 </Form>
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>Cancel</Button>
+                    <Button onClick={onDrawerCLose}>
+                        {t("buttons.cancel")}
+                    </Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"
                         color="primary"
                         type="submit"
                     >
-                        Save
+                        {t("buttons.save")}
                     </Button>
                 </Stack>
             </DrawerFooter>

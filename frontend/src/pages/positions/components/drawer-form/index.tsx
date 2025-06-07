@@ -2,7 +2,13 @@ import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import { IPostion, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
+import {
+    BaseKey,
+    HttpError,
+    useGetToPath,
+    useGo,
+    useTranslate,
+} from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
 import {
@@ -20,6 +26,7 @@ type Props = {
 export const PositionDrawerForm: FC<Props> = ({ action }) => {
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
+    const t = useTranslate();
     const go = useGo();
     const {
         refineCore: { onFinish, id },
@@ -30,7 +37,7 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
             name: "",
             code: "",
             description: "",
-            valid_state: null,
+            valid_state: true,
         },
         refineCoreProps: {
             action,
@@ -74,7 +81,9 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={id ? "Edit Position" : "Create Position"}
+            title={
+                id ? t("positions.actions.edit") : t("positions.actions.add")
+            }
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -85,21 +94,35 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Position Name" required htmlFor="name">
+                    <FormItem
+                        label={t("positions.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
                         <TextFieldElement name="name" id="name" />
                     </FormItem>
 
-                    <FormItem label="Position Code" required htmlFor="code">
+                    <FormItem
+                        label={t("positions.fields.code")}
+                        required
+                        htmlFor="code"
+                    >
                         <TextFieldElement name="code" id="code" />
                     </FormItem>
-                    <FormItem label="Description" htmlFor="description">
+                    <FormItem
+                        label={t("positions.fields.description")}
+                        htmlFor="description"
+                    >
                         <TextareaAutosizeElement
                             name="description"
                             id="description"
                         />
                     </FormItem>
-                    <FormItem label="Status">
-                        <SwitchElement label="Enable" name={`valid_state`} />
+                    <FormItem label={t("fields.status.label")}>
+                        <SwitchElement
+                            label={t("fields.status.true")}
+                            name={`valid_state`}
+                        />
                     </FormItem>
                 </Form>
             </DrawerContent>

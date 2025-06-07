@@ -20,14 +20,14 @@ export const EnumList = ({ children }: PropsWithChildren) => {
     const columns = useMemo<MRT_ColumnDef<IEnum>[]>(
         () => [
             {
-                accessorKey: "key",
-                header: "Key",
-                width: 200,
+                accessorKey: "name",
+                header: t("enums.fields.name"),
+                size: 200,
             },
             {
-                accessorKey: "name",
-                header: "Name",
-                size: 200,
+                accessorKey: "key",
+                header: t("enums.fields.key"),
+                width: 200,
             },
             {
                 accessorKey: "created_at",
@@ -59,7 +59,7 @@ export const EnumList = ({ children }: PropsWithChildren) => {
                     },
                 ],
                 filterVariant: "select",
-                header: t("users.fields.isActive.label"),
+                header: t("fields.status.label"),
                 glow: true,
                 Cell: ({ row }) => {
                     return <Status value={row.original.valid_state!} />;
@@ -78,7 +78,10 @@ export const EnumList = ({ children }: PropsWithChildren) => {
                                 hideText
                                 recordItemId={row.original.id}
                             />
-                            <DeleteButton recordItemId={row.original.id} />
+                            <DeleteButton
+                                hideText
+                                recordItemId={row.original.id}
+                            />
                         </>
                     );
                 },

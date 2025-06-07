@@ -1,0 +1,287 @@
+{
+    "menus": {
+        "dashboard": "控制台",
+        "system": "系统",
+        "system.user": "用户",
+        "system.role": "角色",
+        "system.position": "岗位",
+        "system.department": "部门",
+        "system.resource": "资源",
+        "system.policy": "政策",
+        "system.enum": "枚举值",
+        "system.parameterSetting": "参数设置"
+    },
+    "pages": {
+        "login": {
+            "title": "登录您的账户",
+            "signin": "登入",
+            "signup": "注册",
+            "divider": "或者",
+            "fields": {
+                "loginName": "登录账号",
+                "password": "密码",
+                "captchaCode": "验证码"
+            },
+            "errors": {
+                "validEmail": "Ungültige E-Mail-Adresse"
+            },
+            "buttons": {
+                "submit": "登入中",
+                "forgotPassword": "忘记密码?",
+                "noAccount": "没有账号?",
+                "rememberMe": "记住登录"
+            }
+        },
+        "forgotPassword": {
+            "title": "Forgot your password?",
+            "fields": {
+                "email": "Email"
+            },
+            "errors": {
+                "validEmail": "Ungültige E-Mail-Adresse"
+            },
+            "buttons": {
+                "submit": "Anweisungen zum Zurücksetzen senden"
+            }
+        },
+        "register": {
+            "title": "Registrieren Sie sich für Ihr Konto",
+            "fields": {
+                "email": "Email",
+                "password": "Passwort"
+            },
+            "errors": {
+                "validEmail": "Ungültige E-Mail-Adresse"
+            },
+            "buttons": {
+                "submit": "Registrieren",
+                "haveAccount": "Ein Konto haben?"
+            }
+        },
+        "updatePassword": {
+            "title": "Kennwort aktualisieren",
+            "fields": {
+                "password": "Neues Passwort",
+                "confirmPassword": "Bestätige neues Passwort"
+            },
+            "errors": {
+                "confirmPasswordNotMatch": "Passwörter stimmen nicht überein"
+            },
+            "buttons": {
+                "submit": "Aktualisieren"
+            }
+        },
+        "error": {
+            "info": "Sie haben vergessen, {{action}} component zu {{resource}} hinzufügen.",
+            "404": "Leider existiert diese Seite nicht.",
+            "resource404": "Haben Sie die {{resource}} resource erstellt?",
+            "backHome": "Zurück"
+        }
+    },
+    "actions": {
+        "list": "Aufführen",
+        "create": "Erstellen",
+        "edit": "Bearbeiten",
+        "show": "Zeigen",
+        "delete": "Löschen",
+        "cancel": "Abbrechen"
+    },
+    "buttons": {
+        "create": "创建",
+        "save": "保存",
+        "saveChanges": "保存改变",
+        "logout": "登出",
+        "delete": "删除",
+        "edit": "编辑",
+        "cancel": "取消",
+        "deleteConfirm": "删除确认",
+        "confirm": "确认吗?",
+        "filter": "过滤",
+        "clear": "清除",
+        "reset": "重置",
+        "refresh": "刷新",
+        "show": "Zeigen",
+        "undo": "重做",
+        "import": "导入",
+        "export": "导出",
+        "clone": "克隆",
+        "accept": "接受",
+        "acceptAll": "接收所有",
+        "reject": "拒绝",
+        "rejectAll": "拒绝所有",
+        "nextStep": "下一步",
+        "previousStep": "上一步"
+    },
+    "loading": "加载中",
+    "tags": {
+        "clone": "Klonen"
+    },
+    "table": {
+        "actions": "操作"
+    },
+    "search": {
+        "placeholder": "Suchen mit Geschäfts-ID, E-mail oder Stichwort",
+        "more": "Noch mehr"
+    },
+    "errors": {
+        "required": "此字段是必需的"
+    },
+    "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+    "notifications": {
+        "success": "Erfolg",
+        "error": "Fehler (status code: {{statusCode}})",
+        "undoable": "Sie haben {{seconds}} Sekunden Zeit für Undo.",
+        "createSuccess": "{{resource}} erfolgreich erstellt.",
+        "createError": "Fehler beim Erstellen {{resource}} (status code: {{statusCode}})",
+        "deleteSuccess": "{{resource}} erfolgreich gelöscht.",
+        "deleteError": "Fehler beim Löschen {{resource}} (status code: {{statusCode}})",
+        "editSuccess": "{{resource}} erfolgreich bearbeitet.",
+        "importProgress": "{{processed}}/{{total}} importiert"
+    },
+    "fields": {
+        "status": {
+            "label": "状态",
+            "true": "启用",
+            "false": "禁用"
+        },
+        "createdAt": "创建时间"
+    },
+    "categories": {
+        "categories": "Kategorien",
+        "titles": {
+            "list": "Kategorien"
+        },
+        "fields": {
+            "id": "ID",
+            "title": "Titel",
+            "products": "Produkte",
+            "isActive": {
+                "label": "Aktiv",
+                "true": "Aktiv",
+                "false": "Passiv"
+            }
+        }
+    },
+    "dashboard": {
+        "title": "工作台"
+    },
+    "enum": {
+        "orderStatuses": {
+            "pending": "Wird vorbereiten.",
+            "ready": "Bereit",
+            "on the way": "Unterwegs",
+            "delivered": "Geliefert",
+            "cancelled": "Abgesagt"
+        }
+    },
+    "users": {
+        "fields": {
+            "loginName": "登录名",
+            "userName": "用户名",
+            "password": "密码",
+            "confirmPassword": "确认密码",
+            "email": "邮箱地址",
+            "department": "部门",
+            "roles": "角色"
+        },
+        "actions": {
+            "add": "创建用户",
+            "edit": "编辑用户"
+        },
+        "errors": {
+            "passwordMismatched": "确认密码和密码不一致"
+        }
+    },
+    "roles": {
+        "fields": {
+            "name": "角色名",
+            "code": "角色编码",
+            "description": "描述"
+        },
+        "actions": {
+            "add": "创建角色",
+            "edit": "编辑角色"
+        }
+    },
+    "positions": {
+        "fields": {
+            "name": "岗位名",
+            "code": "岗位代码",
+            "description": "描述"
+        },
+        "actions": {
+            "add": "创建岗位",
+            "edit": "编辑岗位"
+        }
+    },
+    "departments": {
+        "fields": {
+            "name": "部门名",
+            "parent": "父级部门"
+        },
+        "actions": {
+            "add": "创建部门",
+            "edit": "编辑部门"
+        }
+    },
+    "resources": {
+        "fields": {
+            "name": "资源名",
+            "key": {
+                "label": "资源键名",
+                "tips": "在您的代码中或使用 API 时使用此键。该键是许可环境中资源的唯一标识符."
+            },
+            "actions": {
+                "label": "Actions",
+                "placeholder": "Add action...",
+                "tips": "操作是用户对资源执行操作或访问资源的方式。在框中输入操作名称后，请按键盘上的 Enter 或 Return 键以确保操作正确添加."
+            }
+        },
+        "actions": {
+            "add": "创建资源",
+            "edit": "编辑资源"
+        }
+    },
+    "parameterSettings": {
+        "fields": {
+            "name": "参数名",
+            "key": "参数键名",
+            "value": "参数值",
+            "builtIn": "系统内置",
+            "description": "描述"
+        },
+        "actions": {
+            "add": "创建参数",
+            "edit": "编辑参数"
+        }
+    },
+    "enums": {
+        "fields": {
+            "name": "枚举名称",
+            "key": "枚举键名",
+            "description": "描叙",
+            "enumOptions": {
+                "label": "枚举选项",
+                "fields": {
+                    "move": "异动",
+                    "name": "名称",
+                    "value": "值",
+                    "description": "描述"
+                }
+            }
+        },
+        "actions": {
+            "add": "创建枚举值",
+            "edit": "编辑枚举值"
+        }
+    },
+    "policy": {
+        "filter": {
+            "placeholder": "过滤政策",
+            "roles": "角色",
+            "resources": "资源"
+        },
+        "unSaveChangesCounts": "{{changedCount}}条改变未保存",
+        "resource": "资源"
+    }
+}

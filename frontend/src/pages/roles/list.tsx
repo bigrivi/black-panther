@@ -21,12 +21,12 @@ export const RoleList = ({ children }: PropsWithChildren) => {
         () => [
             {
                 accessorKey: "name",
-                header: "Role Name",
+                header: t("roles.fields.name"),
                 size: 200,
             },
             {
                 accessorKey: "code",
-                header: "Role Code",
+                header: t("roles.fields.code"),
                 width: 200,
             },
             {
@@ -59,7 +59,7 @@ export const RoleList = ({ children }: PropsWithChildren) => {
                     },
                 ],
                 filterVariant: "select",
-                header: t("users.fields.isActive.label"),
+                header: t("fields.status.label"),
                 glow: true,
                 Cell: ({ row }) => {
                     return <Status value={row.original.valid_state!} />;

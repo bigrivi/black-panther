@@ -151,11 +151,9 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
             </Button>
             <ConfirmDialog
                 autoClose={false}
+                title={translate("buttons.deleteConfirm")}
                 loading={isLoading}
-                message={
-                    confirmMessage ??
-                    translate("buttons.confirm", "Are you sure?")
-                }
+                message={confirmMessage ?? translate("buttons.confirm")}
                 onConfirm={onConfirm}
                 open={open}
                 onClose={() => {

@@ -22,7 +22,7 @@ interface ConfirmDialogProps {
 }
 
 export const ConfirmDialog: FC<PropsWithChildren<ConfirmDialogProps>> = ({
-    title = "Delete Confirmation",
+    title = "Confirmation",
     message = "Are you sure?",
     onConfirm,
     open,

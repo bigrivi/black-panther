@@ -122,13 +122,17 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                                         zIndex: 100,
                                     }}
                                 >
-                                    Resource
+                                    {t("resources.fields.name")}
                                 </TableCell>
-                                <TableCell align={"left"}>Key</TableCell>
+                                <TableCell align={"left"}>
+                                    {t("resources.fields.key.label")}
+                                </TableCell>
                                 <TableCell
                                     style={{ width: 150 }}
-                                    align={"center"}
-                                ></TableCell>
+                                    align={"left"}
+                                >
+                                    {t("table.actions")}
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -174,9 +178,12 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                                             </TableCell>
                                             <TableCell
                                                 style={{ width: 150 }}
-                                                align={"center"}
+                                                align={"left"}
                                             >
-                                                <Stack direction={"row"}>
+                                                <Stack
+                                                    alignItems="center"
+                                                    direction={"row"}
+                                                >
                                                     {canCreateAction?.can && (
                                                         <IconButton
                                                             size="small"
@@ -222,7 +229,7 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                 </TableContainer>
             </Paper>
             {children}
-            {actionResourceId  && actionDrawerOpen && (
+            {actionResourceId && actionDrawerOpen && (
                 <ActionDrawerForm
                     open={actionDrawerOpen}
                     resourceId={actionResourceId}

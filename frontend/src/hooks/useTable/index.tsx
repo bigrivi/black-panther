@@ -3,6 +3,7 @@ import {
     CrudFilter,
     type CrudSorting,
     type HttpError,
+    useGetLocale,
     useTable as useTableCore,
     type useTableProps as useTablePropsCore,
     type useTableReturnType as useTableReturnTypeCore,
@@ -13,14 +14,14 @@ import {
     getFilteredRowModel,
     getSortedRowModel,
 } from "@tanstack/react-table";
-
+import isEqual from "lodash/isEqual";
 import {
     type MRT_TableInstance,
     type MRT_TableOptions,
     useMaterialReactTable,
 } from "material-react-table";
-
-import isEqual from "lodash/isEqual";
+import { MRT_Localization_EN } from "material-react-table/locales/en";
+import { MRT_Localization_ZH_HANS } from "material-react-table/locales/zh-Hans";
 import { useEffect, useState } from "react";
 
 import { DeleteButton } from "@/components";
@@ -60,7 +61,8 @@ export function useTable<
     TError
 > {
     const isFirstRender = useIsFirstRender();
-
+    const locale = useGetLocale();
+    const currentLocale = locale();
     const useTableResult = useTableCore<TQueryFnData, TError, TData>({
         ...refineCoreProps,
         hasPagination,
@@ -90,6 +92,11 @@ export function useTable<
 
     const reactTableResult = useMaterialReactTable<TData>({
         data: data?.data ?? [],
+        enableRowNumbers: true,
+        localization:
+            currentLocale == "zh"
+                ? MRT_Localization_ZH_HANS
+                : MRT_Localization_EN,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: isServerSideSortingEnabled
             ? undefined
@@ -144,6 +151,7 @@ export function useTable<
         }),
         positionToolbarAlertBanner: "bottom",
         ...(rest.enableRowSelection && {
+            renderToolbarAlertBannerContent: ({ selectedAlert, table }) => null,
             renderTopToolbarCustomActions: ({ table }) => (
                 <DeleteButton
                     disabled={table.getSelectedRowModel().flatRows.length === 0}

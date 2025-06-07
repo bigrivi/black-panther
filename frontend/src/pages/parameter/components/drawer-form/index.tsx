@@ -38,7 +38,7 @@ export const ParameterDrawerForm: FC<Props> = ({ action }) => {
             name: "",
             value: "",
             description: "",
-            is_system: null,
+            is_system: false,
         },
         refineCoreProps: {
             action,
@@ -73,7 +73,11 @@ export const ParameterDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={id ? "Edit Parameter" : "Create Parameter"}
+            title={
+                id
+                    ? t("parameterSettings.actions.edit")
+                    : t("parameterSettings.actions.add")
+            }
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -84,17 +88,32 @@ export const ParameterDrawerForm: FC<Props> = ({ action }) => {
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Param Name" required htmlFor="name">
+                    <FormItem
+                        label={t("parameterSettings.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
                         <TextFieldElement name="name" id="name" />
                     </FormItem>
 
-                    <FormItem label="Param Key" required htmlFor="key">
+                    <FormItem
+                        label={t("parameterSettings.fields.key")}
+                        required
+                        htmlFor="key"
+                    >
                         <TextFieldElement name="key" id="key" />
                     </FormItem>
-                    <FormItem label="Param Value" required htmlFor="value">
+                    <FormItem
+                        label={t("parameterSettings.fields.value")}
+                        required
+                        htmlFor="value"
+                    >
                         <TextFieldElement name="value" id="value" />
                     </FormItem>
-                    <FormItem label="Description" htmlFor="description">
+                    <FormItem
+                        label={t("parameterSettings.fields.description")}
+                        htmlFor="description"
+                    >
                         <TextareaAutosizeElement
                             name="description"
                             hiddenLabel
@@ -102,7 +121,7 @@ export const ParameterDrawerForm: FC<Props> = ({ action }) => {
                             id="description"
                         />
                     </FormItem>
-                    <FormItem label="System build-in">
+                    <FormItem label={t("parameterSettings.fields.builtIn")}>
                         <SwitchElement label="" name={`is_system`} />
                     </FormItem>
                 </Form>
@@ -110,7 +129,6 @@ export const ParameterDrawerForm: FC<Props> = ({ action }) => {
             <DrawerFooter>
                 <Stack direction="row">
                     <Button onClick={onDrawerCLose}>
-                        {" "}
                         {t("buttons.cancel")}
                     </Button>
                     <Button
