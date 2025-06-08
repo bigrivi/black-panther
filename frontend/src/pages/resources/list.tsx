@@ -248,12 +248,10 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                 />
             )}
             <DeleteActionConfirmDialog
-                title="Delete Action"
-                message={
-                    "Are you sure you want to delete the action: " +
-                    action?.name +
-                    "?"
-                }
+                title={t("resourceActions.actions.delete.confirm.title")}
+                message={t("resourceActions.actions.delete.confirm.message", {
+                    action: action?.name,
+                })}
                 onConfirm={doDeleteAction}
                 open={actionRemoveDialogVisible}
                 onClose={() => {

@@ -14,6 +14,7 @@ import {
     Popper,
     useEventCallback,
 } from "@mui/material";
+import { useTranslate } from "@refinedev/core";
 import {
     ChangeEvent,
     forwardRef,
@@ -127,6 +128,7 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
     const [filterText, setFilterText] = useState("");
+    const t = useTranslate();
 
     const rulesTmp = {
         ...rules,
@@ -305,7 +307,7 @@ const TreeSelectFieldElement = forwardRef(function TextFieldElement<
                             <SearchInput
                                 autoFocus
                                 value={filterText}
-                                placeholder="Search"
+                                placeholder={t("search.placeholder")}
                                 onChange={handleFilter}
                             />
                             <IconButton

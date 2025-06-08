@@ -24,8 +24,10 @@
                 "captchaCode": "Captcha Code"
             },
             "errors": {
-                "validEmail": "Invalid email address",
-                "requiredEmail": "Login name is required"
+                "requiredLoginName": "Login name is required",
+                "minLengthdLoginName": "Please enter at least 5 characters",
+                "requiredPassword": "Password is required",
+                "requiredcaptchaCode": "Captcha Code is required"
             },
             "buttons": {
                 "submit": "Login",
@@ -123,8 +125,7 @@
         "actions": "Actions"
     },
     "search": {
-        "placeholder": "Search by Store ID, E-mail, Keyword",
-        "more": "more"
+        "placeholder": "Search"
     },
     "errors": {
         "required": "This field is required"
@@ -155,6 +156,7 @@
     },
     "enum": {},
     "users": {
+        "organization": "Organization",
         "fields": {
             "loginName": "Login Name",
             "userName": "User Name",
@@ -219,7 +221,30 @@
         },
         "actions": {
             "add": "Create Resource",
-            "edit": "Edit Resource"
+            "edit": "Edit Resource",
+            "delete": {
+                "label": "Delete Resource",
+                "confirm": {
+                    "title": "Delete Resource",
+                    "message": "Are you sure you want to delete the resource: {{resource}}?"
+                }
+            }
+        }
+    },
+    "resourceActions": {
+        "fields": {
+            "name": "Name"
+        },
+        "actions": {
+            "add": "Create Action",
+            "edit": "Edit Action",
+            "delete": {
+                "label": "Delete Action",
+                "confirm": {
+                    "title": "Delete Action",
+                    "message": "Are you sure you want to delete the action: {{action}}?"
+                }
+            }
         }
     },
     "parameterSettings": {

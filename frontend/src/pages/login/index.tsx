@@ -99,45 +99,45 @@ export const LoginPage = () => {
                         label={translate("pages.login.fields.loginName")}
                         required
                         htmlFor="loginName"
-                    >
-                        <TextFieldElement
-                            name="loginName"
-                            id="loginName"
-                            rules={{
-                                required: translate(
-                                    "pages.login.errors.requiredEmail",
-                                    "Login name is required"
+                        rules={{
+                            required: translate(
+                                "pages.login.errors.requiredLoginName"
+                            ),
+                            minLength: {
+                                value: 5,
+                                message: translate(
+                                    "pages.login.errors.minLengthdLoginName"
                                 ),
-                            }}
-                        />
+                            },
+                        }}
+                    >
+                        <TextFieldElement name="loginName" id="loginName" />
                     </FormItem>
                     <FormItem
                         label={translate("pages.login.fields.password")}
                         required
                         htmlFor="password"
+                        rules={{
+                            required: translate(
+                                "pages.login.errors.requiredPassword"
+                            ),
+                        }}
                     >
-                        <PasswordElement
-                            name="password"
-                            id="password"
-                            rules={{
-                                required: translate(
-                                    "pages.login.errors.requiredPassword",
-                                    "Password is required"
-                                ),
-                            }}
-                        />
+                        <PasswordElement name="password" id="password" />
                     </FormItem>
                     <FormItem
                         label={translate("pages.login.fields.captchaCode")}
                         required
                         htmlFor="captcha"
+                        rules={{
+                            required: translate(
+                                "pages.login.errors.requiredcaptchaCode"
+                            ),
+                        }}
                     >
                         <TextFieldElement
                             name="captcha"
                             id="captcha"
-                            rules={{
-                                required: "Captcha code is required",
-                            }}
                             slotProps={{
                                 input: {
                                     endAdornment: (
@@ -221,39 +221,6 @@ export const LoginPage = () => {
                         {translate("pages.login.signin", "Sign in")}
                     </Button>
                 </Form>
-
-                <Box
-                    sx={{
-                        mt: "24px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Typography
-                        textAlign="center"
-                        variant="body2"
-                        component="span"
-                        fontSize="12px"
-                    >
-                        {translate(
-                            "pages.login.buttons.noAccount",
-                            "Don’t have an account?"
-                        )}
-                    </Typography>
-                    <MuiLink
-                        ml="4px"
-                        fontSize="12px"
-                        variant="body2"
-                        color="primary"
-                        component={ActiveLink}
-                        underline="none"
-                        to="/register"
-                        fontWeight="bold"
-                    >
-                        {translate("pages.login.signup", "Sign up")}
-                    </MuiLink>
-                </Box>
             </CardContent>
         </Card>
     );

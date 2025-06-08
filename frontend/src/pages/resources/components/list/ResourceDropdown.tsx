@@ -9,7 +9,7 @@ import {
     Menu,
     MenuItem,
 } from "@mui/material";
-import { useDelete, useGo, useNavigation } from "@refinedev/core";
+import { useDelete, useGo, useNavigation, useTranslate } from "@refinedev/core";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import { FC, useState } from "react";
 import { useLocation } from "react-router";
@@ -22,6 +22,7 @@ export const ResourceDropdown: FC<ResourceDropdownProps> = ({ resource }) => {
     const { pathname } = useLocation();
     const { mutateAsync } = useDelete();
     const [dialogVisible, setDialogVisible] = useState(false);
+    const t = useTranslate();
 
     const go = useGo();
     const handleDelete = async () => {
@@ -74,7 +75,9 @@ export const ResourceDropdown: FC<ResourceDropdownProps> = ({ resource }) => {
                                 <ListItemIcon>
                                     <Edit />
                                 </ListItemIcon>
-                                <ListItemText>Edit Resource</ListItemText>
+                                <ListItemText>
+                                    {t("resources.actions.edit")}
+                                </ListItemText>
                             </MenuItem>
                             <MenuItem
                                 onClick={() => {
@@ -86,7 +89,7 @@ export const ResourceDropdown: FC<ResourceDropdownProps> = ({ resource }) => {
                                     <Delete color="error" />
                                 </ListItemIcon>
                                 <ListItemText color="error">
-                                    Delete Resource
+                                    {t("resources.actions.delete.label")}
                                 </ListItemText>
                             </MenuItem>
                         </Menu>
@@ -94,12 +97,10 @@ export const ResourceDropdown: FC<ResourceDropdownProps> = ({ resource }) => {
                 )}
             </PopupState>
             <ConfirmDialog
-                title="Delete Resource"
-                message={
-                    "Are you sure you want to delete the resource: " +
-                    resource.name +
-                    "?"
-                }
+                title={t("resources.actions.delete.confirm.title")}
+                message={t("resources.actions.delete.confirm.message", {
+                    resource: resource.name,
+                })}
                 onConfirm={handleDelete}
                 open={dialogVisible}
                 onClose={() => setDialogVisible(false)}

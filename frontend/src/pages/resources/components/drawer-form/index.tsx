@@ -112,7 +112,11 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
                     >
                         <TextFieldElement name="name" id="name" />
                     </FormItem>
-                    <FormItem label="Key" required htmlFor="key">
+                    <FormItem
+                        label={t("resources.fields.key.label")}
+                        required
+                        htmlFor="key"
+                    >
                         <TextFieldElement
                             name="key"
                             id="key"

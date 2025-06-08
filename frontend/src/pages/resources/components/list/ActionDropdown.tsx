@@ -1,5 +1,4 @@
-import { FC } from "react";
-import { IAction, IResource } from "@/interfaces";
+import { IAction } from "@/interfaces";
 import { Delete, Edit, MoreHorizOutlined } from "@mui/icons-material";
 import {
     Divider,
@@ -9,7 +8,9 @@ import {
     Menu,
     MenuItem,
 } from "@mui/material";
-import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { useTranslate } from "@refinedev/core";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
+import { FC } from "react";
 
 type ActionDropdownProps = {
     action: IAction;
@@ -23,6 +24,7 @@ export const ActionDropdown: FC<ActionDropdownProps> = ({
     resourceId,
     onDelete,
 }) => {
+    const t = useTranslate();
     return (
         <PopupState variant="popover" popupId="2">
             {(popupState) => (
@@ -54,7 +56,9 @@ export const ActionDropdown: FC<ActionDropdownProps> = ({
                             <ListItemIcon>
                                 <Edit />
                             </ListItemIcon>
-                            <ListItemText>Edit Action</ListItemText>
+                            <ListItemText>
+                                {t("resourceActions.actions.edit")}
+                            </ListItemText>
                         </MenuItem>
                         <MenuItem
                             onClick={() => {
@@ -66,7 +70,7 @@ export const ActionDropdown: FC<ActionDropdownProps> = ({
                                 <Delete color="error" />
                             </ListItemIcon>
                             <ListItemText color="error">
-                                Delete Action
+                                {t("resourceActions.actions.delete.label")}
                             </ListItemText>
                         </MenuItem>
                     </Menu>

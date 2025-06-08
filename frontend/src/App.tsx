@@ -53,7 +53,17 @@ const App: React.FC = () => {
     const { authProvider, user } = useAuthProvider(axiosInstance);
     const { accessControlProvider } = useAccessControlProvider(user);
     const i18nProvider = {
-        translate: (key: string, params?: any) => t(key, params),
+        translate: (
+            key: string,
+            params?: any,
+            defaultMessage?: string
+        ): string => {
+            if (params && defaultMessage) {
+                return t(key, defaultMessage, params) as string;
+            } else {
+                return t(key, params) as string;
+            }
+        },
         changeLocale: (lang: string) => i18n.changeLanguage(lang),
         getLocale: () => i18n.language,
     };

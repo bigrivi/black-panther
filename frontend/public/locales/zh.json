@@ -23,7 +23,10 @@
                 "captchaCode": "验证码"
             },
             "errors": {
-                "validEmail": "Ungültige E-Mail-Adresse"
+                "requiredLoginName": "登录账号不可为空",
+                "minLengthdLoginName": "最少输入5个字符",
+                "requiredPassword": "密码不可为空",
+                "requiredcaptchaCode": "验证码不可为空"
             },
             "buttons": {
                 "submit": "登入中",
@@ -33,58 +36,58 @@
             }
         },
         "forgotPassword": {
-            "title": "Forgot your password?",
+            "title": "忘记密码了吗?",
             "fields": {
-                "email": "Email"
+                "email": "邮箱地址"
             },
             "errors": {
-                "validEmail": "Ungültige E-Mail-Adresse"
+                "validEmail": "错误的邮箱地址"
             },
             "buttons": {
-                "submit": "Anweisungen zum Zurücksetzen senden"
+                "submit": "发送重置邮件"
             }
         },
         "register": {
-            "title": "Registrieren Sie sich für Ihr Konto",
+            "title": "Sign up for your account",
             "fields": {
                 "email": "Email",
-                "password": "Passwort"
+                "password": "密码"
             },
             "errors": {
-                "validEmail": "Ungültige E-Mail-Adresse"
+                "validEmail": "Invalid email address"
             },
             "buttons": {
-                "submit": "Registrieren",
-                "haveAccount": "Ein Konto haben?"
+                "submit": "注册",
+                "haveAccount": "已有账号?"
             }
         },
         "updatePassword": {
-            "title": "Kennwort aktualisieren",
+            "title": "Update password",
             "fields": {
-                "password": "Neues Passwort",
-                "confirmPassword": "Bestätige neues Passwort"
+                "password": "New Password",
+                "confirmPassword": "Confirm new password"
             },
             "errors": {
-                "confirmPasswordNotMatch": "Passwörter stimmen nicht überein"
+                "confirmPasswordNotMatch": "Passwords do not match"
             },
             "buttons": {
-                "submit": "Aktualisieren"
+                "submit": "Update"
             }
         },
         "error": {
-            "info": "Sie haben vergessen, {{action}} component zu {{resource}} hinzufügen.",
-            "404": "Leider existiert diese Seite nicht.",
-            "resource404": "Haben Sie die {{resource}} resource erstellt?",
-            "backHome": "Zurück"
+            "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
+            "404": "Sorry, the page you visited does not exist.",
+            "resource404": "Are you sure you have created the {{resource}} resource.",
+            "backHome": "Back Home"
         }
     },
     "actions": {
-        "list": "Aufführen",
-        "create": "Erstellen",
-        "edit": "Bearbeiten",
-        "show": "Zeigen",
-        "delete": "Löschen",
-        "cancel": "Abbrechen"
+        "list": "列表",
+        "create": "创建",
+        "edit": "编辑",
+        "show": "查看",
+        "delete": "删除",
+        "cancel": "取消"
     },
     "buttons": {
         "create": "创建",
@@ -120,23 +123,23 @@
         "actions": "操作"
     },
     "search": {
-        "placeholder": "Suchen mit Geschäfts-ID, E-mail oder Stichwort",
-        "more": "Noch mehr"
+        "placeholder": "搜索"
     },
     "errors": {
         "required": "此字段是必需的"
     },
-    "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+    "warnWhenUnsavedChanges": "您确定要离开吗？您还有未保存的更改.",
     "notifications": {
-        "success": "Erfolg",
-        "error": "Fehler (status code: {{statusCode}})",
-        "undoable": "Sie haben {{seconds}} Sekunden Zeit für Undo.",
-        "createSuccess": "{{resource}} erfolgreich erstellt.",
-        "createError": "Fehler beim Erstellen {{resource}} (status code: {{statusCode}})",
-        "deleteSuccess": "{{resource}} erfolgreich gelöscht.",
-        "deleteError": "Fehler beim Löschen {{resource}} (status code: {{statusCode}})",
-        "editSuccess": "{{resource}} erfolgreich bearbeitet.",
-        "importProgress": "{{processed}}/{{total}} importiert"
+        "success": "Successful",
+        "error": "Error (status code: {{statusCode}})",
+        "undoable": "You have {{seconds}} seconds to undo",
+        "createSuccess": "Successfully created {{resource}}",
+        "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
+        "deleteSuccess": "Successfully deleted {{resource}}",
+        "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
+        "editSuccess": "Successfully edited {{resource}}",
+        "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
+        "importProgress": "Importing: {{processed}}/{{total}}"
     },
     "fields": {
         "status": {
@@ -175,6 +178,7 @@
         }
     },
     "users": {
+        "organization": "组织架构",
         "fields": {
             "loginName": "登录名",
             "userName": "用户名",
@@ -232,14 +236,37 @@
                 "tips": "在您的代码中或使用 API 时使用此键。该键是许可环境中资源的唯一标识符."
             },
             "actions": {
-                "label": "Actions",
-                "placeholder": "Add action...",
-                "tips": "操作是用户对资源执行操作或访问资源的方式。在框中输入操作名称后，请按键盘上的 Enter 或 Return 键以确保操作正确添加."
+                "label": "动作",
+                "placeholder": "新增动作...",
+                "tips": "动作是用户对资源执行操作或访问资源的方式。在框中输入操作名称后，请按键盘上的 Enter 或 Return 键以确保操作正确添加."
             }
         },
         "actions": {
             "add": "创建资源",
-            "edit": "编辑资源"
+            "edit": "编辑资源",
+            "delete": {
+                "label": "删除资源",
+                "confirm": {
+                    "title": "删除资源",
+                    "message": "您确定要删除该资源{{resource}}吗?"
+                }
+            }
+        }
+    },
+    "resourceActions": {
+        "fields": {
+            "name": "动作名"
+        },
+        "actions": {
+            "add": "创建动作",
+            "edit": "编辑动作",
+            "delete": {
+                "label": "删除动作",
+                "confirm": {
+                    "title": "删除动作",
+                    "message": "您确定要删除该动作{{action}}吗?"
+                }
+            }
         }
     },
     "parameterSettings": {

@@ -16,7 +16,7 @@ import {
     IconButton,
     Stack,
 } from "@mui/material";
-import { useList } from "@refinedev/core";
+import { useList, useTranslate } from "@refinedev/core";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 type OrgSiderProps = {
@@ -30,6 +30,7 @@ export const OrgSider: FC<OrgSiderProps> = ({
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
     const [expandAll, setExpandAll] = useState(true);
     const [filterText, setFilterText] = useState("");
+    const t = useTranslate();
 
     const { data: deptTreeData, refetch } = useList<IDepartment>({
         resource: "department",
@@ -95,7 +96,7 @@ export const OrgSider: FC<OrgSiderProps> = ({
                 title={
                     <Box display="flex" alignItems="center">
                         <Group />
-                        Organization
+                        {t("users.organization")}
                     </Box>
                 }
                 action={
@@ -125,7 +126,7 @@ export const OrgSider: FC<OrgSiderProps> = ({
                 >
                     <SearchInput
                         value={filterText}
-                        placeholder="Search"
+                        placeholder={t("search.placeholder")}
                         onChange={handleFilter}
                     />
                     <Box
