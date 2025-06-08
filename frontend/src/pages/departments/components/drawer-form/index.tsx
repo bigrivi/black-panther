@@ -136,14 +136,16 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>Cancel</Button>
+                    <Button onClick={onDrawerCLose}>
+                        {t("buttons.cancel")}
+                    </Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"
                         color="primary"
                         type="submit"
                     >
-                        Save
+                        {t("buttons.save")}
                     </Button>
                 </Stack>
             </DrawerFooter>

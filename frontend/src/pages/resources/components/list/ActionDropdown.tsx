@@ -8,7 +8,7 @@ import {
     Menu,
     MenuItem,
 } from "@mui/material";
-import { useTranslate } from "@refinedev/core";
+import { useCan, useTranslate } from "@refinedev/core";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import { FC } from "react";
 
@@ -25,6 +25,14 @@ export const ActionDropdown: FC<ActionDropdownProps> = ({
     onDelete,
 }) => {
     const t = useTranslate();
+    const { data: canEdit } = useCan({
+        resource: "resource",
+        action: "edit-action",
+    });
+    const { data: canDelete } = useCan({
+        resource: "resource",
+        action: "delete-action",
+    });
     return (
         <PopupState variant="popover" popupId="2">
             {(popupState) => (
@@ -47,32 +55,36 @@ export const ActionDropdown: FC<ActionDropdownProps> = ({
                             <ListItemText>{action.name}</ListItemText>
                         </MenuItem>
                         <Divider />
-                        <MenuItem
-                            onClick={() => {
-                                popupState.close();
-                                onEdit();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <Edit />
-                            </ListItemIcon>
-                            <ListItemText>
-                                {t("resourceActions.actions.edit")}
-                            </ListItemText>
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() => {
-                                popupState.close();
-                                onDelete();
-                            }}
-                        >
-                            <ListItemIcon>
-                                <Delete color="error" />
-                            </ListItemIcon>
-                            <ListItemText color="error">
-                                {t("resourceActions.actions.delete.label")}
-                            </ListItemText>
-                        </MenuItem>
+                        {canEdit?.can && (
+                            <MenuItem
+                                onClick={() => {
+                                    popupState.close();
+                                    onEdit();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Edit />
+                                </ListItemIcon>
+                                <ListItemText>
+                                    {t("resourceActions.actions.edit")}
+                                </ListItemText>
+                            </MenuItem>
+                        )}
+                        {canDelete?.can && (
+                            <MenuItem
+                                onClick={() => {
+                                    popupState.close();
+                                    onDelete();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Delete color="error" />
+                                </ListItemIcon>
+                                <ListItemText color="error">
+                                    {t("resourceActions.actions.delete.label")}
+                                </ListItemText>
+                            </MenuItem>
+                        )}
                     </Menu>
                 </div>
             )}

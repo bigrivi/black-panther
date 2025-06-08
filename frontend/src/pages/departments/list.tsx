@@ -86,6 +86,7 @@ export const DeptList = ({ children }: PropsWithChildren) => {
     } = useTable({
         columns,
         enableColumnPinning: true,
+        enableRowNumbers: false,
         enableExpanding: true,
         enablePagination: false,
         filterFromLeafRows: true,

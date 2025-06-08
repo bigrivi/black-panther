@@ -9,7 +9,13 @@ import {
     Menu,
     MenuItem,
 } from "@mui/material";
-import { useDelete, useGo, useNavigation, useTranslate } from "@refinedev/core";
+import {
+    useCan,
+    useDelete,
+    useGo,
+    useNavigation,
+    useTranslate,
+} from "@refinedev/core";
 import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 import { FC, useState } from "react";
 import { useLocation } from "react-router";
@@ -23,6 +29,14 @@ export const ResourceDropdown: FC<ResourceDropdownProps> = ({ resource }) => {
     const { mutateAsync } = useDelete();
     const [dialogVisible, setDialogVisible] = useState(false);
     const t = useTranslate();
+    const { data: canEdit } = useCan({
+        resource: "resource",
+        action: "edit",
+    });
+    const { data: canDelete } = useCan({
+        resource: "resource",
+        action: "delete",
+    });
 
     const go = useGo();
     const handleDelete = async () => {
@@ -54,44 +68,48 @@ export const ResourceDropdown: FC<ResourceDropdownProps> = ({ resource }) => {
                                 <ListItemText>{resource.name}</ListItemText>
                             </MenuItem>
                             <Divider />
-                            <MenuItem
-                                onClick={() => {
-                                    go({
-                                        to: `${editUrl(
-                                            "resource",
-                                            resource.id
-                                        )}`,
-                                        query: {
-                                            to: pathname,
-                                        },
-                                        options: {
-                                            keepQuery: true,
-                                        },
-                                        type: "replace",
-                                    });
-                                    popupState.close();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Edit />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    {t("resources.actions.edit")}
-                                </ListItemText>
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    popupState.close();
-                                    setDialogVisible(true);
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Delete color="error" />
-                                </ListItemIcon>
-                                <ListItemText color="error">
-                                    {t("resources.actions.delete.label")}
-                                </ListItemText>
-                            </MenuItem>
+                            {canEdit?.can && (
+                                <MenuItem
+                                    onClick={() => {
+                                        go({
+                                            to: `${editUrl(
+                                                "resource",
+                                                resource.id
+                                            )}`,
+                                            query: {
+                                                to: pathname,
+                                            },
+                                            options: {
+                                                keepQuery: true,
+                                            },
+                                            type: "replace",
+                                        });
+                                        popupState.close();
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <Edit />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        {t("resources.actions.edit")}
+                                    </ListItemText>
+                                </MenuItem>
+                            )}
+                            {canDelete?.can && (
+                                <MenuItem
+                                    onClick={() => {
+                                        popupState.close();
+                                        setDialogVisible(true);
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <Delete color="error" />
+                                    </ListItemIcon>
+                                    <ListItemText color="error">
+                                        {t("resources.actions.delete.label")}
+                                    </ListItemText>
+                                </MenuItem>
+                            )}
                         </Menu>
                     </div>
                 )}

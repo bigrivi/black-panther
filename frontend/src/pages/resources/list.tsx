@@ -3,30 +3,19 @@ import {
     Paper,
 } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
+import { useTable } from "@/hooks";
 import { IAction, IResource } from "@/interfaces";
-import {
-    Add,
-    ChevronRightOutlined,
-    ExpandMoreOutlined,
-} from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import {
     IconButton,
     Stack,
     Table,
     TableBody,
-    TableCell,
     TableContainer,
-    TableHead,
-    TableRow,
 } from "@mui/material";
-import {
-    BaseKey,
-    useCan,
-    useDelete,
-    useList,
-    useTranslate,
-} from "@refinedev/core";
-import { Fragment, PropsWithChildren, useMemo, useState } from "react";
+import { BaseKey, useCan, useDelete, useTranslate } from "@refinedev/core";
+import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
+import { PropsWithChildren, useMemo, useState } from "react";
 import { ActionDrawerForm } from "./components/drawer-action-form ";
 import { ActionRows } from "./components/list/ActionRows";
 import { ResourceDropdown } from "./components/list/ResourceDropdown";
@@ -34,15 +23,6 @@ import { ResourceDropdown } from "./components/list/ResourceDropdown";
 export const ResourceList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const { mutateAsync } = useDelete();
-    const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
-    const { data: resourceData, refetch } = useList<IResource>({
-        resource: "resource",
-        pagination: { mode: "off" },
-    });
-
-    const resources = useMemo(() => {
-        return resourceData?.data || [];
-    }, [resourceData]);
     const [actionDrawerOpen, setActionDrawerOpen] = useState(false);
     const [actionResourceId, setActionResourceId] = useState<BaseKey>();
     const [actionRemoveDialogVisible, setActionRemoveDialogVisible] =
@@ -51,18 +31,117 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
     const [actionDrawerMode, setActionDrawerMode] = useState<
         "create" | "edit"
     >();
+    const { data: canCreateAction } = useCan({
+        resource: "resource",
+        action: "create-action",
+    });
 
-    const toggleRowExpanded = (resourceId: number) => {
-        if (expandedRowKeys.includes(resourceId)) {
-            setExpandedRowKeys(
-                expandedRowKeys.filter(
-                    (expandRowKey) => expandRowKey != resourceId
-                )
+    const columns = useMemo<MRT_ColumnDef<IResource>[]>(
+        () => [
+            {
+                accessorKey: "name",
+                header: t("resources.fields.name"),
+                size: 300,
+                grow: 0,
+            },
+            {
+                accessorKey: "key",
+                header: t("resources.fields.key.label"),
+                width: 200,
+            },
+
+            {
+                accessorKey: "actions",
+                header: t("table.actions"),
+                enableColumnFilter: false,
+                enableSorting: false,
+                enableHiding: false,
+                muiTableHeadCellProps: {
+                    align: "center",
+                },
+                muiTableBodyCellProps: {
+                    align: "center",
+                },
+                size: 250,
+                grow: 0,
+                Cell: function render({ row }) {
+                    return (
+                        <Stack alignItems="center" direction={"row"}>
+                            {canCreateAction?.can && (
+                                <IconButton
+                                    size="small"
+                                    onClick={() => {
+                                        handleAddAction(row.original);
+                                    }}
+                                >
+                                    <Add />
+                                </IconButton>
+                            )}
+
+                            <ResourceDropdown resource={row.original} />
+                        </Stack>
+                    );
+                },
+            },
+        ],
+        [t, canCreateAction]
+    );
+
+    const {
+        refineCore: { tableQuery },
+        ...table
+    } = useTable({
+        columns,
+        enableRowNumbers: false,
+        displayColumnDefOptions: {
+            "mrt-row-expand": {
+                size: 1,
+                grow: 0,
+            },
+        },
+        muiDetailPanelProps: {
+            sx: {
+                padding: 0,
+                "& .MuiCollapse-root": {
+                    width: "100%",
+                },
+            },
+        },
+        enableExpandAll: false,
+        muiExpandButtonProps: ({ row, table }) => ({
+            onClick: () =>
+                table.setExpanded({ [row.id]: !row.getIsExpanded() }),
+
+            sx: {
+                transform: row.getIsExpanded()
+                    ? "rotate(180deg)"
+                    : "rotate(-90deg)",
+
+                transition: "transform 0.2s",
+            },
+        }),
+
+        renderDetailPanel: ({ row }) => {
+            return (
+                <TableContainer sx={{ width: "100%" }}>
+                    <Table>
+                        <TableBody>
+                            <ActionRows
+                                resource={row.original}
+                                onEdit={(action) =>
+                                    handleEditAction(row.original, action)
+                                }
+                                onDelete={(action) => {
+                                    handleDeleteAction(row.original, action);
+                                }}
+                                actions={row.original.actions!}
+                            />
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             );
-        } else {
-            setExpandedRowKeys([...expandedRowKeys, resourceId]);
-        }
-    };
+        },
+    });
 
     const handleAddAction = (resource: IResource) => {
         setActionDrawerOpen(true);
@@ -90,143 +169,14 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                 id: action!.id,
                 resource: `resource/${actionResourceId}/action`,
             },
-            { onSuccess: () => refetch() }
+            { onSuccess: () => tableQuery.refetch() }
         );
     };
-
-    const { data: canCreateAction } = useCan({
-        resource: "resource",
-        action: "create-action",
-    });
-    const { data: canEditAction } = useCan({
-        resource: "resource",
-        action: "edit-action",
-    });
-    const { data: canDeleteAction } = useCan({
-        resource: "resource",
-        action: "delete-action",
-    });
 
     return (
         <RefineListView>
             <Paper>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell
-                                    align={"left"}
-                                    style={{
-                                        minWidth: 200,
-                                        width: 200,
-                                        zIndex: 100,
-                                    }}
-                                >
-                                    {t("resources.fields.name")}
-                                </TableCell>
-                                <TableCell align={"left"}>
-                                    {t("resources.fields.key.label")}
-                                </TableCell>
-                                <TableCell
-                                    style={{ width: 150 }}
-                                    align={"left"}
-                                >
-                                    {t("table.actions")}
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {resources.map((resource) => {
-                                const isExpanded = expandedRowKeys.includes(
-                                    resource.id
-                                );
-                                return (
-                                    <Fragment key={resource.id}>
-                                        <TableRow>
-                                            <TableCell
-                                                align={"left"}
-                                                style={{
-                                                    minWidth: 176,
-                                                    width: 176,
-                                                }}
-                                            >
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={(evt) => {
-                                                        evt.stopPropagation();
-                                                        toggleRowExpanded(
-                                                            resource.id
-                                                        );
-                                                    }}
-                                                >
-                                                    {isExpanded && (
-                                                        <ExpandMoreOutlined />
-                                                    )}
-                                                    {!isExpanded && (
-                                                        <ChevronRightOutlined />
-                                                    )}
-                                                </IconButton>
-
-                                                <span
-                                                    style={{ fontWeight: 500 }}
-                                                >
-                                                    {resource.name}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell align={"left"}>
-                                                {resource.key}
-                                            </TableCell>
-                                            <TableCell
-                                                style={{ width: 150 }}
-                                                align={"left"}
-                                            >
-                                                <Stack
-                                                    alignItems="center"
-                                                    direction={"row"}
-                                                >
-                                                    {canCreateAction?.can && (
-                                                        <IconButton
-                                                            size="small"
-                                                            onClick={() => {
-                                                                handleAddAction(
-                                                                    resource
-                                                                );
-                                                            }}
-                                                        >
-                                                            <Add />
-                                                        </IconButton>
-                                                    )}
-
-                                                    <ResourceDropdown
-                                                        resource={resource}
-                                                    />
-                                                </Stack>
-                                            </TableCell>
-                                        </TableRow>
-                                        {isExpanded && (
-                                            <ActionRows
-                                                resource={resource}
-                                                onEdit={(action) =>
-                                                    handleEditAction(
-                                                        resource,
-                                                        action
-                                                    )
-                                                }
-                                                onDelete={(action) => {
-                                                    handleDeleteAction(
-                                                        resource,
-                                                        action
-                                                    );
-                                                }}
-                                                actions={resource.actions!}
-                                            />
-                                        )}
-                                    </Fragment>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <MaterialReactTable table={table} />
             </Paper>
             {children}
             {actionResourceId && actionDrawerOpen && (
@@ -243,7 +193,7 @@ export const ResourceList = ({ children }: PropsWithChildren) => {
                         setActionDrawerOpen(false);
                         setActionResourceId(undefined);
                         setAction(undefined);
-                        refetch();
+                        tableQuery.refetch();
                     }}
                 />
             )}

@@ -120,7 +120,6 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
             <DrawerFooter>
                 <Stack direction="row">
                     <Button onClick={onDrawerCLose}>
-                        {" "}
                         {t("buttons.cancel")}
                     </Button>
                     <Button

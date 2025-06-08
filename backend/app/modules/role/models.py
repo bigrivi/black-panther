@@ -33,8 +33,8 @@ class RolePublicWithoutActions(RoleBase):
 
 
 class RoleCreate(RoleBase):
-    pass
+    valid_state: Optional[bool] = None
 
 
 class RoleUpdate(RoleBase):
-    pass
+    valid_state: Optional[bool] = None

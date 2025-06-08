@@ -3,7 +3,13 @@ import { DrawerContent, DrawerFooter } from "@/components/drawer";
 import { Drawer } from "@/components/drawer/drawer";
 import { IAction, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import { BaseKey, HttpError, useGetToPath, useGo } from "@refinedev/core";
+import {
+    BaseKey,
+    HttpError,
+    useGetToPath,
+    useGo,
+    useTranslate,
+} from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
 import { TextFieldElement } from "react-hook-form-mui";
@@ -33,6 +39,7 @@ export const ActionDrawerForm: FC<Props> = ({
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const go = useGo();
+    const t = useTranslate();
 
     const {
         refineCore: { onFinish, id, formLoading },
@@ -81,7 +88,11 @@ export const ActionDrawerForm: FC<Props> = ({
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={open}
-            title={id ? "Edit Action" : "Create Action"}
+            title={
+                id
+                    ? t("resourceActions.actions.edit")
+                    : t("resourceActions.actions.add")
+            }
             anchor="right"
             onClose={onDrawerCLose}
         >
@@ -92,27 +103,27 @@ export const ActionDrawerForm: FC<Props> = ({
                         onFinish(data);
                     }}
                 >
-                    <FormItem label="Name" required htmlFor="name">
-                        <TextFieldElement
-                            name="name"
-                            id="name"
-                            rules={{
-                                required: "Action name is required",
-                            }}
-                        />
+                    <FormItem
+                        label={t("resourceActions.fields.name")}
+                        required
+                        htmlFor="name"
+                    >
+                        <TextFieldElement name="name" id="name" />
                     </FormItem>
                 </Form>
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>Cancel</Button>
+                    <Button onClick={onDrawerCLose}>
+                        {t("buttons.cancel")}
+                    </Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"
                         color="primary"
                         type="submit"
                     >
-                        Save
+                        {t("buttons.save")}
                     </Button>
                 </Stack>
             </DrawerFooter>

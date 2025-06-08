@@ -190,7 +190,8 @@
         },
         "actions": {
             "add": "创建用户",
-            "edit": "编辑用户"
+            "edit": "编辑用户",
+            "modifyPassword": "修改密码"
         },
         "errors": {
             "passwordMismatched": "确认密码和密码不一致"

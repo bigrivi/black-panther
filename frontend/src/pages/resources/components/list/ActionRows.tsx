@@ -9,6 +9,7 @@ import {
     tableRowClasses,
     TableRowProps,
 } from "@mui/material";
+import { useCan } from "@refinedev/core";
 import { FC } from "react";
 import { ActionDropdown } from "./ActionDropdown";
 type ActionRowsProp = {
@@ -24,9 +25,6 @@ const TableRow = styled(({ children, ...rest }: TableRowProps) => {
     [`&.${tableRowClasses.root}`]: {
         background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
     },
-    ["& .MuiTableCell-root:first-of-type"]: {
-        background: theme.palette.mode === "light" ? "#fafafa" : "#010101",
-    },
 }));
 
 export const ActionRows: FC<ActionRowsProp> = ({
@@ -35,8 +33,12 @@ export const ActionRows: FC<ActionRowsProp> = ({
     onEdit,
     onDelete,
 }) => {
+    const { data: canDelete } = useCan({
+        resource: "resource",
+        action: "delete-action",
+    });
     return actions?.map((action) => (
-        <TableRow key={resource.id + "_" + action.id}>
+        <TableRow key={resource.id + "_" + action.id} hover>
             <TableCell
                 align={"left"}
                 style={{
@@ -52,11 +54,17 @@ export const ActionRows: FC<ActionRowsProp> = ({
                 </div>
             </TableCell>
             <TableCell align={"left"}></TableCell>
-            <TableCell style={{ width: 150 }} align={"center"}>
-                <Stack direction={"row"}>
-                    <IconButton onClick={() => onDelete(action)} size="small">
-                        <Remove />
-                    </IconButton>
+            <TableCell style={{ width: 250 }} align={"center"}>
+                <Stack direction={"row"} justifyContent="center">
+                    {canDelete?.can && (
+                        <IconButton
+                            onClick={() => onDelete(action)}
+                            size="small"
+                        >
+                            <Remove />
+                        </IconButton>
+                    )}
+
                     <ActionDropdown
                         resourceId={resource.id}
                         onEdit={() => onEdit(action)}

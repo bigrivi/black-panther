@@ -168,7 +168,8 @@
         },
         "actions": {
             "add": "Create User",
-            "edit": "Edit User"
+            "edit": "Edit User",
+            "modifyPassword": "Modify Password"
         },
         "errors": {
             "passwordMismatched": "Confirm password do no match password"

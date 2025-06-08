@@ -7,6 +7,7 @@ import {
     HttpError,
     useCustomMutation,
     useHandleNotification,
+    useTranslate,
 } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
@@ -24,6 +25,7 @@ interface IPasswordModifyForm {
 }
 
 export const PasswordModifyForm: FC<Props> = ({ isOpen, onClose, id }) => {
+    const t = useTranslate();
     const { refineCore, ...methods } = useForm<
         IUser,
         HttpError,
@@ -64,28 +66,32 @@ export const PasswordModifyForm: FC<Props> = ({ isOpen, onClose, id }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={isOpen}
-            title={"Modify User Password"}
+            title={t("users.actions.modifyPassword")}
             anchor="right"
             onClose={onDrawerClose}
         >
             <DrawerContent>
                 <Form formContext={methods}>
-                    <FormItem label="Password" required htmlFor="password">
+                    <FormItem
+                        label={t("users.fields.password")}
+                        required
+                        htmlFor="password"
+                    >
                         <PasswordElement name="password" id="password" />
                     </FormItem>
                     <FormItem
-                        label="Confirm Password"
+                        label={t("users.fields.confirmPassword")}
                         required
                         htmlFor="confirm_password"
+                        rules={{
+                            validate: (val) => {
+                                if (methods.watch("password") != val) {
+                                    return t("users.errors.passwordMismatched");
+                                }
+                            },
+                        }}
                     >
                         <PasswordElement
-                            rules={{
-                                validate: (val) => {
-                                    if (methods.watch("password") != val) {
-                                        return "Confirm password do no match password";
-                                    }
-                                },
-                            }}
                             name="confirm_password"
                             id="confirm_password"
                         />
@@ -94,7 +100,9 @@ export const PasswordModifyForm: FC<Props> = ({ isOpen, onClose, id }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerClose}>Cancel</Button>
+                    <Button onClick={onDrawerClose}>
+                        {t("buttons.cancel")}
+                    </Button>
                     <Button
                         onClick={methods.handleSubmit(onSubmit)}
                         variant="contained"
@@ -102,7 +110,7 @@ export const PasswordModifyForm: FC<Props> = ({ isOpen, onClose, id }) => {
                         color="primary"
                         type="submit"
                     >
-                        Save
+                        {t("buttons.save")}
                     </Button>
                 </Stack>
             </DrawerFooter>
