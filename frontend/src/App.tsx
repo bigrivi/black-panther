@@ -91,7 +91,7 @@ const App: React.FC = () => {
                                     warnWhenUnsavedChanges: true,
                                     useNewQueryKeys: true,
                                     title: {
-                                        text: "Photinia",
+                                        text: "Black Panther",
                                     },
                                 }}
                             >
