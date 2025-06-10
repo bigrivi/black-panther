@@ -1,48 +1,40 @@
-# late-corners-wait
+# BlackPanther - Frontend
+The frontend is built with [Vite](https://vitejs.dev/), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Refine dev](https://refine.dev/), [Material React Table](https://www.material-react-table.com/) and [Material UI](https://material-ui.com/).
 
-<div align="center" style="margin: 30px;">
-    <a href="https://refine.dev">
-    <img alt="refine logo" src="https://refine.ams3.cdn.digitaloceanspaces.com/readme/refine-readme-banner.png">
-    </a>
-</div>
-<br/>
-
-This [Refine](https://github.com/refinedev/refine) project was generated with [create refine-app](https://github.com/refinedev/refine/tree/master/packages/create-refine-app).
+The project is built using a refine framework that fully adheres to their development guidelines,Then implement your own set of DataProvider, for more details, please refer to [Refine dev](https://refine.dev/docs/packages/cli/)
 
 ## Getting Started
+1. Install dependencies
+```bash
+# If using npm
+npm install
 
-A React Framework for building internal tools, admin panels, dashboards & B2B apps with unmatched flexibility ✨
+# If using yarn
+yarn install
+```
 
-Refine's hooks and components simplifies the development process and eliminates the repetitive tasks by providing industry-standard solutions for crucial aspects of a project, including authentication, access control, routing, networking, state management, and i18n.
+2. Change the VITE_API_URL variable in the .env file to point to your backend server address
 
 ## Available Scripts
 
 ### Running the development server.
 
 ```bash
-    yarn dev
+yarn dev
 ```
 
 ### Building for production.
 
 ```bash
-    yarn build
+yarn build
 ```
 
 ### Running the production server.
 
 ```bash
-    yarn start
+yarn start
 ```
 
-## Learn More
-
-To learn more about **Refine**, please check out the [Documentation](https://refine.dev/docs)
-
-- **REST Data Provider** [Docs](https://refine.dev/docs/core/providers/data-provider/#overview)
-- **Ant Design** [Docs](https://refine.dev/docs/ui-frameworks/antd/tutorial/)
-- **React Router** [Docs](https://refine.dev/docs/core/providers/router-provider/)
-- **Custom Auth Provider** [Docs](https://refine.dev/docs/core/providers/auth-provider/)
 
 ## License
 

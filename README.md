@@ -18,31 +18,33 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
 ## Technology Stack
 
 - ⚡ [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
-    - [BetterCRUD](https://github.com/bigrivi/better_crud) Quickly implement CRUD functions
-    - [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
-    - [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
+    - ✒️ [BetterCRUD](https://github.com/bigrivi/better_crud) Quickly implement CRUD functions
+    - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
+    - 🔍 [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
 - 🚀 [React](https://react.dev) for the frontend.
-    - Using TypeScript, hooks, Vite, and other parts of a modern frontend stack.
-    - [Refine](https://refine.dev/) for the frontend CRUD pages.
-    - [Material UI](material-ui.com/zh/) for the frontend ui components.
-    - [Material React Table](https://www.material-react-table.com/) for the list page tables
-    - [react-hook-form-mui](https://github.com/dohomi/react-hook-form-mui) for the create/edit page forms
+    - 🐱 Using TypeScript, hooks, Vite, and other parts of a modern frontend stack.
+    - ☣️ [Refine](https://refine.dev/) for the frontend CRUD pages.
+    - 🔷 [Material UI](material-ui.com) for the frontend ui components.
+    - 🐩 [Material React Table](https://www.material-react-table.com/) for the list page tables
+    - 💅 [react-hook-form-mui](https://github.com/dohomi/react-hook-form-mui) for the create/edit page forms
 
 ## All features
-- **Very nice front-end UI interface**:Thanks to the appearance of Material UI
-- **Login Authorization**
-- **Role-Based Access Control**:Powerful role-based asset action control
-- **Multi-language support**
-- **Dark mode support**
-- **Module List**
-  - **User Management**
-  - **Role Management**
-  - **Position Management**
-  - **Department Management**
-  - **Resource Management**
-  - **Policy**
-  - **Enum Management**
-  - **Parameter setting**
+- 🎁 **Very nice front-end UI interface**:Thanks to the appearance of Material UI
+- 🔑 **JWT** (JSON Web Token) authentication.
+- 🔒 **Secure** password hashing by default.
+- 🐼 **Login Authorization**
+- 🐎 **Role-Based Access Control**:Powerful role-based asset action control
+- 🐥 **Multi-language support**
+- 🎓 **Dark mode support**
+- 🎉 **Module List**
+  - 💿 **User Management**
+  - 🎇 **Role Management**
+  - 🎃 **Position Management**
+  - 🔦 **Department Management**
+  - 📲 **Resource Management**
+  - 🔈 **Policy**
+  - 🏠 **Enum Management**
+  - 🌠 **Parameter setting**
 <hr>
 
 ### Login

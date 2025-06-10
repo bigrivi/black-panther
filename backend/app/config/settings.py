@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL")
     # session
     CSRF_ENABLED: bool = True
-    TOKEN_SECRET_KEY: str = "1=F[b{uOzd}^t+6b^-BraV3YDn7__lnM3g9e9_R8C3y1vb,Bv^K^=ky->EWkw/Y<u"
+    TOKEN_SECRET_KEY: str = "+5_fsR|+p2I=?VmF%A4V('@{Ovv59z"
     TRACE_ID_REQUEST_HEADER_KEY: str = 'X-Request-ID'
     SYNC_LOG_TO_DB: bool = False
     # Token

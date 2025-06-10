@@ -37,6 +37,8 @@ def register_crud():
             ],
         },
         soft_deleted_field_key="expiry_at",
-        routes={"dependencies": [DependsJwtAuth,
-                                 DependsRBAC], "exclude": ["update_many"]},
+        routes={
+            "dependencies": [DependsJwtAuth, DependsRBAC],
+            "exclude": ["update_many"]
+        },
     )
