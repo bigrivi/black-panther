@@ -4,10 +4,12 @@
   </a>
 </p>
 <p align="center" markdown=1>
-  <i>Full stack web application scaffold,The perfect combination of <b>Refine</b> and <b>BetterCRUD</b></i>
+  <i>Full-stack Web application scaffolding, the perfect combination of <b>Refine</b> and <b>BetterCRUD</b></i>
 </p>
 <hr>
-
+<p align="center">
+    <img src="resources/combination.svg" width="40%" height="auto">
+</p>
 **BlackPanther** is a complete full-stack web application scaffolding that uses FastAPI, BetterCRUD, Refine, and more.
 He has defined a set of good front-end and back-end development best practices to quickly develop products such as CRM, CMS, Admin Dashboard and other different types of management systems
 
