@@ -1,4 +1,5 @@
 import { AppSider, Header, PageLoading } from "@/components";
+import { CrudList } from "@/components/crud/list";
 import { DashboardPage } from "@/pages/dashboard";
 import { DeptCreate, DeptEdit, DeptList } from "@/pages/departments";
 import { EnumCreate, EnumEdit, EnumList } from "@/pages/enums";
@@ -60,25 +61,6 @@ export const AppRoutes = () => {
                 }
             >
                 <Route index element={<DashboardPage />} />
-
-                {/* <Route path="/:resource">
-                                        <Route
-                                            index
-                                            element={<BlogPostList />}
-                                        />
-                                        <Route
-                                            path="create"
-                                            element={<BlogPostCreate />}
-                                        />
-                                        <Route
-                                            path="edit/:id"
-                                            element={<BlogPostEdit />}
-                                        />
-                                        <Route
-                                            path="show/:id"
-                                            element={<BlogPostShow />}
-                                        />
-                                    </Route> */}
 
                 <Route
                     path="/roles"
@@ -164,6 +146,20 @@ export const AppRoutes = () => {
                 >
                     <Route path="create" element={<ParameterCreate />} />
                     <Route path="edit/:id" element={<ParameterEdit />} />
+                </Route>
+
+                <Route
+                    path="/:resource"
+                    element={
+                        <CrudList>
+                            <Outlet />
+                        </CrudList>
+                    }
+                >
+                    {/* <Route index element={<BlogPostList />} />
+                    <Route path="create" element={<BlogPostCreate />} />
+                    <Route path="edit/:id" element={<BlogPostEdit />} />
+                    <Route path="show/:id" element={<BlogPostShow />} /> */}
                 </Route>
 
                 <Route path="*" element={<ErrorComponent />} />

@@ -8,8 +8,18 @@ from app.enums import IntEnumType
 
 OnDeleteType = Literal["CASCADE", "SET NULL", "RESTRICT"]
 
+WidgetType = Literal[
+    'text',
+    'textarea',
+    'switch',
+    "select",
+    "multi_select",
+    "password",
+    "checkbox"
+]
 
-class ExportFieldInfo(SQLFieldInfo):
+
+class FieldInfo(SQLFieldInfo):
     def __init__(
         self,
         default: Any = Undefined,
@@ -54,12 +64,14 @@ class ExportFieldInfo(SQLFieldInfo):
         schema_extra: Optional[Dict[str, Any]] = None,
         label: Optional[str] = None,
         order: Optional[int] = None,
-        value_enum: Optional[Dict] = None,
+        enum: Optional[Enum] = None,
+        widget: Optional[WidgetType] = None
     ) -> Any:
         current_schema_extra = schema_extra or {}
         self.label = label
         self.order = order
-        self.value_enum = value_enum
+        self.enum = enum
+        self.widget = widget
 
         super().__init__(
             default,
@@ -100,8 +112,7 @@ class ExportFieldInfo(SQLFieldInfo):
         )
 
 
-def ExportField(
-    label: str,
+def Field(
     *,
     default: Any = Undefined,
     default_factory: Optional[NoArgAnyCallable] = None,
@@ -143,13 +154,14 @@ def ExportField(
     sa_column_kwargs: Union[Mapping[str, Any], UndefinedType] = Undefined,
     schema_extra: Optional[Dict[str, Any]] = None,
     order: Optional[int] = None,
-    value_enum: Optional[Dict] = None,
+    label: Optional[str] = None,
     enum: Optional[Enum] = None,
+    widget: Optional[WidgetType] = None
 ) -> Any:
     current_schema_extra = schema_extra or {}
     if enum and sa_type is Undefined:
         sa_type = IntEnumType(enum_class=enum)  # type: ignore
-    field_info = ExportFieldInfo(
+    field_info = FieldInfo(
         default,
         default_factory=default_factory,
         alias=alias,
@@ -186,8 +198,9 @@ def ExportField(
         sa_column_kwargs=sa_column_kwargs,
         label=label,
         order=order,
-        value_enum=value_enum,
-        **current_schema_extra,
+        enum=enum,
+        widget=widget,
+        ** current_schema_extra,
     )
     post_init_field_info(field_info)
     return field_info

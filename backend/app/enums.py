@@ -3,8 +3,8 @@ from enum import IntEnum
 from enum import Enum as PyEnum
 from typing import Any
 from sqlalchemy import TypeDecorator
-from sqlmodel import Field
 from sqlalchemy.dialects.mysql import TINYINT
+from sqlmodel import Field
 
 
 class IntNameEnum(IntEnum):

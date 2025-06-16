@@ -124,3 +124,16 @@ interface IParameter {
     created_at: string;
     is_system?: boolean;
 }
+
+interface ISchemaOption {
+    value: any;
+    label: string;
+}
+
+interface ISchema {
+    name: string;
+    label: string;
+    widget: string;
+    description?: string;
+    options?: ISchemaOption[];
+}

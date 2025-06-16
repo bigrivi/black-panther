@@ -106,5 +106,15 @@ export const resources = (t): ResourceProps[] => {
                 parent: "system_manager",
             },
         },
+        {
+            name: "toy",
+            list: "/toy",
+            create: "/toy/create",
+            edit: "/toy/edit/:id",
+            meta: {
+                label: "Toy",
+                parent: "system_manager",
+            },
+        },
     ];
 };

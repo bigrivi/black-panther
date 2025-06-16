@@ -80,6 +80,10 @@ export const columnFiltersToCrudFilters = ({
                 if (Array.isArray(value) && value.every((ele) => !!!ele)) {
                     value = [];
                 }
+            } else if (value === "true") {
+                value = true;
+            } else if (value === "false") {
+                value = false;
             }
 
             return {

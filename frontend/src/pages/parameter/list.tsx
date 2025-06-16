@@ -120,7 +120,6 @@ export const ParameterList = ({ children }: PropsWithChildren) => {
     } = useTable({
         columns,
         enableColumnPinning: true,
-        enableRowSelection: (row) => row.original.code !== "admin",
         getRowId: (originalRow) => {
             return originalRow.id + "";
         },

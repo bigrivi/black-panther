@@ -16,6 +16,11 @@ import {
 } from "@tanstack/react-table";
 import isEqual from "lodash/isEqual";
 import {
+    getAllLeafColumnDefs,
+    getColumnId,
+    getDefaultColumnFilterFn,
+    MRT_ColumnDef,
+    MRT_ColumnFilterFnsState,
     type MRT_TableInstance,
     type MRT_TableOptions,
     useMaterialReactTable,
@@ -55,6 +60,7 @@ export function useTable<
 >({
     refineCoreProps: { hasPagination = true, ...refineCoreProps } = {},
     initialState: reactTableInitialState = {},
+    columns,
     ...rest
 }: UseTableProps<TQueryFnData, TError, TData>): UseTableReturnType<
     TData,
@@ -89,6 +95,20 @@ export function useTable<
         pageCount,
     } = useTableResult;
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [columnFilterFns, setColumnFilterFns] =
+        useState<MRT_ColumnFilterFnsState>(() =>
+            Object.assign(
+                {},
+                ...getAllLeafColumnDefs(columns as MRT_ColumnDef<TData>[]).map(
+                    (col) => ({
+                        [getColumnId(col)]:
+                            col.filterFn instanceof Function
+                                ? col.filterFn.name ?? "custom"
+                                : col.filterFn ?? getDefaultColumnFilterFn(col),
+                    })
+                )
+            )
+        );
 
     const reactTableResult = useMaterialReactTable<TData>({
         data: data?.data ?? [],
@@ -105,6 +125,7 @@ export function useTable<
             ? undefined
             : getFilteredRowModel(),
         onColumnFiltersChange: setColumnFilters,
+        onColumnFilterFnsChange: setColumnFilterFns,
         initialState: {
             pagination: {
                 pageIndex: current - 1,
@@ -115,7 +136,7 @@ export function useTable<
                 desc: sorting.order === "desc",
             })),
             columnFilters: crudFiltersToColumnFilters({
-                columns: rest.columns,
+                columns: columns,
                 crudFilters: filtersCore,
             }),
             ...reactTableInitialState,
@@ -130,6 +151,7 @@ export function useTable<
             columnFilters,
             showProgressBars: isRefetching,
             showAlertBanner: isError,
+            columnFilterFns: columnFilterFns,
         },
         columnFilterDisplayMode: "popover",
         enableColumnFilterModes: true,
@@ -167,11 +189,12 @@ export function useTable<
                 />
             ),
         }),
+        columns,
         ...rest,
     });
 
     const { state } = reactTableResult.options;
-    const { pagination, sorting, columnFilterFns } = state;
+    const { pagination, sorting } = state;
     const { pageIndex, pageSize } = pagination ?? {};
 
     useEffect(() => {
@@ -185,6 +208,22 @@ export function useTable<
             setPageSizeCore(pageSize);
         }
     }, [pageSize]);
+
+    useEffect(() => {
+        setColumnFilterFns(
+            Object.assign(
+                {},
+                ...getAllLeafColumnDefs(columns as MRT_ColumnDef<TData>[]).map(
+                    (col) => ({
+                        [getColumnId(col)]:
+                            col.filterFn instanceof Function
+                                ? col.filterFn.name ?? "custom"
+                                : col.filterFn ?? getDefaultColumnFilterFn(col),
+                    })
+                )
+            )
+        );
+    }, [columns]);
 
     useEffect(() => {
         if (sorting !== undefined) {
@@ -217,7 +256,6 @@ export function useTable<
         );
         if (!isEqual(crudFilters, filtersCore)) {
             setFilters(crudFilters);
-            console.log("setFilters", crudFilters);
         }
         if (crudFilters.length > 0 && isPaginationEnabled && !isFirstRender) {
             setCurrent(1);
