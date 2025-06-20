@@ -8,7 +8,7 @@ from app.enums import IntEnumType
 
 OnDeleteType = Literal["CASCADE", "SET NULL", "RESTRICT"]
 
-WidgetType = Literal[
+ValueType = Literal[
     'text',
     'textarea',
     'switch',
@@ -62,16 +62,25 @@ class FieldInfo(SQLFieldInfo):
         sa_column_args: Union[Sequence[Any], UndefinedType] = Undefined,
         sa_column_kwargs: Union[Mapping[str, Any], UndefinedType] = Undefined,
         schema_extra: Optional[Dict[str, Any]] = None,
-        label: Optional[str] = None,
         order: Optional[int] = None,
         enum: Optional[Enum] = None,
-        widget: Optional[WidgetType] = None
+        value_type: Optional[ValueType] = None
     ) -> Any:
         current_schema_extra = schema_extra or {}
-        self.label = label
+        json_schema_extra = current_schema_extra.get("json_schema_extra") or {}
+        if value_type:
+            json_schema_extra.update({
+                "valueType": value_type
+
+            })
+        if enum:
+            json_schema_extra.update({
+                "options": [dict(label=enum_item.name_ if hasattr(enum_item, "name_") else enum_item.name, value=enum_item.value) for enum_item in enum]
+            })
+
         self.order = order
         self.enum = enum
-        self.widget = widget
+        self.value_type = value_type
 
         super().__init__(
             default,
@@ -109,6 +118,7 @@ class FieldInfo(SQLFieldInfo):
             sa_column_args=sa_column_args,
             sa_column_kwargs=sa_column_kwargs,
             **current_schema_extra,
+            json_schema_extra=json_schema_extra,
         )
 
 
@@ -154,9 +164,8 @@ def Field(
     sa_column_kwargs: Union[Mapping[str, Any], UndefinedType] = Undefined,
     schema_extra: Optional[Dict[str, Any]] = None,
     order: Optional[int] = None,
-    label: Optional[str] = None,
     enum: Optional[Enum] = None,
-    widget: Optional[WidgetType] = None
+    value_type: Optional[ValueType] = None
 ) -> Any:
     current_schema_extra = schema_extra or {}
     if enum and sa_type is Undefined:
@@ -196,11 +205,10 @@ def Field(
         sa_column=sa_column,
         sa_column_args=sa_column_args,
         sa_column_kwargs=sa_column_kwargs,
-        label=label,
         order=order,
         enum=enum,
-        widget=widget,
-        ** current_schema_extra,
+        value_type=value_type,
+        **current_schema_extra,
     )
     post_init_field_info(field_info)
     return field_info

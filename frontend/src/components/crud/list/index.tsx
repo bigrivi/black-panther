@@ -1,21 +1,16 @@
 import { DeleteButton, Paper } from "@/components";
 import { RefineListView } from "@/components/refine-list-view";
 import { useTable } from "@/hooks";
-import { ISchema } from "@/interfaces";
 import { useCustom, useResource, useTranslate } from "@refinedev/core";
-import {
-    BooleanField,
-    CreateButton,
-    EditButton,
-    RefreshButton,
-} from "@refinedev/mui";
+import { CreateButton, EditButton, RefreshButton } from "@refinedev/mui";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo } from "react";
+import { columnDefFactory } from "./column-factory";
 
 export const CrudList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const { resource } = useResource();
-    const { data: listSchemaData } = useCustom<ISchema[]>({
+    const { data: listSchemaData } = useCustom<any>({
         url: `schema/${resource?.name}`,
         method: "get",
         config: {
@@ -24,47 +19,24 @@ export const CrudList = ({ children }: PropsWithChildren) => {
     });
 
     const listSchema = useMemo(() => {
-        return listSchemaData?.data ?? [];
+        if (listSchemaData?.data) {
+            const { properties } = listSchemaData.data;
+            return Object.keys(properties)
+                .filter((key) => !!properties[key].valueType)
+                .map((key) => {
+                    return {
+                        name: key,
+                        ...properties[key],
+                    };
+                });
+        }
+        return [];
     }, [listSchemaData]);
 
     const columns = useMemo<MRT_ColumnDef<any>[]>(() => {
         return [
             ...listSchema.map(
-                ({ name, label, options, widget }): MRT_ColumnDef<any> => {
-                    const columnDef: MRT_ColumnDef<any> = {
-                        accessorKey: name,
-                        header: label,
-                        size: 200,
-                    };
-                    if (widget == "select") {
-                        Object.assign(columnDef, {
-                            enableColumnFilterModes: false,
-                            filterSelectOptions: options?.map((item) => {
-                                return {
-                                    label: item.label,
-                                    value: item.value + "",
-                                };
-                            }),
-                            filterVariant: "select",
-                            filterFn: "equals",
-                            Cell: ({ cell }) => {
-                                return options?.find(
-                                    (option) => option.value == cell.getValue()
-                                )?.label;
-                            },
-                        });
-                    } else if (widget == "switch") {
-                        Object.assign(columnDef, {
-                            filterVariant: "checkbox",
-                            muiFilterCheckboxProps: {},
-                            enableColumnFilterModes: false,
-                            Cell: ({ cell }) => {
-                                return <BooleanField value={cell.getValue()} />;
-                            },
-                        });
-                    }
-                    return columnDef;
-                }
+                (schema): MRT_ColumnDef<any> => columnDefFactory(schema)
             ),
             {
                 accessorKey: "actions",

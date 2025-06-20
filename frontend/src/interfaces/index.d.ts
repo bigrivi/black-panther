@@ -125,15 +125,37 @@ interface IParameter {
     is_system?: boolean;
 }
 
-interface ISchemaOption {
+interface IFieldOption {
     value: any;
     label: string;
 }
 
-interface ISchema {
+interface IFieldSchema {
     name: string;
-    label: string;
-    widget: string;
+    title: string;
+    type?: string;
+    valueType:
+        | "text"
+        | "textarea"
+        | "switch"
+        | "checkbox"
+        | "select"
+        | "listTable";
     description?: string;
-    options?: ISchemaOption[];
+    options?: IFieldOption[];
+    schema?: Schema;
+    items?: { $ref: string };
+}
+
+export interface Schema {
+    title?: string;
+    name: string;
+    description?: string;
+    properties: Properties;
+    required?: string[];
+    $defs?: Record<string, Schema>;
+}
+
+export interface Properties {
+    [key: string]: IFieldSchema;
 }

@@ -1,4 +1,6 @@
 import { AppSider, Header, PageLoading } from "@/components";
+import { CrudCreate } from "@/components/crud/create";
+import { CrudEdit } from "@/components/crud/edit";
 import { CrudList } from "@/components/crud/list";
 import { DashboardPage } from "@/pages/dashboard";
 import { DeptCreate, DeptEdit, DeptList } from "@/pages/departments";
@@ -156,10 +158,8 @@ export const AppRoutes = () => {
                         </CrudList>
                     }
                 >
-                    {/* <Route index element={<BlogPostList />} />
-                    <Route path="create" element={<BlogPostCreate />} />
-                    <Route path="edit/:id" element={<BlogPostEdit />} />
-                    <Route path="show/:id" element={<BlogPostShow />} /> */}
+                    <Route path="create" element={<CrudCreate />} />
+                    <Route path="edit/:id" element={<CrudEdit />} />
                 </Route>
 
                 <Route path="*" element={<ErrorComponent />} />

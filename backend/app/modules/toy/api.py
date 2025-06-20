@@ -11,6 +11,13 @@ router = APIRouter()
     feature="toy",
     dto={"create": ToyCreate, "update": ToyUpdate},
     serialize={"base": ToyPublic},
+    query={
+        "joins": {
+            "details": {
+                "select": True
+            }
+        }
+    }
 )
 class ToyController():
     service: ToyService = Depends(ToyService)
