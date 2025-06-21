@@ -5,7 +5,7 @@ import { defaultDataTimeFormat } from "@/constants";
 import { useTable } from "@/hooks";
 import { IRole, IUser } from "@/interfaces";
 import { KeyOutlined } from "@mui/icons-material";
-import { Chip, IconButton, Stack } from "@mui/material";
+import { Box, Chip, IconButton, Stack } from "@mui/material";
 import { useList, useModal, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
@@ -15,10 +15,8 @@ import {
 } from "@refinedev/mui";
 import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo, useState } from "react";
-import { Panel, PanelGroup } from "react-resizable-panels";
 import { OrgSider } from "./components/org-sider";
 import { PasswordModifyForm } from "./components/password";
-import ResizeHandle from "./components/ResizeHandle";
 
 export const UserList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
@@ -205,25 +203,26 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 }}
             >
                 <Stack spacing={2} direction="row">
-                    <PanelGroup autoSaveId="persistence" direction="horizontal">
-                        <Panel collapsible defaultSize={20} minSize={20}>
-                            <OrgSider
-                                selectedDept={selectedDeptId}
-                                onSelectedDeptChange={
-                                    handleSelectedDeptIdChange
-                                }
-                            />
-                        </Panel>
-                        <ResizeHandle />
-                        <Panel>
-                            <Paper>
-                                <MaterialReactTable table={table} />
-                            </Paper>
-                        </Panel>
-                    </PanelGroup>
+                    <Box sx={{ flexBasis: 350, overflow: "auto" }}>
+                        <OrgSider
+                            selectedDept={selectedDeptId}
+                            onSelectedDeptChange={handleSelectedDeptIdChange}
+                        />
+                    </Box>
+                    <Box sx={{ flex: 1, overflow: "hidden" }}>
+                        <Paper>
+                            <MaterialReactTable table={table} />
+                        </Paper>
+                    </Box>
                 </Stack>
             </RefineListView>
-            <PasswordModifyForm id={editId} isOpen={visible} onClose={close} />
+            {visible && (
+                <PasswordModifyForm
+                    id={editId}
+                    isOpen={visible}
+                    onClose={close}
+                />
+            )}
             {children}
         </>
     );
