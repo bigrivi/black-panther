@@ -12,7 +12,8 @@ type Props = {
 
 export const CrudDrawerForm: FC<Props> = ({ action }) => {
     const t = useTranslate();
-    const { onBack, methods, saveButtonProps, schema } = useEditForm(action);
+    const { onBack, methods, saveButtonProps, schema, title } =
+        useEditForm(action);
 
     return (
         <Drawer
@@ -20,7 +21,7 @@ export const CrudDrawerForm: FC<Props> = ({ action }) => {
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
             open={true}
-            title={schema?.title}
+            title={title}
             anchor="right"
             onClose={onBack}
         >

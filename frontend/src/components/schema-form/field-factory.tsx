@@ -2,10 +2,10 @@ import { IFieldSchema } from "@/interfaces";
 import {
     CheckboxElement,
     SelectElement,
-    SwitchElement,
     TextareaAutosizeElement,
     TextFieldElement,
 } from "react-hook-form-mui";
+import { SwitchElement } from "../form/elements";
 import { ListTable } from "./list-table";
 
 export const fieldFactory = ({
@@ -21,6 +21,7 @@ export const fieldFactory = ({
         case "switch":
             return (
                 <SwitchElement
+                    helperText={renderHelp ? description : undefined}
                     required={required}
                     style={{ width: 50 }}
                     label=""

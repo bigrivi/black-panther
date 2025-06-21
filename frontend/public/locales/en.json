@@ -289,5 +289,11 @@
             "resources": "Resources"
         },
         "unSaveChangesCounts": "{{changedCount}} unsaved changes"
+    },
+    "toy": {
+        "actions": {
+            "add": "Create Toy",
+            "edit": "Edit Toy"
+        }
     }
 }

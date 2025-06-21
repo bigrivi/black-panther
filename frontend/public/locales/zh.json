@@ -311,5 +311,11 @@
         },
         "unSaveChangesCounts": "{{changedCount}}条改变未保存",
         "resource": "资源"
+    },
+    "toy": {
+        "actions": {
+            "add": "创建玩具",
+            "edit": "编辑玩具"
+        }
     }
 }

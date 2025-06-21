@@ -5,6 +5,7 @@ import {
     useGetToPath,
     useGo,
     useResource,
+    useTranslate,
 } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { useEffect, useMemo } from "react";
@@ -48,6 +49,7 @@ interface UseEditFormHookResult {
     schema?: Schema;
     onBack: () => void;
     methods: UseFormReturn;
+    title: string;
     saveButtonProps: {
         disabled: boolean;
         onClick: (e: React.BaseSyntheticEvent) => void;
@@ -56,6 +58,7 @@ interface UseEditFormHookResult {
 export const useEditForm = (
     action: "create" | "edit"
 ): UseEditFormHookResult => {
+    const t = useTranslate();
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const { resource } = useResource();
@@ -84,11 +87,11 @@ export const useEditForm = (
         return {};
     }, [schema]);
 
-    const { refineCore, saveButtonProps, ...methods } = useForm<
-        any,
-        HttpError,
-        Nullable<any>
-    >({
+    const {
+        refineCore: { onFinish, id },
+        saveButtonProps,
+        ...methods
+    } = useForm<any, HttpError, Nullable<any>>({
         defaultValues: defaultValues,
         refineCoreProps: {
             action,
@@ -122,10 +125,14 @@ export const useEditForm = (
             type: "replace",
         });
     };
+    const title = id
+        ? t(`${resource?.name}.actions.edit`)
+        : t(`${resource?.name}.actions.add`);
     return {
         schema,
         onBack,
         methods,
         saveButtonProps,
+        title,
     };
 };

@@ -20,11 +20,11 @@ class ToyBase(SQLModel):
     textarea1: Optional[str] = Field(
         default=None, value_type="textarea", title="textarea1")
     switch1: Optional[bool] = Field(
-        default=True, value_type="switch", title="switch1")
+        default=True, value_type="switch", title="switch1", description="description")
     checkbox1: Optional[bool] = Field(
-        default=True, value_type="checkbox", title="checkbox1")
+        default=True, value_type="checkbox", title="checkbox1", description="description")
     select1: Select1Enum | None = Field(
-        enum=Select1Enum, default=Select1Enum.option1, value_type="select", title="select1")
+        enum=Select1Enum, default=Select1Enum.option1, value_type="select", title="select1", description="select1_description")
 
 
 class Toy(ToyBase, BaseMixin, table=True):

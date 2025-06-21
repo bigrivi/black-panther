@@ -19,7 +19,8 @@ type Props = {
 
 export const CrudDialogForm: FC<Props> = ({ action }) => {
     const t = useTranslate();
-    const { onBack, methods, saveButtonProps, schema } = useEditForm(action);
+    const { onBack, methods, saveButtonProps, schema, title } =
+        useEditForm(action);
 
     return (
         <Dialog
@@ -28,7 +29,7 @@ export const CrudDialogForm: FC<Props> = ({ action }) => {
             slotProps={{ paper: { sx: { minWidth: 700 } } }}
         >
             <DrawerHeader
-                title={schema?.title}
+                title={title}
                 onCloseClick={() => {
                     onBack();
                 }}
