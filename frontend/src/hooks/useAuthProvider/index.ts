@@ -20,7 +20,7 @@ export const useAuthProvider = (
         }
     }, []);
     const authProvider: AuthProvider = {
-        login: async ({ username, loginName, password, uuid, captcha }) => {
+        login: async ({ loginName, password, uuid, captcha }) => {
             try {
                 const { data } = await axiosInstance.post(
                     `${API_URL}/auth/login`,
@@ -37,7 +37,6 @@ export const useAuthProvider = (
                     redirectTo: "/",
                 };
             } catch (error: any) {
-                console.log(error.response.data);
                 return {
                     success: false,
                     unlockDate: error.response.data.data?.unlock_date,
