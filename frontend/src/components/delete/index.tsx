@@ -17,7 +17,7 @@ import type { SvgIconProps } from "@mui/material/SvgIcon";
 
 import { useButtonCanAccess } from "@/hooks";
 import DeleteOutline from "@mui/icons-material/DeleteOutline";
-import { ConfirmDialog } from "../confirm-dialog";
+import { ConfirmDialog } from "../confirm/dialog";
 
 export type DeleteButtonProps = RefineDeleteButtonProps<
     ButtonProps,
@@ -51,31 +51,6 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     ...rest
 }) => {
     const [open, setOpen] = React.useState(false);
-    // const {
-    //     onConfirm,
-    //     title,
-    //     label,
-    //     hidden,
-    //     disabled,
-    //     loading,
-    //     confirmTitle: defaultConfirmTitle,
-    //     confirmOkLabel,
-    //     cancelLabel,
-    // } = useDeleteButton({
-    //     resource: resourceNameFromProps ?? resourceNameOrRouteName,
-    //     id: recordItemId,
-    //     dataProviderName,
-    //     mutationMode,
-    //     accessControl,
-    //     invalidates,
-    //     onSuccess: (res) => {
-    //         onSuccess && onSuccess(res);
-    //         setOpen(false);
-    //     },
-    //     meta,
-    //     successNotification,
-    //     errorNotification,
-    // });
 
     const { mutate, isLoading } = useDelete();
     const { setWarnWhen } = useWarnAboutChange();

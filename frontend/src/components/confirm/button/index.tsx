@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { useModal } from "@refinedev/core";
 import React, { FC, Fragment, PropsWithChildren } from "react";
-import { ConfirmDialog } from "../confirm-dialog";
+import { ConfirmDialog } from "../dialog";
 
 interface ConfirmButtonProps {
     title?: string;
