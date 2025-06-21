@@ -13,9 +13,10 @@ ValueType = Literal[
     'textarea',
     'switch',
     "select",
-    "multi_select",
+    "multiSelect",
     "password",
-    "checkbox"
+    "checkbox",
+    "listTable"
 ]
 
 

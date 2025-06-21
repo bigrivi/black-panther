@@ -18,9 +18,9 @@ class ToyDetailBase(SQLModel):
     tetx2: str = Field(default=None, value_type="text", title="text2")
 
     switch1: Optional[bool] = Field(
-        default=None, value_type="switch", title="switch1")
+        default=True, value_type="switch", title="switch1")
     checkbox1: Optional[bool] = Field(
-        default=None, value_type="checkbox", title="checkbox1")
+        default=True, value_type="checkbox", title="checkbox1")
     select1: Select2Enum | None = Field(
         enum=Select2Enum, default=None, value_type="select", title="select1")
 

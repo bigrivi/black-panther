@@ -7,7 +7,7 @@ import { MaterialReactTable, MRT_ColumnDef } from "material-react-table";
 import { PropsWithChildren, useMemo } from "react";
 import { columnDefFactory } from "./column-factory";
 
-export const CrudList = ({ children }: PropsWithChildren) => {
+export const List = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
     const { resource } = useResource();
     const { data: listSchemaData } = useCustom<any>({

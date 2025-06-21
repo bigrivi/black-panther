@@ -1,7 +1,7 @@
 import { ConfirmButton, Paper } from "@/components";
 import { IEnumOption, Schema } from "@/interfaces";
-import { Add, Delete } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Add, Delete, Help } from "@mui/icons-material";
+import { FormHelperText, IconButton, Tooltip } from "@mui/material";
 import { useGetLocale, useTranslate } from "@refinedev/core";
 import {
     MaterialReactTable,
@@ -11,19 +11,32 @@ import {
 import { MRT_Localization_EN } from "material-react-table/locales/en";
 import { MRT_Localization_ZH_HANS } from "material-react-table/locales/zh-Hans";
 import { FC, useMemo } from "react";
-import { useFieldArray } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { fieldFactory } from "../field-factory";
 interface ListTableProps {
+    required?: boolean;
     name: string;
+    description?: string;
     schema?: Schema;
 }
-export const ListTable: FC<ListTableProps> = ({ schema, name }) => {
-    const t = useTranslate();
+export const ListTable: FC<ListTableProps> = ({
+    schema,
+    name,
+    required,
+    description,
+}) => {
     const locale = useGetLocale();
+    const t = useTranslate();
     const currentLocale = locale();
+    const {
+        formState: { errors },
+    } = useFormContext();
     const { fields, append, remove, move } = useFieldArray({
         name,
         keyName: "key",
+        rules: {
+            ...(required && { required: t("errors.required") }),
+        },
     });
 
     const listFields = useMemo(() => {
@@ -62,15 +75,39 @@ export const ListTable: FC<ListTableProps> = ({ schema, name }) => {
                                     *
                                 </span>
                             )}
+                            {field.description && (
+                                <Tooltip
+                                    placement="top"
+                                    slotProps={{
+                                        popper: {
+                                            modifiers: [
+                                                {
+                                                    name: "offset",
+                                                    options: {
+                                                        offset: [0, -14],
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    }}
+                                    arrow
+                                    title={description}
+                                >
+                                    <IconButton size="small">
+                                        <Help fontSize="small" />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                         </>
                     ),
                     enableColumnActions: false,
-                    muiTableBodyCellProps: { valign: "top" },
+                    muiTableBodyCellProps: { sx: { verticalAlign: "top" } },
                     Cell: function render({ row, staticRowIndex }) {
                         return fieldFactory({
                             ...field,
                             required: schema?.required?.includes(field.name),
                             name: `${name}.${staticRowIndex}.${field.name}`,
+                            renderHelp: false,
                         });
                     },
                 };
@@ -151,10 +188,20 @@ export const ListTable: FC<ListTableProps> = ({ schema, name }) => {
             },
         },
     });
+    const error = !!errors[name];
+    const renderHelperText: string | undefined =
+        (errors[name]?.root?.message as string) ?? description;
 
     return (
-        <Paper>
-            <MaterialReactTable table={table} />
-        </Paper>
+        <>
+            <Paper style={{ borderColor: error ? "red" : undefined }}>
+                <MaterialReactTable table={table} />
+            </Paper>
+            {renderHelperText && (
+                <FormHelperText error={error}>
+                    {renderHelperText}
+                </FormHelperText>
+            )}
+        </>
     );
 };

@@ -1,7 +1,5 @@
 import { AppSider, Header, PageLoading } from "@/components";
-import { CrudCreate } from "@/components/crud/create";
-import { CrudEdit } from "@/components/crud/edit";
-import { CrudList } from "@/components/crud/list";
+import { Create, Edit, List } from "@/components/crud";
 import { DashboardPage } from "@/pages/dashboard";
 import { DeptCreate, DeptEdit, DeptList } from "@/pages/departments";
 import { EnumCreate, EnumEdit, EnumList } from "@/pages/enums";
@@ -153,13 +151,13 @@ export const AppRoutes = () => {
                 <Route
                     path="/:resource"
                     element={
-                        <CrudList>
+                        <List>
                             <Outlet />
-                        </CrudList>
+                        </List>
                     }
                 >
-                    <Route path="create" element={<CrudCreate />} />
-                    <Route path="edit/:id" element={<CrudEdit />} />
+                    <Route path="create" element={<Create />} />
+                    <Route path="edit/:id" element={<Edit />} />
                 </Route>
 
                 <Route path="*" element={<ErrorComponent />} />

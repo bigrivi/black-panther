@@ -1,6 +1,6 @@
-from typing import Optional, List, Any, TYPE_CHECKING
+from typing import Optional, List
 from datetime import datetime
-from sqlmodel import SQLModel, Relationship, Column, DateTime
+from sqlmodel import SQLModel, Relationship
 from app.common.model import BaseMixin
 from app.common.model.field import Field
 from app.enums import IntNameEnum
@@ -15,16 +15,16 @@ class Select1Enum(IntNameEnum):
 
 class ToyBase(SQLModel):
     tetx1: str = Field(value_type="text",
-                       title="text1", description="description1")
+                       title="text1", description="description")
     tetx2: str = Field(default=None, value_type="text", title="text2")
     textarea1: Optional[str] = Field(
         default=None, value_type="textarea", title="textarea1")
     switch1: Optional[bool] = Field(
-        default=None, value_type="switch", title="switch1")
+        default=True, value_type="switch", title="switch1")
     checkbox1: Optional[bool] = Field(
-        default=None, value_type="checkbox", title="checkbox1")
+        default=True, value_type="checkbox", title="checkbox1")
     select1: Select1Enum | None = Field(
-        enum=Select1Enum, default=None, value_type="select", title="select1")
+        enum=Select1Enum, default=Select1Enum.option1, value_type="select", title="select1")
 
 
 class Toy(ToyBase, BaseMixin, table=True):
@@ -43,7 +43,8 @@ class ToyPublic(ToyBase):
 
 
 class ToyCreate(ToyBase):
-    details: List[ToyDetailCreate] = None
+    details: List[ToyDetailCreate] = Field(
+        title="details", value_type="listTable", description="detail description")
 
 
 class ToyUpdate(ToyBase):

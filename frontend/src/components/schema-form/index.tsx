@@ -24,7 +24,7 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({
             return {
                 ...propertyData,
                 ...(isArray && {
-                    valueType: "listTable",
+                    valueType: propertyData.valueType ?? "listTable",
                     schema: getRefSchema(
                         propertyData.items!.$ref,
                         schema.$defs!

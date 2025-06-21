@@ -130,26 +130,39 @@ interface IFieldOption {
     label: string;
 }
 
+export type SchemeDataType =
+    | "object"
+    | "boolean"
+    | "string"
+    | "array"
+    | "integer"
+    | "null";
+
+type SchemaValueType =
+    | "text"
+    | "textarea"
+    | "switch"
+    | "checkbox"
+    | "select"
+    | "listTable";
+
 interface IFieldSchema {
     name: string;
     title: string;
-    type?: string;
-    valueType:
-        | "text"
-        | "textarea"
-        | "switch"
-        | "checkbox"
-        | "select"
-        | "listTable";
+    type?: SchemeDataType;
+    anyOf?: { type?: SchemeDataType; $ref?: string }[];
+    valueType: SchemaValueType;
     description?: string;
     options?: IFieldOption[];
     schema?: Schema;
     items?: { $ref: string };
+    default?: any;
 }
 
 export interface Schema {
     title?: string;
     name: string;
+    type?: SchemeDataType;
     description?: string;
     properties: Properties;
     required?: string[];

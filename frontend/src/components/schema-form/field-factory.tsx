@@ -14,7 +14,9 @@ export const fieldFactory = ({
     options,
     schema,
     required,
-}: IFieldSchema & { required?: boolean }) => {
+    description,
+    renderHelp = true,
+}: IFieldSchema & { required?: boolean; renderHelp?: boolean }) => {
     switch (valueType) {
         case "switch":
             return (
@@ -26,11 +28,18 @@ export const fieldFactory = ({
                 />
             );
         case "checkbox":
-            return <CheckboxElement required={required} name={name} />;
+            return (
+                <CheckboxElement
+                    helperText={renderHelp ? description : undefined}
+                    required={required}
+                    name={name}
+                />
+            );
         case "select":
             return (
                 <SelectElement
                     name={name}
+                    helperText={renderHelp ? description : undefined}
                     required={required}
                     fullWidth
                     labelKey="label"
@@ -44,15 +53,28 @@ export const fieldFactory = ({
                     hiddenLabel
                     required={required}
                     maxRows={3}
+                    helperText={renderHelp ? description : undefined}
                     name={name}
                     id={name}
                 />
             );
         case "listTable":
-            return <ListTable name={name} schema={schema} />;
+            return (
+                <ListTable
+                    required={required}
+                    description={description}
+                    name={name}
+                    schema={schema}
+                />
+            );
         default:
             return (
-                <TextFieldElement required={required} name={name} id={name} />
+                <TextFieldElement
+                    helperText={renderHelp ? description : undefined}
+                    required={required}
+                    name={name}
+                    id={name}
+                />
             );
     }
 };
