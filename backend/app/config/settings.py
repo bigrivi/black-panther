@@ -24,17 +24,17 @@ class Settings(BaseSettings):
     TOKEN_ALGORITHM: str = 'HS256'
     TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 10
     TOKEN_REFRESH_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7
-    TOKEN_REDIS_PREFIX: str = 'photinia_token'
-    TOKEN_REFRESH_REDIS_PREFIX: str = 'Photinia_refresh_token'
+    TOKEN_REDIS_PREFIX: str = 'black_panther_token'
+    TOKEN_REFRESH_REDIS_PREFIX: str = 'black_panther_refresh_token'
     TOKEN_REQUEST_PATH_EXCLUDE: list[str] = [
         'api/auth/login',
     ]
 
     # FastAPI
     FASTAPI_API_PATH: str = '/api'
-    FASTAPI_TITLE: str = 'Photinia backend api'
+    FASTAPI_TITLE: str = 'BlackPanther backend api'
     FASTAPI_VERSION: str = '0.0.1'
-    FASTAPI_DESCRIPTION: str = 'Web API for Photinia'
+    FASTAPI_DESCRIPTION: str = 'Web API for BlackPanther'
     FASTAPI_DOCS_URL: str | None = f'/docs'
     FASTAPI_REDOCS_URL: str | None = f'/redocs'
     FASTAPI_OPENAPI_URL: str | None = f'/openapi'

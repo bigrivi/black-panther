@@ -137,10 +137,8 @@ export const ListTable: FC<ListTableProps> = ({
                 Cell: function render({ row, staticRowIndex }) {
                     return (
                         <ConfirmButton
-                            title="Delete Option"
-                            message={
-                                "Are you sure you want to delete the option?"
-                            }
+                            title={t("common.deleteConfirm.title")}
+                            message={t("common.deleteConfirm.message")}
                             onConfirm={() => remove(staticRowIndex)}
                         >
                             <IconButton size="small">

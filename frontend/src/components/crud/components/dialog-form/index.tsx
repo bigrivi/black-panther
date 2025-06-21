@@ -1,11 +1,12 @@
 import { SchemaForm } from "@/components";
-import { DrawerHeader } from "@/components/drawer";
+import CloseIcon from "@mui/icons-material/Close";
 import {
     Button,
     Dialog,
     DialogActions,
     DialogContent,
-    Divider,
+    DialogTitle,
+    IconButton,
     Stack,
 } from "@mui/material";
 import { BaseKey, useTranslate } from "@refinedev/core";
@@ -28,16 +29,26 @@ export const CrudDialogForm: FC<Props> = ({ action }) => {
             onClose={onBack}
             slotProps={{ paper: { sx: { minWidth: 700 } } }}
         >
-            <DrawerHeader
-                title={title}
-                onCloseClick={() => {
-                    onBack();
-                }}
-            />
-            <DialogContent>
+            <DialogTitle>
+                <Stack direction="row" gap={1} alignItems="center">
+                    {title}
+                </Stack>
+            </DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={onBack}
+                sx={(theme) => ({
+                    position: "absolute",
+                    right: 8,
+                    top: 8,
+                    color: theme.palette.grey[500],
+                })}
+            >
+                <CloseIcon />
+            </IconButton>
+            <DialogContent dividers>
                 {schema && <SchemaForm schema={schema} formContext={methods} />}
             </DialogContent>
-            <Divider />
             <DialogActions>
                 <Stack direction="row">
                     <Button onClick={onBack}>{t("buttons.cancel")}</Button>

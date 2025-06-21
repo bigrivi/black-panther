@@ -168,6 +168,12 @@
     "dashboard": {
         "title": "工作台"
     },
+    "common": {
+        "deleteConfirm": {
+            "title": "删除确认",
+            "message": "您确定要删除此行数据吗?"
+        }
+    },
     "enum": {
         "orderStatuses": {
             "pending": "Wird vorbereiten.",
