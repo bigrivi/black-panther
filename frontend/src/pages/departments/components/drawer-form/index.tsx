@@ -1,21 +1,12 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import { TreeSelectFieldElement } from "@/components/form/elements";
-import { useUrlSearchQuery } from "@/hooks";
+import { useEditForm, useUrlSearchQuery } from "@/hooks";
 import { IDepartment, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import {
-    BaseKey,
-    HttpError,
-    useCustom,
-    useGetToPath,
-    useGo,
-    useTranslate,
-} from "@refinedev/core";
-import { useForm } from "@refinedev/react-hook-form";
+import { BaseKey, HttpError, useCustom, useTranslate } from "@refinedev/core";
 import { FC, useMemo } from "react";
 import { SwitchElement, TextFieldElement } from "react-hook-form-mui";
-import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -23,30 +14,22 @@ type Props = {
 };
 
 export const DeptDrawerForm: FC<Props> = ({ action }) => {
-    const getToPath = useGetToPath();
-    const [searchParams] = useSearchParams();
-    const go = useGo();
     const query = useUrlSearchQuery();
     const t = useTranslate();
 
     const {
         refineCore: { onFinish, id },
         saveButtonProps,
+        close,
         ...methods
-    } = useForm<IDepartment, HttpError, Nullable<IDepartment>>({
+    } = useEditForm<IDepartment, HttpError, Nullable<IDepartment>>({
+        action,
         defaultValues: {
             name: "",
             valid_state: true,
             parent_id: query.get("parent_id")
                 ? Number(query.get("parent_id"))
                 : null,
-        },
-        refineCoreProps: {
-            action,
-            redirect: "list",
-            onMutationSuccess: () => {
-                onDrawerCLose();
-            },
         },
     });
 
@@ -64,24 +47,6 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
         return deptTreeData?.data ?? [];
     }, [deptTreeData]);
 
-    const onDrawerCLose = () => {
-        go({
-            to:
-                searchParams.get("to") ??
-                getToPath({
-                    action: "list",
-                }) ??
-                "",
-            query: {
-                to: undefined,
-            },
-            options: {
-                keepQuery: true,
-            },
-            type: "replace",
-        });
-    };
-
     return (
         <Drawer
             slotProps={{
@@ -94,7 +59,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
                     : t("departments.actions.add")
             }
             anchor="right"
-            onClose={onDrawerCLose}
+            onClose={close}
         >
             <DrawerContent>
                 <Form
@@ -136,9 +101,7 @@ export const DeptDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>
-                        {t("buttons.cancel")}
-                    </Button>
+                    <Button onClick={close}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"

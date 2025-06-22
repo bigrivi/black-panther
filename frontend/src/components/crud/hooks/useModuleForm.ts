@@ -6,6 +6,7 @@ import {
     useGo,
     useResource,
     useTranslate,
+    useWarnAboutChange,
 } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
 import { useEffect, useMemo } from "react";
@@ -45,9 +46,9 @@ const guessDefaultValue = (fieldKey: string, schema: Schema) => {
     }
     return null;
 };
-interface UseEditFormHookResult {
+interface UseModuleFormHookResult {
     schema?: Schema;
-    onBack: () => void;
+    onClose: () => void;
     methods: UseFormReturn;
     title: string;
     saveButtonProps: {
@@ -55,14 +56,15 @@ interface UseEditFormHookResult {
         onClick: (e: React.BaseSyntheticEvent) => void;
     };
 }
-export const useEditForm = (
+export const useModuleForm = (
     action: "create" | "edit"
-): UseEditFormHookResult => {
+): UseModuleFormHookResult => {
     const t = useTranslate();
     const getToPath = useGetToPath();
     const [searchParams] = useSearchParams();
     const { resource } = useResource();
     const go = useGo();
+    const { warnWhen, setWarnWhen } = useWarnAboutChange();
     const { data: schemaData } = useCustom<Schema>({
         url: `schema/${resource?.name}`,
         method: "get",
@@ -88,7 +90,7 @@ export const useEditForm = (
     }, [schema]);
 
     const {
-        refineCore: { onFinish, id },
+        refineCore: { id },
         saveButtonProps,
         ...methods
     } = useForm<any, HttpError, Nullable<any>>({
@@ -97,7 +99,7 @@ export const useEditForm = (
             action,
             redirect: "list",
             onMutationSuccess: () => {
-                onBack();
+                back();
             },
         },
     });
@@ -108,7 +110,7 @@ export const useEditForm = (
         }
     }, [defaultValues, action]);
 
-    const onBack = () => {
+    const back = () => {
         go({
             to:
                 searchParams.get("to") ??
@@ -125,12 +127,30 @@ export const useEditForm = (
             type: "replace",
         });
     };
+
+    const onClose = () => {
+        if (warnWhen) {
+            const warnWhenConfirm = window.confirm(
+                t(
+                    "warnWhenUnsavedChanges",
+                    "Are you sure you want to leave? You have unsaved changes."
+                )
+            );
+
+            if (warnWhenConfirm) {
+                setWarnWhen(false);
+            } else {
+                return;
+            }
+        }
+        back();
+    };
     const title = id
         ? t(`${resource?.name}.actions.edit`)
         : t(`${resource?.name}.actions.add`);
     return {
         schema,
-        onBack,
+        onClose,
         methods,
         saveButtonProps,
         title,

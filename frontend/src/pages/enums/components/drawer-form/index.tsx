@@ -1,15 +1,9 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
+import { useEditForm } from "@/hooks";
 import { IEnum, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import {
-    BaseKey,
-    HttpError,
-    useGetToPath,
-    useGo,
-    useTranslate,
-} from "@refinedev/core";
-import { useForm } from "@refinedev/react-hook-form";
+import { BaseKey, HttpError, useTranslate } from "@refinedev/core";
 import { FC } from "react";
 import {
     SubmitHandler,
@@ -17,7 +11,6 @@ import {
     TextareaAutosizeElement,
     TextFieldElement,
 } from "react-hook-form-mui";
-import { useSearchParams } from "react-router";
 import { EnumOptionsField } from "./enum-options";
 
 type Props = {
@@ -26,15 +19,14 @@ type Props = {
 };
 
 export const EnumDrawerForm: FC<Props> = ({ action }) => {
-    const getToPath = useGetToPath();
-    const [searchParams] = useSearchParams();
     const t = useTranslate();
-    const go = useGo();
     const {
         refineCore: { onFinish, id, formLoading },
         saveButtonProps,
+        close,
         ...methods
-    } = useForm<IEnum, HttpError, Nullable<IEnum>>({
+    } = useEditForm<IEnum, HttpError, Nullable<IEnum>>({
+        action,
         defaultValues: {
             key: "",
             name: "",
@@ -42,32 +34,7 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
             items: [],
             valid_state: true,
         },
-        refineCoreProps: {
-            action,
-            redirect: "list",
-            onMutationSuccess: () => {
-                onDrawerCLose();
-            },
-        },
     });
-
-    const onDrawerCLose = () => {
-        go({
-            to:
-                searchParams.get("to") ??
-                getToPath({
-                    action: "list",
-                }) ??
-                "",
-            query: {
-                to: undefined,
-            },
-            options: {
-                keepQuery: true,
-            },
-            type: "replace",
-        });
-    };
 
     const onSubmit: SubmitHandler<IEnum> = (data) => {
         onFinish({
@@ -95,7 +62,7 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
             open={true}
             title={id ? t("enums.actions.edit") : t("enums.actions.add")}
             anchor="right"
-            onClose={onDrawerCLose}
+            onClose={close}
         >
             <DrawerContent>
                 <Form
@@ -143,9 +110,7 @@ export const EnumDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>
-                        {t("buttons.cancel")}
-                    </Button>
+                    <Button onClick={close}>{t("buttons.cancel")}</Button>
                     <Button
                         disabled={formLoading}
                         onClick={methods.handleSubmit(onSubmit)}

@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import { Button, Stack } from "@mui/material";
 import { BaseKey, useTranslate } from "@refinedev/core";
 import { FC } from "react";
-import { useEditForm } from "../../hooks/useEditForm";
+import { useModuleForm } from "../../hooks/useModuleForm";
 
 type Props = {
     id?: BaseKey;
@@ -12,33 +12,25 @@ type Props = {
 
 export const CrudDrawerForm: FC<Props> = ({ action }) => {
     const t = useTranslate();
-    const { onBack, methods, saveButtonProps, schema, title } =
-        useEditForm(action);
+    const { onClose, methods, saveButtonProps, schema, title } =
+        useModuleForm(action);
 
     return (
         <Drawer
             slotProps={{
                 paper: { sx: { width: { sm: "100%", md: "616px" } } },
             }}
-            open={true}
+            open
             title={title}
             anchor="right"
-            onClose={onBack}
+            onClose={onClose}
         >
             <DrawerContent>
-                <Stack
-                    bgcolor="background.paper"
-                    padding="24px"
-                    sx={{ flex: 1, overflow: "auto" }}
-                >
-                    {schema && (
-                        <SchemaForm schema={schema} formContext={methods} />
-                    )}
-                </Stack>
+                {schema && <SchemaForm schema={schema} formContext={methods} />}
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onBack}>{t("buttons.cancel")}</Button>
+                    <Button onClick={onClose}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"

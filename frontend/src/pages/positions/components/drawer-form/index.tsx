@@ -1,22 +1,15 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
+import { useEditForm } from "@/hooks";
 import { IPostion, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import {
-    BaseKey,
-    HttpError,
-    useGetToPath,
-    useGo,
-    useTranslate,
-} from "@refinedev/core";
-import { useForm } from "@refinedev/react-hook-form";
+import { BaseKey, HttpError, useTranslate } from "@refinedev/core";
 import { FC } from "react";
 import {
     SwitchElement,
     TextareaAutosizeElement,
     TextFieldElement,
 } from "react-hook-form-mui";
-import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -24,56 +17,21 @@ type Props = {
 };
 
 export const PositionDrawerForm: FC<Props> = ({ action }) => {
-    const getToPath = useGetToPath();
-    const [searchParams] = useSearchParams();
     const t = useTranslate();
-    const go = useGo();
     const {
-        refineCore: { onFinish, id },
         saveButtonProps,
-        ...methods
-    } = useForm<IPostion, HttpError, Nullable<IPostion>>({
+        close,
+        refineCore: { id },
+        ...useHookFormResult
+    } = useEditForm<IPostion, HttpError, Nullable<IPostion>>({
+        action,
         defaultValues: {
             name: "",
             code: "",
             description: "",
             valid_state: true,
         },
-        refineCoreProps: {
-            action,
-            redirect: "list",
-            onMutationSuccess: () => {
-                onDrawerCLose();
-            },
-            queryOptions: {
-                select: (data) => {
-                    return {
-                        data: {
-                            ...data.data,
-                        },
-                    };
-                },
-            },
-        },
     });
-
-    const onDrawerCLose = () => {
-        go({
-            to:
-                searchParams.get("to") ??
-                getToPath({
-                    action: "list",
-                }) ??
-                "",
-            query: {
-                to: undefined,
-            },
-            options: {
-                keepQuery: true,
-            },
-            type: "replace",
-        });
-    };
 
     return (
         <Drawer
@@ -85,15 +43,10 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
                 id ? t("positions.actions.edit") : t("positions.actions.add")
             }
             anchor="right"
-            onClose={onDrawerCLose}
+            onClose={close}
         >
             <DrawerContent>
-                <Form
-                    formContext={methods}
-                    onSuccess={(data) => {
-                        onFinish(data);
-                    }}
-                >
+                <Form formContext={useHookFormResult}>
                     <FormItem
                         label={t("positions.fields.name")}
                         required
@@ -128,9 +81,7 @@ export const PositionDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>
-                        {t("buttons.cancel")}
-                    </Button>
+                    <Button onClick={close}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"

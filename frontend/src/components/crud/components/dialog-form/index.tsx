@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { BaseKey, useTranslate } from "@refinedev/core";
 import { FC } from "react";
-import { useEditForm } from "../../hooks/useEditForm";
+import { useModuleForm } from "../../hooks/useModuleForm";
 
 type Props = {
     id?: BaseKey;
@@ -20,13 +20,13 @@ type Props = {
 
 export const CrudDialogForm: FC<Props> = ({ action }) => {
     const t = useTranslate();
-    const { onBack, methods, saveButtonProps, schema, title } =
-        useEditForm(action);
+    const { onClose, methods, saveButtonProps, schema, title } =
+        useModuleForm(action);
 
     return (
         <Dialog
             open={true}
-            onClose={onBack}
+            onClose={onClose}
             slotProps={{ paper: { sx: { minWidth: 700 } } }}
         >
             <DialogTitle>
@@ -36,7 +36,7 @@ export const CrudDialogForm: FC<Props> = ({ action }) => {
             </DialogTitle>
             <IconButton
                 aria-label="close"
-                onClick={onBack}
+                onClick={onClose}
                 sx={(theme) => ({
                     position: "absolute",
                     right: 8,
@@ -51,7 +51,7 @@ export const CrudDialogForm: FC<Props> = ({ action }) => {
             </DialogContent>
             <DialogActions>
                 <Stack direction="row">
-                    <Button onClick={onBack}>{t("buttons.cancel")}</Button>
+                    <Button onClick={onClose}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"

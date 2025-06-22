@@ -1,19 +1,12 @@
 import { Form, FormItem } from "@/components";
 import { DrawerContent, DrawerFooter } from "@/components/drawer";
 import { Drawer } from "@/components/drawer/drawer";
+import { useEditForm } from "@/hooks";
 import { Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import {
-    BaseKey,
-    HttpError,
-    useGetToPath,
-    useGo,
-    useTranslate,
-} from "@refinedev/core";
-import { useForm } from "@refinedev/react-hook-form";
+import { BaseKey, HttpError, useTranslate } from "@refinedev/core";
 import { FC } from "react";
 import { AutocompleteElement, TextFieldElement } from "react-hook-form-mui";
-import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -29,28 +22,21 @@ type ResourceFormType = {
 const defaultActionOptions = ["list", "create", "edit", "show", "delete"];
 
 export const ResourceDrawerForm: FC<Props> = ({ action }) => {
-    const getToPath = useGetToPath();
-    const [searchParams] = useSearchParams();
-    const go = useGo();
     const t = useTranslate();
 
     const {
         refineCore: { onFinish, id },
         saveButtonProps,
+        close,
         ...methods
-    } = useForm<ResourceFormType, HttpError, Nullable<ResourceFormType>>({
+    } = useEditForm<ResourceFormType, HttpError, Nullable<ResourceFormType>>({
+        action,
         defaultValues: {
             name: "",
             key: "",
             actions: [...defaultActionOptions],
         },
         refineCoreProps: {
-            resource: `resource`,
-            action,
-            redirect: "list",
-            onMutationSuccess: () => {
-                onDrawerCLose();
-            },
             queryOptions: {
                 select: (data) => {
                     const actions = data.data.actions?.map(
@@ -67,25 +53,6 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
         },
     });
 
-    const onDrawerCLose = () => {
-        close();
-        go({
-            to:
-                searchParams.get("to") ??
-                getToPath({
-                    action: "list",
-                }) ??
-                "",
-            query: {
-                to: undefined,
-            },
-            options: {
-                keepQuery: true,
-            },
-            type: "replace",
-        });
-    };
-
     return (
         <Drawer
             slotProps={{
@@ -96,7 +63,7 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
                 id ? t("resources.actions.edit") : t("resources.actions.add")
             }
             anchor="right"
-            onClose={onDrawerCLose}
+            onClose={close}
         >
             <DrawerContent>
                 <Form
@@ -143,9 +110,7 @@ export const ResourceDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>
-                        {t("buttons.cancel")}
-                    </Button>
+                    <Button onClick={close}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"

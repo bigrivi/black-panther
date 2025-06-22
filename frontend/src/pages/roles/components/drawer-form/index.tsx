@@ -1,22 +1,15 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
+import { useEditForm } from "@/hooks";
 import { IRole, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import {
-    BaseKey,
-    HttpError,
-    useGetToPath,
-    useGo,
-    useTranslate,
-} from "@refinedev/core";
-import { useForm } from "@refinedev/react-hook-form";
+import { BaseKey, HttpError, useTranslate } from "@refinedev/core";
 import { FC } from "react";
 import {
     SwitchElement,
     TextareaAutosizeElement,
     TextFieldElement,
 } from "react-hook-form-mui";
-import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -24,47 +17,21 @@ type Props = {
 };
 
 export const RoleDrawerForm: FC<Props> = ({ action }) => {
-    const getToPath = useGetToPath();
-    const [searchParams] = useSearchParams();
     const t = useTranslate();
-    const go = useGo();
     const {
         refineCore: { onFinish, id },
         saveButtonProps,
+        close,
         ...methods
-    } = useForm<IRole, HttpError, Nullable<IRole>>({
+    } = useEditForm<IRole, HttpError, Nullable<IRole>>({
+        action,
         defaultValues: {
             code: "",
             name: "",
             description: "",
             valid_state: true,
         },
-        refineCoreProps: {
-            action,
-            redirect: "list",
-            onMutationSuccess: () => {
-                onDrawerCLose();
-            },
-        },
     });
-
-    const onDrawerCLose = () => {
-        go({
-            to:
-                searchParams.get("to") ??
-                getToPath({
-                    action: "list",
-                }) ??
-                "",
-            query: {
-                to: undefined,
-            },
-            options: {
-                keepQuery: true,
-            },
-            type: "replace",
-        });
-    };
 
     return (
         <Drawer
@@ -74,7 +41,7 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
             open={true}
             title={id ? t("roles.actions.edit") : t("roles.actions.add")}
             anchor="right"
-            onClose={onDrawerCLose}
+            onClose={close}
         >
             <DrawerContent>
                 <Form
@@ -119,9 +86,7 @@ export const RoleDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>
-                        {t("buttons.cancel")}
-                    </Button>
+                    <Button onClick={close}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"

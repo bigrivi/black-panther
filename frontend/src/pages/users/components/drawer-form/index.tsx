@@ -1,18 +1,11 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import { TreeSelectFieldElement } from "@/components/form/elements";
+import { useEditForm } from "@/hooks";
 import { IDepartment, IRole, IUser, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import {
-    BaseKey,
-    HttpError,
-    useGetToPath,
-    useGo,
-    useList,
-    useTranslate,
-} from "@refinedev/core";
+import { BaseKey, HttpError, useList, useTranslate } from "@refinedev/core";
 import { useAutocomplete } from "@refinedev/mui";
-import { useForm } from "@refinedev/react-hook-form";
 import { FC } from "react";
 import {
     AutocompleteElement,
@@ -20,7 +13,6 @@ import {
     SwitchElement,
     TextFieldElement,
 } from "react-hook-form-mui";
-import { useSearchParams } from "react-router";
 
 type Props = {
     id?: BaseKey;
@@ -34,15 +26,14 @@ interface IUserForm extends Omit<IUser, "roles"> {
 }
 
 export const UserDrawerForm: FC<Props> = ({ action }) => {
-    const getToPath = useGetToPath();
-    const [searchParams] = useSearchParams();
     const t = useTranslate();
-    const go = useGo();
     const {
         refineCore: { onFinish, id },
+        close,
         saveButtonProps,
         ...methods
-    } = useForm<IUser, HttpError, Nullable<IUserForm>>({
+    } = useEditForm<IUser, HttpError, Nullable<IUserForm>>({
+        action,
         defaultValues: {
             user_name: "",
             login_name: "",
@@ -54,12 +45,6 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             roles: [],
         },
         refineCoreProps: {
-            resource: `user`,
-            action,
-            redirect: "list",
-            onMutationSuccess: () => {
-                onDrawerCLose();
-            },
             queryOptions: {
                 select: (data) => {
                     return {
@@ -83,24 +68,6 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
         },
     });
 
-    const onDrawerCLose = () => {
-        go({
-            to:
-                searchParams.get("to") ??
-                getToPath({
-                    action: "list",
-                }) ??
-                "",
-            query: {
-                to: undefined,
-            },
-            options: {
-                keepQuery: true,
-            },
-            type: "replace",
-        });
-    };
-
     return (
         <Drawer
             slotProps={{
@@ -109,7 +76,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             open={true}
             title={id ? t("users.actions.edit") : t("users.actions.add")}
             anchor="right"
-            onClose={onDrawerCLose}
+            onClose={close}
         >
             <DrawerContent>
                 <Form
@@ -223,9 +190,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             </DrawerContent>
             <DrawerFooter>
                 <Stack direction="row">
-                    <Button onClick={onDrawerCLose}>
-                        {t("buttons.cancel")}
-                    </Button>
+                    <Button onClick={close}>{t("buttons.cancel")}</Button>
                     <Button
                         {...saveButtonProps}
                         variant="contained"
