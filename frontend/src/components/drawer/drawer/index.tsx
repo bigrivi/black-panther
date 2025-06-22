@@ -12,6 +12,7 @@ export const Drawer = ({ children, ...props }: PropsWithChildren<Props>) => {
     return (
         <BaseDrawer
             {...props}
+            aria-hidden={false}
             sx={{
                 "& .MuiDrawer-paper": {
                     backgroundColor: mode === "light" ? "#f5f5f5" : "#000",

@@ -1,4 +1,5 @@
 import { Nullable, Schema, SchemeDataType } from "@/interfaces";
+import { confirm } from "@/utils/confirm";
 import {
     HttpError,
     useCustom,
@@ -128,14 +129,14 @@ export const useModuleForm = (
         });
     };
 
-    const onClose = () => {
+    const onClose = async () => {
         if (warnWhen) {
-            const warnWhenConfirm = window.confirm(
-                t(
+            const warnWhenConfirm = await confirm({
+                confirmation: t(
                     "warnWhenUnsavedChanges",
                     "Are you sure you want to leave? You have unsaved changes."
-                )
-            );
+                ),
+            });
 
             if (warnWhenConfirm) {
                 setWarnWhen(false);

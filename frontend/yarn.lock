@@ -5071,6 +5071,11 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-confirm@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-confirm/-/react-confirm-0.3.1.tgz#962638dcb45392192e17be82539bbb9486962069"
+  integrity sha512-9GUEuvr2TJMkCI3r6Lc8xlvWCJRXGCOHpwmqj6Pvp+zJeabK3uizee+LSbx4nDT/R6kzNUma8On7zmBr6tui/g==
+
 react-dom@^18.0.0:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
@@ -5143,11 +5148,6 @@ react-refresh@^0.17.0:
   version "0.17.0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.17.0.tgz"
   integrity sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==
-
-react-resizable-panels@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/react-resizable-panels/-/react-resizable-panels-3.0.2.tgz"
-  integrity sha512-j4RNII75fnHkLnbsTb5G5YsDvJsSEZrJK2XSF2z0Tc2jIonYlIVir/Yh/5LvcUFCfs1HqrMAoiBFmIrRjC4XnA==
 
 react-router@^7.0.2:
   version "7.5.3"

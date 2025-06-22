@@ -21,6 +21,7 @@ import "./App.css";
 import { ColorModeContextProvider } from "./contexts";
 import axiosInstance from "./libs/axios";
 import { AppRoutes } from "./routes";
+import { MountPoint } from "./utils/confirm";
 
 const App: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -48,6 +49,7 @@ const App: React.FC = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <ColorModeContextProvider>
                         <CssBaseline />
+                        <MountPoint />
                         <GlobalStyles
                             styles={{ html: { WebkitFontSmoothing: "auto" } }}
                         />

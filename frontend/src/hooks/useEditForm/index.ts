@@ -1,3 +1,4 @@
+import { confirm } from "@/utils/confirm";
 import {
     BaseRecord,
     HttpError,
@@ -128,14 +129,14 @@ export const useEditForm = <
         });
     };
 
-    const onClose = () => {
+    const onClose = async () => {
         if (warnWhen) {
-            const warnWhenConfirm = window.confirm(
-                t(
+            const warnWhenConfirm = await confirm({
+                confirmation: t(
                     "warnWhenUnsavedChanges",
                     "Are you sure you want to leave? You have unsaved changes."
-                )
-            );
+                ),
+            });
 
             if (warnWhenConfirm) {
                 setWarnWhen(false);

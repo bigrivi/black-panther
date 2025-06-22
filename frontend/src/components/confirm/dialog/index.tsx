@@ -61,7 +61,7 @@ export const ConfirmDialog: FC<PropsWithChildren<ConfirmDialogProps>> = ({
     };
 
     return (
-        <Dialog open={open}>
+        <Dialog open={open} closeAfterTransition={false}>
             <DialogTitle>
                 <Stack direction="row" gap={1} alignItems="center">
                     <WarningIcon color="warning" />
