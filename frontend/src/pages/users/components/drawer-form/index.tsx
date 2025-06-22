@@ -37,12 +37,14 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
         defaultValues: {
             user_name: "",
             login_name: "",
-            password: "",
-            confirm_password: "",
             email: "",
             department_id: null,
             is_active: true,
             roles: [],
+            ...(action == "create" && {
+                password: "",
+                confirm_password: "",
+            }),
         },
         refineCoreProps: {
             queryOptions: {

@@ -28,11 +28,6 @@ class UserService(ServiceBase[User]):
         hashed_password = get_hashed_password(user_create.password)
         user_create.password = hashed_password
 
-    async def on_before_update(self, entity: User, user_update: UserUpdate, **kwargs):
-        if user_update.password is not None:
-            hashed_password = get_hashed_password(user_update.password)
-            user_update.password = hashed_password
-
     async def get_by_role(self, role_id, load_role: Optional[bool] = False, load_user_post: Optional[bool] = False) -> List[User]:
         stmt = []
         options = []

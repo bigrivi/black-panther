@@ -108,7 +108,6 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
-    password: Optional[str] = None
     valid_state: Optional[bool] = None
     roles: Optional[List[int]] = None
     positions: Optional[List[int]] = None
