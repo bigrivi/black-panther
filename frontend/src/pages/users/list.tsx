@@ -3,7 +3,7 @@ import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
 import { useTable } from "@/hooks";
-import { IRole, IUser } from "@/interfaces";
+import { IPostion, IRole, IUser } from "@/interfaces";
 import { KeyOutlined } from "@mui/icons-material";
 import { Box, Chip, IconButton, Stack } from "@mui/material";
 import { useList, useModal, useTranslate } from "@refinedev/core";
@@ -26,6 +26,11 @@ export const UserList = ({ children }: PropsWithChildren) => {
 
     const { data: rolesData } = useList<IRole>({
         resource: "role",
+        pagination: { mode: "off" },
+    });
+
+    const { data: positionData } = useList<IPostion>({
+        resource: "position",
         pagination: { mode: "off" },
     });
 
@@ -71,6 +76,32 @@ export const UserList = ({ children }: PropsWithChildren) => {
                     return (
                         <div>
                             {row.original.roles.map((role) => (
+                                <Chip
+                                    size="small"
+                                    key={role.id}
+                                    label={role.name}
+                                />
+                            ))}
+                        </div>
+                    );
+                },
+            },
+            {
+                accessorKey: "positions",
+                header: t("users.fields.positions"),
+                enableSorting: false,
+                filterFn: "any",
+                enableColumnFilterModes: false,
+                filterSelectOptions:
+                    positionData?.data.map((item) => {
+                        return { label: item.name, value: item.id + "" };
+                    }) ?? [],
+                filterVariant: "select",
+                grow: true,
+                Cell: function render({ row }) {
+                    return (
+                        <div>
+                            {row.original.positions.map((role) => (
                                 <Chip
                                     size="small"
                                     key={role.id}
@@ -151,7 +182,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 },
             },
         ],
-        [t, rolesData]
+        [t, rolesData, positionData]
     );
 
     const {

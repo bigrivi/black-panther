@@ -91,12 +91,13 @@ class UserPublic(UserBase):
     roles: List[RolePublic] = None
     department_id: Optional[int] = None
     department: Optional[DepartmentPublic] = None
+    positions: List[PositionPublic] = None
 
 
 class CurrentUser(UserBase):
     id: int
     roles: List[RolePublicWithoutActions] = None
-    posts: List[PositionPublic] = None
+    positions: List[PositionPublic] = None
     permissions: List[str] = None
 
 

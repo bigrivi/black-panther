@@ -80,6 +80,7 @@ interface IUser {
     user_name: string;
     created_at: string;
     roles: IRole[];
+    positions: IPostion[];
     is_active?: boolean;
     is_superuser?: boolean;
     email?: string;

@@ -16,7 +16,11 @@ ValueType = Literal[
     "multiSelect",
     "password",
     "checkbox",
-    "listTable"
+    "listTable",
+    "reference",  # reference="book_details" target="book_id"
+    "referenceOne",  # reference="book_details" target="book_id"
+    "referenceMany",  # reference="book_details" target="book_id"
+    "referenceManyToMany"
 ]
 
 

@@ -1,14 +1,15 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
-import { TreeSelectFieldElement } from "@/components/form/elements";
+import {
+    ReferenceArrayElement,
+    TreeSelectFieldElement,
+} from "@/components/form/elements";
 import { useEditForm } from "@/hooks";
-import { IDepartment, IRole, IUser, Nullable } from "@/interfaces";
+import { IDepartment, IUser, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
 import { BaseKey, HttpError, useList, useTranslate } from "@refinedev/core";
-import { useAutocomplete } from "@refinedev/mui";
 import { FC } from "react";
 import {
-    AutocompleteElement,
     PasswordElement,
     SwitchElement,
     TextFieldElement,
@@ -41,26 +42,12 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             department_id: null,
             is_active: true,
             roles: [],
+            positions: [],
             ...(action == "create" && {
                 password: "",
                 confirm_password: "",
             }),
         },
-        refineCoreProps: {
-            queryOptions: {
-                select: (data) => {
-                    return {
-                        data: {
-                            ...data.data,
-                            roles: data.data.roles.map((item) => item.id),
-                        },
-                    };
-                },
-            },
-        },
-    });
-    const { autocompleteProps } = useAutocomplete<IRole>({
-        resource: "role",
     });
 
     const { data: deptTreeData } = useList<IDepartment>({
@@ -164,22 +151,12 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         />
                     </FormItem>
                     <FormItem label={t("users.fields.roles")} required>
-                        <AutocompleteElement
-                            name="roles"
-                            multiple
-                            transform={{
-                                output: (event, value) => {
-                                    return value.map((item) => item.id);
-                                },
-                            }}
-                            options={autocompleteProps.options}
-                            autocompleteProps={{
-                                getOptionLabel: (option) => option.name,
-                                isOptionEqualToValue: (option, value) =>
-                                    value === undefined ||
-                                    option?.id?.toString() ===
-                                        (value?.id ?? value)?.toString(),
-                            }}
+                        <ReferenceArrayElement name="roles" resource="role" />
+                    </FormItem>
+                    <FormItem label={t("users.fields.positions")} required>
+                        <ReferenceArrayElement
+                            name="positions"
+                            resource="position"
                         />
                     </FormItem>
                     <FormItem label={t("fields.status.label")}>

@@ -26,6 +26,10 @@ router = APIRouter()
             "department": {
                 "select": True,
                 "join": True
+            },
+            "positions": {
+                "select": True,
+                "join": True
             }
         }
     }
