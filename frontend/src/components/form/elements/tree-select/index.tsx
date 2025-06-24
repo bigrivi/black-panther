@@ -96,7 +96,7 @@ type TreeSelectFieldElementComponent = <
         RefAttributes<HTMLDivElement>
 ) => JSX.Element;
 
-const TreeSelectFieldElement = forwardRef(function TextFieldElement<
+const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue = unknown
