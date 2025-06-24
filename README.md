@@ -4,7 +4,7 @@
   </a>
 </p>
 <p align="center" markdown=1>
-  <i>Full-stack Web application scaffolding, the perfect combination of <b>Refine</b> and <b>BetterCRUD</b></i>
+  <i>Full-stack Web application scaffolding,low-code builder, the perfect combination of <b>Refine</b> and <b>BetterCRUD</b></i>
 </p>
 <hr>
 <p align="center">
@@ -13,6 +13,8 @@
 
 **BlackPanther** is a complete full-stack web application scaffolding that uses FastAPI, BetterCRUD, Refine, and more.
 He has defined a set of good front-end and back-end development best practices to quickly develop products such as CRM, CMS, Admin Dashboard and other different types of management systems
+
+At the same time, **BlackPanther** is also a low-code builder that provides a series of low-code components and solutions
 
 I like [Refine](https://refine.dev/) very much, I think it's a good solution for the front-end to produce products quickly, and I have always hoped that Refine can be combined with [BetterCRUD](https://github.com/bigrivi/better_crud) to generate strong productivity, which is also the original intention of this project
 
