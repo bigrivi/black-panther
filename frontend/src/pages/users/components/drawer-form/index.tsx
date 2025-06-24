@@ -2,12 +2,13 @@ import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import {
     ReferenceArrayElement,
+    ReferenceNodeElement,
     TreeSelectFieldElement,
 } from "@/components/form/elements";
 import { useEditForm } from "@/hooks";
-import { IDepartment, IUser, Nullable } from "@/interfaces";
+import { IUser, Nullable } from "@/interfaces";
 import { Button, Stack } from "@mui/material";
-import { BaseKey, HttpError, useList, useTranslate } from "@refinedev/core";
+import { BaseKey, HttpError, useTranslate } from "@refinedev/core";
 import { FC } from "react";
 import {
     PasswordElement,
@@ -47,13 +48,6 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                 password: "",
                 confirm_password: "",
             }),
-        },
-    });
-
-    const { data: deptTreeData } = useList<IDepartment>({
-        resource: `department`,
-        meta: {
-            isTree: true,
         },
     });
 
@@ -139,22 +133,21 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         required
                         htmlFor="department_id"
                     >
-                        <TreeSelectFieldElement
+                        <ReferenceNodeElement<IUser>
                             name="department_id"
-                            fieldNames={{
-                                label: "name",
-                                value: "id",
-                                children: "children",
-                            }}
-                            treeData={deptTreeData?.data ?? []}
-                            id="department_id"
-                        />
+                            resource="department"
+                        >
+                            <TreeSelectFieldElement />
+                        </ReferenceNodeElement>
                     </FormItem>
                     <FormItem label={t("users.fields.roles")} required>
-                        <ReferenceArrayElement name="roles" resource="role" />
+                        <ReferenceArrayElement<IUser>
+                            name="roles"
+                            resource="role"
+                        />
                     </FormItem>
                     <FormItem label={t("users.fields.positions")} required>
-                        <ReferenceArrayElement
+                        <ReferenceArrayElement<IUser>
                             name="positions"
                             resource="position"
                         />

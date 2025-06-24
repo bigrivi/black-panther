@@ -68,7 +68,7 @@ export type TreeSelectFieldElementProps<
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue = unknown
 > = {
-    treeData: ITreeNode[];
+    treeData?: ITreeNode[];
     fieldNames?: FieldNames;
     id?: string;
     required?: boolean;
@@ -76,7 +76,7 @@ export type TreeSelectFieldElementProps<
     placeholder?: string;
     helperText?: ReactNode;
     rules?: UseControllerProps<TFieldValues, TName>["rules"];
-    name: TName;
+    name?: TName;
     parseError?: (error: FieldError) => ReactNode;
     control?: Control<TFieldValues>;
     transform?: {
@@ -107,10 +107,11 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
     const {
         rules = {},
         fieldNames = {
-            label: "title",
-            value: "value",
+            label: "name",
+            value: "id",
             children: "children",
         },
+        treeData = [],
         parseError,
         name,
         id,
@@ -119,7 +120,6 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
         helperText,
         required,
         disabled,
-        treeData,
         placeholder,
     } = props;
 
@@ -140,7 +140,7 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
         field,
         fieldState: { error },
     } = useController({
-        name,
+        name: name!,
         control,
         disabled,
         rules: rulesTmp,
@@ -193,7 +193,6 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
     const filteredTree = useMemo(() => {
         if (filterText) {
             const filteredTree = filterTree(treeData, filterText, fieldNames);
-            console.log(filteredTree);
             return filteredTree;
         } else {
             return treeData;
@@ -202,7 +201,6 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
 
     const handleFilter = useCallback(
         (value: string) => {
-            console.log(value);
             setFilterText(value);
             if (value) {
                 const expandedNodeIds: string[] = getExpandFilteredNodeIds(
@@ -210,7 +208,6 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
                     value,
                     fieldNames
                 );
-                console.log("expandedNodeIds", expandedNodeIds);
                 setExpandedItems(expandedNodeIds.map(String));
             } else {
                 setExpandedItems([]);
@@ -244,7 +241,6 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
                     return node[fieldNames.value] == value;
                 }
             );
-            console.log("expandedNodeIds", expandedNodeIds);
             setExpandedItems(expandedNodeIds.map(String));
         }
     }, [treeData, value]);

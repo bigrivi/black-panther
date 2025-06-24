@@ -1,38 +1,23 @@
 import { BaseRecord } from "@refinedev/core";
 import { useAutocomplete } from "@refinedev/mui";
-import { RefAttributes, useEffect } from "react";
-import {
-    FieldPath,
-    FieldValues,
-    PathValue,
-    useFormContext,
-    useWatch,
-} from "react-hook-form";
-import {
-    AutocompleteElement,
-    AutocompleteElementProps,
-} from "react-hook-form-mui";
+import React from "react";
+import { FieldPath, FieldValues } from "react-hook-form";
+import AutoCompleteSingleElement from "../autocomplete-single";
 
 export type ReferenceElementProps<
     TFieldValues extends FieldValues = FieldValues,
-    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-    TValue extends BaseRecord = BaseRecord
-> = Omit<
-    AutocompleteElementProps<TFieldValues, TName, TValue, false>,
-    "options" | "autocompleteProps"
-> & {
+    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = {
+    name: TName;
     resource: string;
-    optionLabel?: string;
-    optionValue?: string;
+    children?: JSX.Element;
 };
 
 type ReferenceElementComponent = <
     TFieldValues extends FieldValues = FieldValues,
-    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-    TValue extends BaseRecord = BaseRecord
+    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-    props: ReferenceElementProps<TFieldValues, TName, TValue> &
-        RefAttributes<HTMLLabelElement>
+    props: ReferenceElementProps<TFieldValues, TName>
 ) => JSX.Element;
 
 const ReferenceElement = <
@@ -40,56 +25,23 @@ const ReferenceElement = <
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord
 >(
-    props: ReferenceElementProps<TFieldValues, TName, TValue>
+    props: ReferenceElementProps<TFieldValues, TName>
 ) => {
-    const {
-        name,
-        resource,
-        optionLabel = "name",
-        optionValue = "id",
-        ...rest
-    } = props;
-    const { setValue } = useFormContext();
+    const { name, resource, children = defaultChildren } = props;
+
+    if (React.Children.count(children) !== 1) {
+        throw new Error("<ReferenceArrayElement> only accepts a single child");
+    }
+
     const { autocompleteProps } = useAutocomplete<TValue>({
         resource: resource,
     });
 
-    const fieldValue = useWatch({ name });
-
-    useEffect(() => {
-        if (!fieldValue) {
-            return;
-        }
-        if (typeof fieldValue == "object") {
-            setValue(name, fieldValue[optionValue]);
-        }
-    }, [fieldValue]);
-
-    return (
-        <AutocompleteElement
-            name={name}
-            {...rest}
-            transform={{
-                output: (event, value) => {
-                    return value?.[optionValue] as PathValue<
-                        TFieldValues,
-                        TName
-                    >;
-                },
-            }}
-            options={autocompleteProps.options as TValue[]}
-            autocompleteProps={{
-                getOptionLabel: (option) => option[optionLabel],
-                isOptionEqualToValue: (option, value) => {
-                    return (
-                        value === undefined ||
-                        option?.[optionValue]?.toString() ===
-                            (value?.[optionValue] ?? value)?.toString()
-                    );
-                },
-            }}
-        />
-    );
+    return React.cloneElement(children as React.ReactElement, {
+        options: autocompleteProps.options as TValue[],
+        name,
+    });
 };
+const defaultChildren = <AutoCompleteSingleElement />;
 ReferenceElement.displayName = "ReferenceElement";
 export default ReferenceElement as ReferenceElementComponent;

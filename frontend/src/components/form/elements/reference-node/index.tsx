@@ -1,10 +1,9 @@
-import { BaseRecord } from "@refinedev/core";
-import { useAutocomplete } from "@refinedev/mui";
+import { BaseRecord, useList } from "@refinedev/core";
 import React from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
-import AutoCompleteArrayElement from "../autocomplete-array";
+import TreeSelectFieldElement from "../tree-select";
 
-export type ReferenceArrayElementProps<
+export type ReferenceNodeElementProps<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
@@ -13,35 +12,38 @@ export type ReferenceArrayElementProps<
     children?: JSX.Element;
 };
 
-type ReferenceArrayElementComponent = <
+type ReferenceNodeElementComponent = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-    props: ReferenceArrayElementProps<TFieldValues, TName>
+    props: ReferenceNodeElementProps<TFieldValues, TName>
 ) => JSX.Element;
 
-const ReferenceArrayElement = <
+const ReferenceNodeElement = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord
 >(
-    props: ReferenceArrayElementProps<TFieldValues, TName>
+    props: ReferenceNodeElementProps<TFieldValues, TName>
 ) => {
     const { name, resource, children = defaultChildren } = props;
 
     if (React.Children.count(children) !== 1) {
-        throw new Error("<ReferenceArrayElement> only accepts a single child");
+        throw new Error("<ReferenceNodeElement> only accepts a single child");
     }
 
-    const { autocompleteProps } = useAutocomplete<TValue>({
-        resource: resource,
+    const { data } = useList<TFieldValues>({
+        resource,
+        meta: {
+            isTree: true,
+        },
     });
 
     return React.cloneElement(children as React.ReactElement, {
-        options: autocompleteProps.options as TValue[],
+        treeData: data?.data ?? [],
         name,
     });
 };
-const defaultChildren = <AutoCompleteArrayElement />;
-ReferenceArrayElement.displayName = "ReferenceArrayElement";
-export default ReferenceArrayElement as ReferenceArrayElementComponent;
+const defaultChildren = <TreeSelectFieldElement />;
+ReferenceNodeElement.displayName = "ReferenceNodeElement";
+export default ReferenceNodeElement as ReferenceNodeElementComponent;
