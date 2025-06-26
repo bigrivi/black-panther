@@ -85,6 +85,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             >
                                 <PasswordElement
                                     name="password"
+                                    autoComplete="new-password"
                                     id="password"
                                 />
                             </FormItem>
@@ -115,7 +116,11 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         required
                         htmlFor="user_name"
                     >
-                        <TextFieldElement name="user_name" id="user_name" />
+                        <TextFieldElement
+                            autoComplete="off"
+                            name="user_name"
+                            id="user_name"
+                        />
                     </FormItem>
                     <FormItem
                         label={t("users.fields.email")}

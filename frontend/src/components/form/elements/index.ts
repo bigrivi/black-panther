@@ -1,3 +1,4 @@
+export { default as AutoCompleteElement } from "./autocomplete";
 export { default as AutoCompleteArrayElement } from "./autocomplete-array";
 export { default as ReferenceElement } from "./reference";
 export { default as ReferenceArrayElement } from "./reference-array";
