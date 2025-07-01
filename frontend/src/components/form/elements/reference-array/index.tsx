@@ -7,6 +7,7 @@ import {
     UseControllerProps,
     useWatch,
 } from "react-hook-form";
+import { AutocompleteElement } from "react-hook-form-mui";
 import AutoCompleteArrayElement from "../autocomplete-array";
 
 export type ReferenceArrayElementProps<
@@ -72,6 +73,9 @@ const ReferenceArrayElement = <
     if (React.Children.count(children) !== 1) {
         throw new Error("<ReferenceArrayElement> only accepts a single child");
     }
+    const isAutoCompleteType =
+        children.type == AutoCompleteArrayElement ||
+        children.type == AutocompleteElement;
 
     const fieldValue = useWatch({ name: name! });
     const { autocompleteProps, onSearch } = useAutocomplete<
@@ -81,7 +85,7 @@ const ReferenceArrayElement = <
     >({
         resource: resource,
         pagination,
-        defaultValue: fieldValue,
+        ...(isAutoCompleteType && { defaultValue: fieldValue }),
         searchField: searchField as keyof TData extends string
             ? keyof TData
             : never,
@@ -91,7 +95,7 @@ const ReferenceArrayElement = <
 
     return React.cloneElement(children as React.ReactElement, {
         options: autocompleteProps.options,
-        onSearch,
+        ...(isAutoCompleteType && { onSearch }),
         name,
         required,
         rules,

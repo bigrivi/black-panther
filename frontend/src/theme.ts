@@ -47,16 +47,37 @@ const components = {
         styleOverrides: {
             root: {
                 "& .MuiOutlinedInput-root": {
-                    padding: "0px 30px 0px 8px",
-                    minHeight: 43,
+                    padding: "5px 30px 5px 8px",
+                    minHeight: 41,
+                    boxSizing: "border-box",
+                    display: "flex",
+                    gap: 4,
                     "& .MuiChip-root": {
-                        height: 28,
+                        maxHeight: 27,
+                        margin: 0,
+                    },
+                    "& input": {
+                        padding: "0px !important",
                     },
                 },
                 "& .MuiAutocomplete-option": {
                     padding: 10,
                 },
             },
+        },
+    },
+    MuiSelect: {
+        styleOverrides: {
+            select: () => ({
+                padding: "5px 32px 5px 8px",
+                display: "flex",
+                minHeight: 41,
+                boxSizing: "border-box",
+                alignItems: "center",
+                "& .MuiChip-root": {
+                    maxHeight: 27,
+                },
+            }),
         },
     },
     MuiTypography: {
