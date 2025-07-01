@@ -1,5 +1,5 @@
-export { default as AutoCompleteElement } from "./autocomplete";
-export { default as AutoCompleteArrayElement } from "./autocomplete-array";
+export { default as AutocompleteElement } from "./autocomplete";
+export { default as AutocompleteArrayElement } from "./autocomplete-array";
 export { default as MultiSelectElement } from "./multi-select";
 export { default as ReferenceElement } from "./reference";
 export { default as ReferenceArrayElement } from "./reference-array";

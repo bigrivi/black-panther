@@ -1,32 +1,32 @@
 import { BaseRecord } from "@refinedev/core";
 import { FieldPath, FieldValues } from "react-hook-form";
-import AutoCompleteElement, { AutoCompleteElementProps } from "../autocomplete";
+import AutocompleteElement, { AutocompleteElementProps } from "../autocomplete";
 
-export type AutoCompleteArrayElementProps<
+export type AutocompleteArrayElementProps<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord
 > = Omit<
-    AutoCompleteElementProps<TFieldValues, TName, TValue, true>,
+    AutocompleteElementProps<TFieldValues, TName, TValue, true>,
     "multiple"
 >;
 
-type AutoCompleteElementComponent = <
+type AutocompleteElementComponent = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord
 >(
-    props: AutoCompleteArrayElementProps<TFieldValues, TName, TValue>
+    props: AutocompleteArrayElementProps<TFieldValues, TName, TValue>
 ) => JSX.Element;
 
-const AutoCompleteArrayElement = <
+const AutocompleteArrayElement = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord
 >(
-    props: AutoCompleteArrayElementProps<TFieldValues, TName, TValue>
+    props: AutocompleteArrayElementProps<TFieldValues, TName, TValue>
 ) => {
-    return <AutoCompleteElement {...props} multiple />;
+    return <AutocompleteElement {...props} multiple />;
 };
-AutoCompleteArrayElement.displayName = "AutoCompleteArrayElement";
-export default AutoCompleteArrayElement as AutoCompleteElementComponent;
+AutocompleteArrayElement.displayName = "AutocompleteArrayElement";
+export default AutocompleteArrayElement as AutocompleteElementComponent;

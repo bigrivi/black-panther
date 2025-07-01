@@ -7,8 +7,8 @@ import {
     UseControllerProps,
     useWatch,
 } from "react-hook-form";
-import { AutocompleteElement } from "react-hook-form-mui";
-import AutoCompleteArrayElement from "../autocomplete-array";
+import AutocompleteElement from "../autocomplete";
+import AutocompleteArrayElement from "../autocomplete-array";
 
 export type ReferenceArrayElementProps<
     TFieldValues extends FieldValues = FieldValues,
@@ -74,7 +74,7 @@ const ReferenceArrayElement = <
         throw new Error("<ReferenceArrayElement> only accepts a single child");
     }
     const isAutoCompleteType =
-        children.type == AutoCompleteArrayElement ||
+        children.type == AutocompleteArrayElement ||
         children.type == AutocompleteElement;
 
     const fieldValue = useWatch({ name: name! });
@@ -101,6 +101,6 @@ const ReferenceArrayElement = <
         rules,
     });
 };
-const defaultChildren = <AutoCompleteArrayElement />;
+const defaultChildren = <AutocompleteArrayElement />;
 ReferenceArrayElement.displayName = "ReferenceArrayElement";
 export default ReferenceArrayElement as ReferenceArrayElementComponent;

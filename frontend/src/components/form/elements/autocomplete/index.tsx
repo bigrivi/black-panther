@@ -12,7 +12,7 @@ import {
     AutocompleteElementProps as RHFAutocompleteElementProps,
 } from "react-hook-form-mui";
 
-export type AutoCompleteElementProps<
+export type AutocompleteElementProps<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord,
@@ -28,22 +28,22 @@ export type AutoCompleteElementProps<
     onSearch?: (value: string) => void;
 };
 
-type AutoCompleteElementComponent = <
+type AutocompleteElementComponent = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord,
     Multiple extends boolean | undefined = false
 >(
-    props: AutoCompleteElementProps<TFieldValues, TName, TValue, Multiple>
+    props: AutocompleteElementProps<TFieldValues, TName, TValue, Multiple>
 ) => JSX.Element;
 
-const AutoCompleteElement = <
+const AutocompleteElement = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue extends BaseRecord = BaseRecord,
     Multiple extends boolean | undefined = false
 >(
-    props: AutoCompleteElementProps<TFieldValues, TName, TValue, Multiple>
+    props: AutocompleteElementProps<TFieldValues, TName, TValue, Multiple>
 ) => {
     const {
         name,
@@ -121,5 +121,5 @@ const AutoCompleteElement = <
         />
     );
 };
-AutoCompleteElement.displayName = "AutoCompleteElement";
-export default AutoCompleteElement as AutoCompleteElementComponent;
+AutocompleteElement.displayName = "AutocompleteElement";
+export default AutocompleteElement as AutocompleteElementComponent;
