@@ -65,16 +65,16 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 header: t("users.fields.roles"),
                 enableSorting: false,
                 filterFn: "any",
+                grow: true,
                 enableColumnFilterModes: false,
                 filterSelectOptions:
                     rolesData?.data.map((item) => {
                         return { label: item.name, value: item.id + "" };
                     }) ?? [],
                 filterVariant: "select",
-                grow: true,
                 Cell: function render({ row }) {
                     return (
-                        <div>
+                        <Box display={"flex"} flexWrap={"wrap"} gap={"2px"}>
                             {row.original.roles.map((role) => (
                                 <Chip
                                     size="small"
@@ -82,7 +82,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                                     label={role.name}
                                 />
                             ))}
-                        </div>
+                        </Box>
                     );
                 },
             },
@@ -100,7 +100,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 grow: true,
                 Cell: function render({ row }) {
                     return (
-                        <div>
+                        <Box display={"flex"} flexWrap={"wrap"} gap={"2px"}>
                             {row.original.positions.map((role) => (
                                 <Chip
                                     size="small"
@@ -108,7 +108,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                                     label={role.name}
                                 />
                             ))}
-                        </div>
+                        </Box>
                     );
                 },
             },

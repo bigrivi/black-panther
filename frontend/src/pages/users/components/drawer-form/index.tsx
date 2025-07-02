@@ -149,7 +149,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                         <ReferenceArrayElement<IUser>
                             name="roles"
                             resource="role"
-                        />
+                        ></ReferenceArrayElement>
                     </FormItem>
                     <FormItem label={t("users.fields.positions")} required>
                         <ReferenceArrayElement<IUser>
