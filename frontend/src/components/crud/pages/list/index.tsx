@@ -23,6 +23,7 @@ export const List = ({ children }: PropsWithChildren) => {
             const { properties } = listSchemaData.data;
             return Object.keys(properties)
                 .filter((key) => !!properties[key].valueType)
+                .filter((key) => !properties[key].hideInList)
                 .map((key) => {
                     return {
                         name: key,

@@ -71,6 +71,7 @@ class FieldInfo(SQLFieldInfo):
         enum: Optional[Enum] = None,
         value_type: Optional[ValueType] = None,
         reference: Optional[str] = None,
+        hide_in_list: Optional[bool] = False
     ) -> Any:
         current_schema_extra = schema_extra or {}
         json_schema_extra = current_schema_extra.get("json_schema_extra") or {}
@@ -86,6 +87,11 @@ class FieldInfo(SQLFieldInfo):
         if reference:
             json_schema_extra.update({
                 "reference": reference
+            })
+
+        if hide_in_list is not None:
+            json_schema_extra.update({
+                "hideInList": hide_in_list
             })
 
         self.order = order
@@ -177,6 +183,7 @@ def Field(
     enum: Optional[Enum] = None,
     value_type: Optional[ValueType] = None,
     reference: Optional[str] = None,
+    hide_in_list: Optional[bool] = False
 ) -> Any:
     current_schema_extra = schema_extra or {}
     if enum and sa_type is Undefined:
@@ -220,6 +227,7 @@ def Field(
         enum=enum,
         value_type=value_type,
         reference=reference,
+        hide_in_list=hide_in_list,
         **current_schema_extra,
     )
     post_init_field_info(field_info)
