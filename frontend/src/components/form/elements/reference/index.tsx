@@ -7,7 +7,7 @@ import {
     UseControllerProps,
     useWatch,
 } from "react-hook-form";
-import AutoCompleteElement from "../autocomplete";
+import AutocompleteElement from "../autocomplete";
 
 export type ReferenceElementProps<
     TFieldValues extends FieldValues = FieldValues,
@@ -89,14 +89,15 @@ const ReferenceElement = <
         ...rest,
     });
 
+    const isAutoCompleteType = children.type == AutocompleteElement;
     return React.cloneElement(children as React.ReactElement, {
         options: autocompleteProps.options,
-        onSearch,
+        ...(isAutoCompleteType && { onSearch }),
         name,
         required,
         rules,
     });
 };
-const defaultChildren = <AutoCompleteElement />;
+const defaultChildren = <AutocompleteElement />;
 ReferenceElement.displayName = "ReferenceElement";
 export default ReferenceElement as ReferenceElementComponent;

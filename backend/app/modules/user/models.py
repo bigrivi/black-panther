@@ -1,6 +1,5 @@
 from typing import Optional, List
 from datetime import datetime
-from sqlalchemy.dialects.mysql import BIGINT
 from sqlmodel import Field, SQLModel, Relationship, Column, DateTime, String, BIGINT
 from app.common.model import BaseMixin
 from app.modules.department.models import Department, DepartmentPublic

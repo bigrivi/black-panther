@@ -1,5 +1,7 @@
 import { BaseRecord } from "@refinedev/core";
-import { useEffect, useState } from "react";
+import isEqual from "lodash/isEqual";
+import { useEffect, useRef } from "react";
+
 import {
     FieldPath,
     FieldValues,
@@ -55,10 +57,8 @@ const AutocompleteElement = <
         ...rest
     } = props;
     const { setValue } = useFormContext();
-    const [filterValue, setFilterValue] = useState("");
-
+    const inputValueRef = useRef<any>();
     const fieldValue = useWatch({ name: name! });
-
     useEffect(() => {
         if (!fieldValue) {
             return;
@@ -78,11 +78,31 @@ const AutocompleteElement = <
         }
     }, [fieldValue, name]);
 
+    const matchOptionByValue = (value: TValue) => {
+        return options.find((option) => {
+            return (
+                option?.[optionValue]?.toString() ===
+                (value?.[optionValue] ?? value)?.toString()
+            );
+        });
+    };
+
     return (
         <RHFAutocompleteElement
             name={name!}
             options={options}
             transform={{
+                input: (newValue) => {
+                    const value = multiple
+                        ? (Array.isArray(newValue) ? newValue : []).map(
+                              matchOptionByValue
+                          )
+                        : matchOptionByValue(newValue) ?? null;
+                    if (!isEqual(value, inputValueRef.current)) {
+                        inputValueRef.current = value;
+                    }
+                    return inputValueRef.current;
+                },
                 output: (event, value) => {
                     if (Array.isArray(value)) {
                         return value.map(
@@ -96,13 +116,10 @@ const AutocompleteElement = <
                 },
             }}
             autocompleteProps={{
-                inputValue: filterValue,
-                onInputChange: (event, value) => {
+                onInputChange: (event, value, reason) => {
                     if (event?.type === "change") {
-                        setFilterValue(value);
                         onSearch && onSearch(value);
                     } else if (event?.type === "click") {
-                        setFilterValue(value);
                         onSearch && onSearch("");
                     }
                 },

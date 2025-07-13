@@ -13,14 +13,14 @@ ValueType = Literal[
     'textarea',
     'switch',
     "select",
+    "treeSelect",
     "multiSelect",
     "password",
     "checkbox",
     "listTable",
-    "reference",  # reference="book_details" target="book_id"
-    "referenceOne",  # reference="book_details" target="book_id"
-    "referenceMany",  # reference="book_details" target="book_id"
-    "referenceManyToMany"
+    "autocomplete",
+    "checkboxGroup",
+    "autocomplete"
 ]
 
 
@@ -69,7 +69,8 @@ class FieldInfo(SQLFieldInfo):
         schema_extra: Optional[Dict[str, Any]] = None,
         order: Optional[int] = None,
         enum: Optional[Enum] = None,
-        value_type: Optional[ValueType] = None
+        value_type: Optional[ValueType] = None,
+        reference: Optional[str] = None,
     ) -> Any:
         current_schema_extra = schema_extra or {}
         json_schema_extra = current_schema_extra.get("json_schema_extra") or {}
@@ -81,6 +82,10 @@ class FieldInfo(SQLFieldInfo):
         if enum:
             json_schema_extra.update({
                 "options": [dict(label=enum_item.name_ if hasattr(enum_item, "name_") else enum_item.name, value=enum_item.value) for enum_item in enum]
+            })
+        if reference:
+            json_schema_extra.update({
+                "reference": reference
             })
 
         self.order = order
@@ -170,7 +175,8 @@ def Field(
     schema_extra: Optional[Dict[str, Any]] = None,
     order: Optional[int] = None,
     enum: Optional[Enum] = None,
-    value_type: Optional[ValueType] = None
+    value_type: Optional[ValueType] = None,
+    reference: Optional[str] = None,
 ) -> Any:
     current_schema_extra = schema_extra or {}
     if enum and sa_type is Undefined:
@@ -213,6 +219,7 @@ def Field(
         order=order,
         enum=enum,
         value_type=value_type,
+        reference=reference,
         **current_schema_extra,
     )
     post_init_field_info(field_info)
