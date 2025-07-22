@@ -1,4 +1,4 @@
-import { ClearOutlined } from "@mui/icons-material";
+import { CloseOutlined } from "@mui/icons-material";
 import Search from "@mui/icons-material/Search";
 import {
     FormControl,
@@ -74,8 +74,16 @@ const SearchInput: FC<SearchInputProps> = ({
                 endAdornment={
                     value ? (
                         <InputAdornment position="end">
-                            <IconButton onClick={clearInput} size="small">
-                                <ClearOutlined sx={{ fontSize: 12 }} />
+                            <IconButton
+                                onClick={clearInput}
+                                sx={{
+                                    height: "2rem",
+                                    transform: "scale(0.9)",
+                                    width: "2rem",
+                                }}
+                                size="small"
+                            >
+                                <CloseOutlined />
                             </IconButton>
                         </InputAdornment>
                     ) : null

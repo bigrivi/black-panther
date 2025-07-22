@@ -1,14 +1,24 @@
 import SearchInput from "@/components/ui/search-input";
 import { TreeView } from "@/components/ui/tree-view";
 import { ITreeNode } from "@/interfaces";
-import { filterTree, getExpandFilteredNodeIds } from "@/utils/tree";
-import { ArrowDropDown, ArrowDropUp, Close } from "@mui/icons-material";
+import {
+    filterTree,
+    findNodeById,
+    getExpandFilteredNodeIds,
+} from "@/utils/tree";
+import {
+    ArrowDropDown,
+    ArrowDropUp,
+    Close,
+    CloseOutlined,
+} from "@mui/icons-material";
 import {
     Box,
     ClickAwayListener,
     Divider,
     FormHelperText,
     IconButton,
+    InputAdornment,
     OutlinedInput,
     Paper,
     Popper,
@@ -41,26 +51,6 @@ type FieldNames = {
     label: string;
     value: string;
     children: string;
-};
-
-export const findNodeById = (
-    treeData: ITreeNode[],
-    nodeId: any,
-    fieldNames: FieldNames
-): ITreeNode | null => {
-    for (const item of treeData) {
-        if (item[fieldNames["value"]] == nodeId) {
-            return item;
-        }
-        const children = item[fieldNames["children"]];
-        if (children && children.length) {
-            const found = findNodeById(children, nodeId, fieldNames);
-            if (found) {
-                return found;
-            }
-        }
-    }
-    return null;
 };
 
 export type TreeSelectFieldElementProps<
@@ -216,6 +206,11 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
         [treeData]
     );
 
+    const handleClear = (e) => {
+        e.stopPropagation();
+        onChange(null);
+    };
+
     const selectedItem: ITreeNode | null = useMemo(() => {
         if (value) {
             return findNodeById(treeData, value, fieldNames);
@@ -230,6 +225,28 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
         : helperText;
 
     const open = Boolean(anchorEl);
+
+    const endAdornment = (
+        <InputAdornment position="end" sx={{}}>
+            <IconButton
+                onClick={handleClear}
+                size="small"
+                sx={{
+                    height: "2rem",
+                    transform: "scale(0.9)",
+                    width: "2rem",
+                    visibility: value ? "visible" : "hidden",
+                }}
+            >
+                <CloseOutlined />
+            </IconButton>
+            {open ? (
+                <ArrowDropUp fontSize="small" />
+            ) : (
+                <ArrowDropDown fontSize="small" />
+            )}
+        </InputAdornment>
+    );
 
     useEffect(() => {
         if (treeData?.length && value) {
@@ -261,13 +278,7 @@ const TreeSelectFieldElement = forwardRef(function TreeSelectFieldElement<
                 }}
                 required={required}
                 error={!!error}
-                endAdornment={
-                    open ? (
-                        <ArrowDropUp fontSize="small" />
-                    ) : (
-                        <ArrowDropDown fontSize="small" />
-                    )
-                }
+                endAdornment={endAdornment}
                 ref={ref}
             />
 

@@ -66,7 +66,6 @@ export const columnFiltersToCrudFilters = ({
         columnFilters?.map((filter) => {
             const operator = columnFilterFns[filter.id];
             const defaultOperator = Array.isArray(filter.value) ? "in" : "eq";
-            console.log(filter);
             let value = ["empty", "notEmpty"].includes(operator)
                 ? true
                 : filter.value;
