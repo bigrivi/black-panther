@@ -1,5 +1,6 @@
 export { ConfirmButton, ConfirmDialog } from "./confirm";
 export { DeleteButton } from "./delete";
+export { ReferenceFilter } from "./filter";
 export { FooterToolbar } from "./footer-toolbar";
 export * from "./form";
 export { Header } from "./header";

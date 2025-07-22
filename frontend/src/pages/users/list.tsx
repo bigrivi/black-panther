@@ -1,12 +1,13 @@
-import { DeleteButton, Paper } from "@/components";
+import { DeleteButton, Paper, ReferenceFilter } from "@/components";
+import { ReferenceNodeFilter } from "@/components/filter";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
 import { useTable } from "@/hooks";
-import { IPostion, IRole, IUser } from "@/interfaces";
+import { IUser } from "@/interfaces";
 import { KeyOutlined } from "@mui/icons-material";
 import { Box, Chip, IconButton, Stack } from "@mui/material";
-import { useList, useModal, useTranslate } from "@refinedev/core";
+import { useModal, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
     DateField,
@@ -23,16 +24,6 @@ export const UserList = ({ children }: PropsWithChildren) => {
     const [selectedDeptId, setSelectedDeptId] = useState<string>("");
     const { visible, show, close } = useModal();
     const [editId, setEditId] = useState<number>();
-
-    const { data: rolesData } = useList<IRole>({
-        resource: "role",
-        pagination: { mode: "off" },
-    });
-
-    const { data: positionData } = useList<IPostion>({
-        resource: "position",
-        pagination: { mode: "off" },
-    });
 
     const columns = useMemo<MRT_ColumnDef<IUser>[]>(
         () => [
@@ -52,13 +43,20 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 width: 150,
             },
             {
-                accessorKey: "department",
+                accessorKey: "department_id",
                 header: t("users.fields.department"),
-                enableColumnFilter: false,
+                enableColumnFilterModes: false,
+                filterFn: "equals",
                 enableSorting: false,
                 Cell: function render({ row }) {
                     return row.original.department?.name ?? "";
                 },
+                Filter: ({ header }) => (
+                    <ReferenceNodeFilter
+                        header={header}
+                        resource="department"
+                    />
+                ),
             },
             {
                 accessorKey: "roles",
@@ -67,11 +65,9 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 filterFn: "any",
                 grow: true,
                 enableColumnFilterModes: false,
-                filterSelectOptions:
-                    rolesData?.data.map((item) => {
-                        return { label: item.name, value: item.id + "" };
-                    }) ?? [],
-                filterVariant: "select",
+                Filter: ({ header }) => (
+                    <ReferenceFilter header={header} resource="role" />
+                ),
                 Cell: function render({ row }) {
                     return (
                         <Box display={"flex"} flexWrap={"wrap"} gap={"2px"}>
@@ -92,12 +88,10 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 enableSorting: false,
                 filterFn: "any",
                 enableColumnFilterModes: false,
-                filterSelectOptions:
-                    positionData?.data.map((item) => {
-                        return { label: item.name, value: item.id + "" };
-                    }) ?? [],
-                filterVariant: "select",
                 grow: true,
+                Filter: ({ header }) => (
+                    <ReferenceFilter header={header} resource="position" />
+                ),
                 Cell: function render({ row }) {
                     return (
                         <Box display={"flex"} flexWrap={"wrap"} gap={"2px"}>
@@ -182,7 +176,7 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 },
             },
         ],
-        [t, rolesData, positionData]
+        [t]
     );
 
     const {
