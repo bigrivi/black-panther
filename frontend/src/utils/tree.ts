@@ -123,3 +123,23 @@ export const filterTree = <T extends BasicDataNode>(
             };
         });
 };
+
+export const findNodeById = <T extends BasicDataNode>(
+    treeData: T[],
+    nodeId: any,
+    fieldNames: FieldNames<keyof T>
+): T | null => {
+    for (const item of treeData) {
+        if (item[fieldNames["value"]] == nodeId) {
+            return item;
+        }
+        const children = item[fieldNames["children"]];
+        if (children && children.length) {
+            const found = findNodeById(children, nodeId, fieldNames);
+            if (found) {
+                return found;
+            }
+        }
+    }
+    return null;
+};

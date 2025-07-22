@@ -1,3 +1,4 @@
+import { propertyExists } from "@/utils/common";
 import CloseIcon from "@mui/icons-material/Cancel";
 import {
     Checkbox,
@@ -25,17 +26,6 @@ import {
     UseControllerProps,
 } from "react-hook-form";
 import { useFormError, useTransform } from "react-hook-form-mui";
-
-function propertyExists<X, Y extends PropertyKey>(
-    obj: X,
-    prop: Y
-): obj is X & Record<Y, unknown> {
-    return (
-        typeof obj === "object" &&
-        obj !== null &&
-        Object.prototype.hasOwnProperty.call(obj, prop)
-    );
-}
 
 export type MultiSelectElementProps<
     TFieldValues extends FieldValues = FieldValues,

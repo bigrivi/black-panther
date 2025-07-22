@@ -1,6 +1,6 @@
 import { BaseRecord, useList } from "@refinedev/core";
 import React from "react";
-import { FieldPath, FieldValues } from "react-hook-form";
+import { FieldPath, FieldValues, UseControllerProps } from "react-hook-form";
 import TreeSelectFieldElement from "../tree-select";
 
 export type ReferenceNodeElementProps<
@@ -10,6 +10,8 @@ export type ReferenceNodeElementProps<
     name: TName;
     resource: string;
     children?: JSX.Element;
+    required?: boolean;
+    rules?: UseControllerProps["rules"];
 };
 
 type ReferenceNodeElementComponent = <
@@ -26,7 +28,13 @@ const ReferenceNodeElement = <
 >(
     props: ReferenceNodeElementProps<TFieldValues, TName>
 ) => {
-    const { name, resource, children = defaultChildren } = props;
+    const {
+        name,
+        resource,
+        required,
+        rules,
+        children = defaultChildren,
+    } = props;
 
     if (React.Children.count(children) !== 1) {
         throw new Error("<ReferenceNodeElement> only accepts a single child");
@@ -42,6 +50,8 @@ const ReferenceNodeElement = <
     return React.cloneElement(children as React.ReactElement, {
         treeData: data?.data ?? [],
         name,
+        required,
+        rules,
     });
 };
 const defaultChildren = <TreeSelectFieldElement />;
