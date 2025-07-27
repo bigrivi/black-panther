@@ -41,7 +41,7 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
 - 🐎 **Role-Based Access Control**:Powerful role-based asset action control
 - 🐥 **Multi-language support**
 - 🎓 **Dark mode support**
-- 🎉 **Module List**
+- 🎉 **Built-in Module**
   - 💿 **User Management**
   - 🎇 **Role Management**
   - 🎃 **Position Management**
@@ -50,6 +50,8 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
   - 🔈 **Policy**
   - 🏠 **Enum Management**
   - 🌠 **Parameter setting**
+  - 🎁 **Dynamic module**
+
 <hr>
 
 ### Login
@@ -102,6 +104,92 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
 
 #### Dark mode
 ![Dark mode](resources/dark-mode.png)
+
+### Dynamic module support
+
+**Zero code on the front end**
+
+Just define some special fields to describe the data in your backend model, and the frontend will be automatically generated.
+
+```python
+from typing import Optional, List
+from datetime import datetime
+from sqlmodel import SQLModel, Relationship, BIGINT
+from app.common.model import BaseMixin
+from app.common.model.field import Field
+from app.enums import IntNameEnum
+from app.modules.department.models import Department, DepartmentPublic
+from .detail.models import ToyDetail, ToyDetailCreate, ToyDetailPublic
+
+
+class Select1Enum(IntNameEnum):
+    option1 = 1, "option1"
+    option2 = 2, "option2"
+    option3 = 3, "option3"
+
+
+class ToyBase(SQLModel):
+    tetx1: str = Field(value_type="text",
+                       title="text1", description="description")
+    tetx2: str = Field(default=None, value_type="text", title="text2")
+    textarea1: Optional[str] = Field(
+        default=None, value_type="textarea", title="textarea1")
+    switch1: Optional[bool] = Field(
+        default=True, value_type="switch", title="switch1", description="description")
+    checkbox1: Optional[bool] = Field(
+        default=True, value_type="checkbox", title="checkbox1", description="description")
+    select1: Select1Enum | None = Field(
+        enum=Select1Enum, default=Select1Enum.option1, value_type="select", title="select1", description="select1_description")
+    department_id: Optional[int] = Field(
+        default=None,
+        title="department",
+        value_type="treeSelect",
+        sa_type=BIGINT,
+        reference="department",
+        hide_in_list=True,
+        foreign_key="department.id",
+        description="department_description"
+    )
+
+
+class Toy(ToyBase, BaseMixin, table=True):
+    department: Optional[Department] = Relationship(
+        sa_relationship_kwargs={"lazy": "noload"},
+    )
+    details: List[ToyDetail] = Relationship(
+        sa_relationship_kwargs={
+            "uselist": True,
+            "cascade": "all, delete-orphan",
+            "lazy": "noload"
+        })
+
+
+class ToyPublic(ToyBase):
+    id: Optional[int]
+    department: Optional[DepartmentPublic] = Field(
+        title="department",
+        value_type="treeSelect",
+        reference="department",
+        search_key="department_id"
+    )
+    created_at: Optional[datetime] = None
+    details: List[ToyDetailPublic] = None
+
+
+class ToyCreate(ToyBase):
+    details: List[ToyDetailCreate] = Field(
+        title="details", value_type="listTable", description="detail description")
+
+
+class ToyUpdate(ToyBase):
+    details: List[ToyDetailCreate] = None
+
+```
+The front end automatically generates lists and forms based on the json schema returned by the back end
+
+![Toy List](resources/toy-list.png)
+![Toy Create](resources/toy-create.png)
+
 
 ## How To Use It
 You can **just fork or clone** this repository and use it as is.
