@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/bigrivi/black-panther">
-    <img src="resources/Black Panther.png" alt="BlackPanther is a Full stack web application scaffold,Using FastAPI,BetterCRUD,Refine and more." width="25%" height="auto">
+  <img src="resources/black-panter.png" alt="BlackPanther is a Full stack web application scaffold,Using FastAPI,BetterCRUD,Refine and more." width="300" height="auto">
   </a>
 </p>
 <p align="center" markdown=1>
@@ -116,6 +116,9 @@ Backend docs: [backend/README.md](./backend/README.md).
 Frontend docs: [frontend/README.md](./frontend/README.md).
 
 ## Why did you use Black Panther as the name of the project?
+<p align="center">
+<img src="resources/Black Panther.png" alt="BlackPanther is a Full stack web application scaffold,Using FastAPI,BetterCRUD,Refine and more." width="200" height="auto">
+</p>
 Black Panther is the name of a stray cat I feed. It is very cute and obedient. We have a good relationship. My daughter gave it the name, which I think is good. I hope it can live a good life.
 
 ## Author
