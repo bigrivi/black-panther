@@ -1,3 +1,4 @@
+import { ReferenceNodeFilter } from "@/components/filter";
 import { IFieldSchema } from "@/interfaces";
 import { BooleanField } from "@refinedev/mui";
 import { MRT_ColumnDef } from "material-react-table";
@@ -7,9 +8,11 @@ export const columnDefFactory = ({
     title,
     options,
     valueType,
+    reference,
+    search_key,
 }: IFieldSchema): MRT_ColumnDef<any> => {
     const base = {
-        accessorKey: name,
+        accessorKey: search_key || name,
         header: title,
         size: 200,
     };
@@ -41,6 +44,21 @@ export const columnDefFactory = ({
                     return options?.find(
                         (option) => option.value == cell.getValue()
                     )?.label;
+                },
+            };
+        case "treeSelect":
+            return {
+                ...base,
+                enableColumnFilterModes: false,
+                filterFn: "equals",
+                Filter: ({ header }) => (
+                    <ReferenceNodeFilter
+                        header={header}
+                        resource={reference!}
+                    />
+                ),
+                Cell: ({ row }) => {
+                    return row.original[name].name;
                 },
             };
     }

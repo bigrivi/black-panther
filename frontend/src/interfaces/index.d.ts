@@ -161,6 +161,7 @@ interface IFieldSchema {
     items?: { $ref: string };
     default?: any;
     reference?: string;
+    search_key?: string;
 }
 
 export interface Schema {

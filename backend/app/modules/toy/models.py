@@ -27,7 +27,14 @@ class ToyBase(SQLModel):
     select1: Select1Enum | None = Field(
         enum=Select1Enum, default=Select1Enum.option1, value_type="select", title="select1", description="select1_description")
     department_id: Optional[int] = Field(
-        default=None, title="department", value_type="treeSelect", sa_type=BIGINT, reference="department", foreign_key="department.id", hide_in_list=True, description="department_description"
+        default=None,
+        title="department",
+        value_type="treeSelect",
+        sa_type=BIGINT,
+        reference="department",
+        hide_in_list=True,
+        foreign_key="department.id",
+        description="department_description"
     )
 
 
@@ -46,7 +53,11 @@ class Toy(ToyBase, BaseMixin, table=True):
 class ToyPublic(ToyBase):
     id: Optional[int]
     department: Optional[DepartmentPublic] = Field(
-        reference="department", title="department", value_type="treeSelect")
+        title="department",
+        value_type="treeSelect",
+        reference="department",
+        search_key="department_id"
+    )
     created_at: Optional[datetime] = None
     details: List[ToyDetailPublic] = None
 

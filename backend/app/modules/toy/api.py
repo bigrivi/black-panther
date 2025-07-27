@@ -13,6 +13,9 @@ router = APIRouter()
     serialize={"base": ToyPublic},
     query={
         "joins": {
+            "department": {
+                "select": True
+            },
             "details": {
                 "select": True
             }
