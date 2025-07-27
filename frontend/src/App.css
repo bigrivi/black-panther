@@ -1,3 +1,61 @@
-.MuiDataGrid-columnHeader--pinnedRight{
 
+
+.split {
+    display: flex;
+    flex-direction: row;
+}
+
+.gutter {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
+}
+
+.gutter-btn{
+    width:12px;
+    height: 30px;
+    background: #d7d8da;
+    position: absolute;
+    z-index: 15;
+    left:100%;
+    cursor: pointer;
+    border-radius: 0px 4px 4px 0px;
+}
+
+.gutter-btn::before,.gutter-btn::after{
+    content: "";
+    width: 10px;
+    height: 2px;
+    background: #fff;
+    display: block;
+    position: absolute;
+
+}
+
+.gutter-btn::before{
+    top: 9px;
+    left: 1px;
+    transform: rotate(-70deg);
+
+}
+
+.gutter-btn::after{
+    top: 18px;
+    left: 1px;
+    transform: rotate(70deg);
+}
+
+.gutter-btn.collapsed::before{
+    transform: rotate(70deg);
+}
+
+.gutter-btn.collapsed::after{
+    transform: rotate(-70deg);
 }

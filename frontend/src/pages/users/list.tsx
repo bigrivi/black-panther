@@ -1,4 +1,4 @@
-import { DeleteButton, Paper, ReferenceFilter } from "@/components";
+import { DeleteButton, Paper, ReferenceFilter, Split } from "@/components";
 import { ReferenceNodeFilter } from "@/components/filter";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
@@ -6,7 +6,7 @@ import { defaultDataTimeFormat } from "@/constants";
 import { useTable } from "@/hooks";
 import { IUser } from "@/interfaces";
 import { KeyOutlined } from "@mui/icons-material";
-import { Box, Chip, IconButton, Stack } from "@mui/material";
+import { Box, Chip, IconButton } from "@mui/material";
 import { useModal, useTranslate } from "@refinedev/core";
 import {
     CreateButton,
@@ -24,7 +24,6 @@ export const UserList = ({ children }: PropsWithChildren) => {
     const [selectedDeptId, setSelectedDeptId] = useState<string>("");
     const { visible, show, close } = useModal();
     const [editId, setEditId] = useState<number>();
-
     const columns = useMemo<MRT_ColumnDef<IUser>[]>(
         () => [
             {
@@ -227,19 +226,19 @@ export const UserList = ({ children }: PropsWithChildren) => {
                     ];
                 }}
             >
-                <Stack spacing={2} direction="row">
-                    <Box sx={{ flexBasis: 350, overflow: "auto" }}>
+                <Split>
+                    <Box>
                         <OrgSider
                             selectedDept={selectedDeptId}
                             onSelectedDeptChange={handleSelectedDeptIdChange}
                         />
                     </Box>
-                    <Box sx={{ flex: 1, overflow: "hidden" }}>
+                    <Box>
                         <Paper>
                             <MaterialReactTable table={table} />
                         </Paper>
                     </Box>
-                </Stack>
+                </Split>
             </RefineListView>
             {visible && (
                 <PasswordModifyForm
