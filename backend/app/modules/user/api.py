@@ -30,6 +30,10 @@ router = APIRouter()
             "positions": {
                 "select": True,
                 "join": True
+            },
+            "gender": {
+                "select": True,
+                "join": False
             }
         }
     }

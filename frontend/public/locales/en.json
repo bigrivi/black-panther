@@ -171,7 +171,8 @@
             "email": "Email",
             "department": "Department",
             "roles": "Roles",
-            "positions": "Positions"
+            "positions": "Positions",
+            "gender": "Gender"
         },
         "actions": {
             "add": "Create User",

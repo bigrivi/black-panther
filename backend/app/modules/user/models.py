@@ -5,6 +5,7 @@ from app.common.model import BaseMixin
 from app.modules.department.models import Department, DepartmentPublic
 from app.modules.position.models import Position, PositionPublic
 from app.modules.role.models import Role, RolePublic, RolePublicWithoutActions
+from app.modules.enum.item.models import EnumItem, EnumItemPublic
 from app.utils.common import find
 
 
@@ -46,16 +47,23 @@ class UserBase(SQLModel):
     login_name: str
     user_name: str
     email: Optional[str] = None
+    department_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="department.id"
+    )
+    gender_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="enum_item.id"
+    )
 
 
 class User(UserBase, BaseMixin, table=True):
     password: str
-    department_id: Optional[int] = Field(
-        default=None, sa_type=BIGINT, foreign_key="department.id"
-    )
     department: Department = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
     )
+    gender: EnumItem = Relationship(
+        sa_relationship_kwargs={"lazy": "noload"},
+    )
+
     positions: List["Position"] = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
         link_model=UserPositionLink
@@ -91,6 +99,7 @@ class UserPublic(UserBase):
     department_id: Optional[int] = None
     department: Optional[DepartmentPublic] = None
     positions: List[PositionPublic] = None
+    gender: Optional[EnumItemPublic] = None
 
 
 class CurrentUser(UserBase):

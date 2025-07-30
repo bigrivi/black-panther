@@ -86,6 +86,8 @@ interface IUser {
     email?: string;
     department_id?: number;
     department?: IDepartment;
+    gender_id?: number;
+    gender?: IEnumOption;
 }
 
 interface IPostion {

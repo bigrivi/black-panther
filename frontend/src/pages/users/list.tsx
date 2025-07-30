@@ -1,5 +1,5 @@
 import { DeleteButton, Paper, ReferenceFilter, Split } from "@/components";
-import { ReferenceNodeFilter } from "@/components/filter";
+import { EnumFilter, ReferenceNodeFilter } from "@/components/filter";
 import { RefineListView } from "@/components/refine-list-view";
 import { Status } from "@/components/status";
 import { defaultDataTimeFormat } from "@/constants";
@@ -42,11 +42,24 @@ export const UserList = ({ children }: PropsWithChildren) => {
                 width: 150,
             },
             {
+                accessorKey: "gender_id",
+                header: t("users.fields.gender"),
+                enableColumnFilterModes: false,
+                filterFn: "equals",
+                enableSorting: true,
+                Cell: function render({ row }) {
+                    return row.original.gender?.name ?? "";
+                },
+                Filter: ({ header }) => (
+                    <EnumFilter header={header} enumKey="SYS_USER_GENDER" />
+                ),
+            },
+            {
                 accessorKey: "department_id",
                 header: t("users.fields.department"),
                 enableColumnFilterModes: false,
                 filterFn: "equals",
-                enableSorting: false,
+                enableSorting: true,
                 Cell: function render({ row }) {
                     return row.original.department?.name ?? "";
                 },

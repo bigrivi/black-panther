@@ -1,6 +1,7 @@
 import { Form, FormItem } from "@/components";
 import { Drawer, DrawerContent, DrawerFooter } from "@/components/drawer";
 import {
+    EnumSelectElement,
     ReferenceArrayElement,
     ReferenceNodeElement,
     TreeSelectFieldElement,
@@ -25,6 +26,7 @@ interface IUserForm extends Omit<IUser, "roles"> {
     password: string;
     confirm_password?: string;
     roles: number[];
+    gender_id?: number;
 }
 
 export const UserDrawerForm: FC<Props> = ({ action }) => {
@@ -42,6 +44,7 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
             email: "",
             department_id: null,
             is_active: true,
+            gender_id: null,
             roles: [],
             positions: [],
             ...(action == "create" && {
@@ -132,6 +135,12 @@ export const UserDrawerForm: FC<Props> = ({ action }) => {
                             name="email"
                             id="email"
                         />
+                    </FormItem>
+                    <FormItem label={t("users.fields.gender")} required>
+                        <EnumSelectElement<IUser>
+                            enumKey="SYS_USER_GENDER"
+                            name="gender_id"
+                        ></EnumSelectElement>
                     </FormItem>
                     <FormItem
                         label={t("users.fields.department")}
