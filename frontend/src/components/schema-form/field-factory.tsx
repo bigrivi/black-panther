@@ -1,4 +1,5 @@
 import { IFieldSchema } from "@/interfaces";
+import { Typography } from "@mui/material";
 import {
     CheckboxElement,
     SelectElement,
@@ -6,7 +7,9 @@ import {
     TextFieldElement,
 } from "react-hook-form-mui";
 import {
+    AutocompleteArrayElement,
     AutocompleteElement,
+    ReferenceArrayElement,
     ReferenceElement,
     ReferenceNodeElement,
     SwitchElement,
@@ -102,24 +105,32 @@ export const fieldFactory = ({
                         options={options}
                     />
                 );
-            case "treeSelect":
+            case "referenceNode":
                 return (
                     <TreeSelectFieldElement
                         helperText={renderHelp ? description : undefined}
                         required={required}
                     />
                 );
-            case "autocomplete":
+            case "reference":
                 return <AutocompleteElement />;
+            case "referenceArray":
+                return <AutocompleteArrayElement />;
             default:
-                return <></>;
+                return (
+                    <Typography color="error">
+                        unknow reference type {valueType}
+                    </Typography>
+                );
         }
     };
 
     if (reference) {
         let ReferenceComponent = ReferenceElement;
-        if (valueType == "treeSelect") {
+        if (valueType == "referenceNode") {
             ReferenceComponent = ReferenceNodeElement;
+        } else if (valueType == "referenceArray") {
+            ReferenceComponent = ReferenceArrayElement;
         }
         return (
             <ReferenceComponent name={name} resource={reference}>

@@ -18,21 +18,27 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({
     schema,
 }) => {
     const fields = useMemo(() => {
-        return Object.keys(schema.properties).map((key): IFieldSchema => {
-            const propertyData = schema?.properties[key];
-            const isArray = propertyData.type == "array";
-            return {
-                ...propertyData,
-                ...(isArray && {
-                    valueType: propertyData.valueType ?? "listTable",
-                    schema: getRefSchema(
-                        propertyData.items!.$ref,
-                        schema.$defs!
-                    ),
-                }),
-                name: key,
-            };
-        });
+        return Object.keys(schema.properties)
+            .sort((a, b) => {
+                const p1 = schema.properties[a].priority ?? 0;
+                const p2 = schema.properties[b].priority ?? 0;
+                return p2 - p1;
+            })
+            .map((key): IFieldSchema => {
+                const propertyData = schema?.properties[key];
+                const isArray = propertyData.type == "array";
+                return {
+                    ...propertyData,
+                    ...(isArray && {
+                        valueType: propertyData.valueType ?? "listTable",
+                        schema: getRefSchema(
+                            propertyData.items!.$ref,
+                            schema.$defs!
+                        ),
+                    }),
+                    name: key,
+                };
+            });
     }, [schema]);
 
     return (

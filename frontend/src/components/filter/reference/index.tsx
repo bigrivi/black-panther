@@ -29,7 +29,6 @@ export const ReferenceFilter: FC<ReferenceFilterProps<any>> = ({
         },
         defaultValue: (header.column.getFilterValue() as BaseKey) ?? undefined,
         searchField,
-        selectedOptionsOrder: "selected-first",
     });
 
     const getOptionLabel = (option): string => {

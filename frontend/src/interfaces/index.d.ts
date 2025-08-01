@@ -148,8 +148,9 @@ type SchemaValueType =
     | "checkbox"
     | "select"
     | "listTable"
-    | "treeSelect"
-    | "autocomplete";
+    | "reference"
+    | "referenceNode"
+    | "referenceArray";
 
 interface IFieldSchema {
     name: string;
@@ -164,6 +165,7 @@ interface IFieldSchema {
     default?: any;
     reference?: string;
     search_key?: string;
+    priority?: number;
 }
 
 export interface Schema {

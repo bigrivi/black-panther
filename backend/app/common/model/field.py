@@ -13,14 +13,15 @@ ValueType = Literal[
     'textarea',
     'switch',
     "select",
-    "treeSelect",
     "multiSelect",
     "password",
     "checkbox",
     "listTable",
-    "autocomplete",
     "checkboxGroup",
-    "autocomplete"
+    "reference",
+    "referenceNode",
+    "referenceArray",
+
 ]
 
 
@@ -67,7 +68,7 @@ class FieldInfo(SQLFieldInfo):
         sa_column_args: Union[Sequence[Any], UndefinedType] = Undefined,
         sa_column_kwargs: Union[Mapping[str, Any], UndefinedType] = Undefined,
         schema_extra: Optional[Dict[str, Any]] = None,
-        order: Optional[int] = None,
+        priority: Optional[int] = None,
         enum: Optional[Enum] = None,
         value_type: Optional[ValueType] = None,
         reference: Optional[str] = None,
@@ -100,7 +101,12 @@ class FieldInfo(SQLFieldInfo):
                 "search_key": search_key
             })
 
-        self.order = order
+        if priority is not None:
+            json_schema_extra.update({
+                "priority": priority
+            })
+
+        self.priority = priority
         self.enum = enum
         self.value_type = value_type
 
@@ -185,12 +191,12 @@ def Field(
     sa_column_args: Union[Sequence[Any], UndefinedType] = Undefined,
     sa_column_kwargs: Union[Mapping[str, Any], UndefinedType] = Undefined,
     schema_extra: Optional[Dict[str, Any]] = None,
-    order: Optional[int] = None,
+    priority: Optional[int] = None,
     enum: Optional[Enum] = None,
     value_type: Optional[ValueType] = None,
     reference: Optional[str] = None,
     hide_in_list: Optional[bool] = False,
-    search_key: Optional[str] = None
+    search_key: Optional[str] = None,
 ) -> Any:
     current_schema_extra = schema_extra or {}
     if enum and sa_type is Undefined:
@@ -230,7 +236,7 @@ def Field(
         sa_column=sa_column,
         sa_column_args=sa_column_args,
         sa_column_kwargs=sa_column_kwargs,
-        order=order,
+        priority=priority,
         enum=enum,
         value_type=value_type,
         reference=reference,

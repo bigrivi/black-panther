@@ -24,6 +24,11 @@ export const List = ({ children }: PropsWithChildren) => {
             return Object.keys(properties)
                 .filter((key) => !!properties[key].valueType)
                 .filter((key) => !properties[key].hideInList)
+                .sort((a, b) => {
+                    const p1 = properties[a].priority ?? 0;
+                    const p2 = properties[b].priority ?? 0;
+                    return p2 - p1;
+                })
                 .map((key) => {
                     return {
                         name: key,
