@@ -63,37 +63,37 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
 ![Policy Save](resources/policy-save.png)
 
 ### User
-#### List
+1. List
 ![User List](resources/user-list.png)
-#### Create
+2. Create
 ![User Create](resources/user-create.png)
 
 ### Role
-#### List
+1. List
 ![Role List](resources/role-list.png)
-#### Create
+2. Create
 ![Role Create](resources/role-create.png)
 
 ### Resource
-#### List
+1. List
 ![Resource List](resources/resource-list.png)
 
-#### Create
+2. Create
 ![Resource Create](resources/resource-create.png)
 
 
 ### Department
-#### List
+1. List
 ![Department List](resources/department-list.png)
 
-#### Create
+2. Create
 ![Department Create](resources/department-create.png)
 
 ### Enum
-#### List
+1. List
 ![Enum List](resources/enum-list.png)
 
-#### Edit
+2. Edit
 ![Enum Edit](resources/enum-edit.png)
 
 #### Sidebar mini mode
@@ -105,21 +105,45 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
 #### Dark mode
 ![Dark mode](resources/dark-mode.png)
 
-### Dynamic module support
+### Dynamic module
 
-**Zero code on the front end**
+**Generate the front end through SQLModel model configuration**
+
+>Zero code on the front end
 
 Just define some special fields to describe the data in your backend model, and the frontend will be automatically generated.
 
+This method is more suitable when you have a large number of data tables to maintain and there is not much complex business logic.
+
 ```python
+
 from typing import Optional, List
 from datetime import datetime
 from sqlmodel import SQLModel, Relationship, BIGINT
 from app.common.model import BaseMixin
 from app.common.model.field import Field
+from app.common.model.helper import partial_model
 from app.enums import IntNameEnum
 from app.modules.department.models import Department, DepartmentPublic
+from app.modules.position.models import Position, PositionPublic
 from .detail.models import ToyDetail, ToyDetailCreate, ToyDetailPublic
+from app.modules.role.models import Role, RolePublicWithoutActions
+
+
+class ToyRoleLink(SQLModel, table=True):
+    __tablename__ = "toy_role_link"
+    id: int = Field(
+        sa_type=BIGINT,
+        primary_key=True,
+        index=True,
+        nullable=False,
+    )
+    toy_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="toy.id"
+    )
+    role_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="role.id"
+    )
 
 
 class Select1Enum(IntNameEnum):
@@ -143,17 +167,29 @@ class ToyBase(SQLModel):
     department_id: Optional[int] = Field(
         default=None,
         title="department",
-        value_type="treeSelect",
+        value_type="referenceNode",
         sa_type=BIGINT,
         reference="department",
         hide_in_list=True,
         foreign_key="department.id",
         description="department_description"
     )
+    position_id: int = Field(
+        foreign_key="position.id",
+        title="position",
+        value_type="reference",
+        sa_type=BIGINT,
+        reference="position",
+        hide_in_list=True,
+        priority=10
+    )
 
 
 class Toy(ToyBase, BaseMixin, table=True):
     department: Optional[Department] = Relationship(
+        sa_relationship_kwargs={"lazy": "noload"},
+    )
+    position: Optional[Position] = Relationship(
         sa_relationship_kwargs={"lazy": "noload"},
     )
     details: List[ToyDetail] = Relationship(
@@ -162,33 +198,177 @@ class Toy(ToyBase, BaseMixin, table=True):
             "cascade": "all, delete-orphan",
             "lazy": "noload"
         })
+    roles: List["Role"] = Relationship(
+        sa_relationship_kwargs={"lazy": "noload"},
+        link_model=ToyRoleLink
+    )
 
 
 class ToyPublic(ToyBase):
     id: Optional[int]
     department: Optional[DepartmentPublic] = Field(
         title="department",
-        value_type="treeSelect",
+        value_type="referenceNode",
         reference="department",
         search_key="department_id"
     )
+    position: Optional[PositionPublic] = Field(
+        title="position",
+        value_type="reference",
+        reference="position",
+        search_key="position_id",
+        priority=10
+    )
     created_at: Optional[datetime] = None
     details: List[ToyDetailPublic] = None
+    roles: List[RolePublicWithoutActions] = Field(
+        title="roles",
+        value_type="referenceArray",
+        reference="role",
+        priority=9
+    )
 
 
 class ToyCreate(ToyBase):
+    roles: Optional[List[int]] = Field(
+        default=None,
+        title="roles",
+        value_type="referenceArray",
+        reference="role",
+        priority=9
+    )
     details: List[ToyDetailCreate] = Field(
         title="details", value_type="listTable", description="detail description")
 
 
+@partial_model
 class ToyUpdate(ToyBase):
+    roles: Optional[List[int]] = Field(
+        default=None,
+        title="roles",
+        value_type="referenceArray",
+        reference="role",
+        priority=9
+    )
     details: List[ToyDetailCreate] = None
+
 
 ```
 The front end automatically generates lists and forms based on the json schema returned by the back end
 
 ![Toy List](resources/toy-list.png)
 ![Toy Create](resources/toy-create.png)
+
+### Support for relationships
+
+#### 1. One To One
+
+Create/Edit Mode
+
+```python
+
+department_id: Optional[int] = Field(
+    default=None,
+    title="department",
+    value_type="referenceNode",
+    sa_type=BIGINT,
+    reference="department",
+    hide_in_list=True,
+    foreign_key="department.id",
+    description="department_description"
+)
+position_id: int = Field(
+    foreign_key="position.id",
+    title="position",
+    value_type="reference",
+    sa_type=BIGINT,
+    reference="position",
+    hide_in_list=True,
+    priority=10
+)
+
+```
+Add value_type and reference attributes to the normal SQLModel foreign key configuration
+
+Different value_type will present different form rendering items
+
+**reference**:autocomplete.
+**referenceNode**:tree select.
+
+Also in list mode you only need to configure
+
+```python
+department: Optional[DepartmentPublic] = Field(
+    title="department",
+    value_type="referenceNode",
+    reference="department",
+    search_key="department_id"
+)
+position: Optional[PositionPublic] = Field(
+    title="position",
+    value_type="reference",
+    reference="position",
+    search_key="position_id",
+    priority=10
+)
+```
+
+
+#### 2. One To Many
+
+```python
+
+class ToyCreate(ToyBase):
+    details: List[ToyDetailCreate] = Field(title="details", value_type="listTable", description="detail description")
+```
+Compared with the normal **SQLModel** relationship configuration
+You just should to add value_type as listTable
+The front end will automatically generate one-to-many table data maintenance
+
+![One To Many](resources/one-to-many.png)
+
+
+#### 3. Many To Many
+
+```python
+class ToyRoleLink(SQLModel, table=True):
+    __tablename__ = "toy_role_link"
+    id: int = Field(
+        sa_type=BIGINT,
+        primary_key=True,
+        index=True,
+        nullable=False,
+    )
+    toy_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="toy.id"
+    )
+    role_id: Optional[int] = Field(
+        default=None, sa_type=BIGINT, foreign_key="role.id"
+    )
+
+class Toy(ToyBase, BaseMixin, table=True):
+    roles: List["Role"] = Relationship(
+        sa_relationship_kwargs={"lazy": "noload"},
+        link_model=ToyRoleLink
+    )
+
+class ToyCreate(ToyBase):
+    roles: Optional[List[int]] = Field(
+        default=None,
+        title="roles",
+        value_type="referenceArray",
+        reference="role",
+        priority=9
+    )
+
+```
+
+Compared with the normal **SQLModel** relationship configuration
+You just should to add value_type as referenceArray
+
+The front end will automatically generate a multi-select autocomplate control
+
+![Many To Many](resources/many-to-many.png)
 
 
 ## How To Use It
@@ -203,7 +383,7 @@ Backend docs: [backend/README.md](./backend/README.md).
 
 Frontend docs: [frontend/README.md](./frontend/README.md).
 
-## Why did you use Black Panther as the name of the project?
+## Why did you use BlackPanther as the name of the project?
 <p align="center">
 <img src="resources/Black Panther.png" alt="BlackPanther is a Full stack web application scaffold,Using FastAPI,BetterCRUD,Refine and more." width="200" height="auto">
 </p>
