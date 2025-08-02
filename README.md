@@ -105,7 +105,9 @@ I like [Refine](https://refine.dev/) very much, I think it's a good solution for
 #### Dark mode
 ![Dark mode](resources/dark-mode.png)
 
-### Dynamic module
+### Dynamic module support
+
+Compared with other features, this is a dessert-level feature 😃 👍
 
 **Generate the front end through SQLModel model configuration**
 
@@ -388,6 +390,9 @@ Frontend docs: [frontend/README.md](./frontend/README.md).
 <img src="resources/Black Panther.png" alt="BlackPanther is a Full stack web application scaffold,Using FastAPI,BetterCRUD,Refine and more." width="200" height="auto">
 </p>
 Black Panther is the name of a stray cat I feed. It is very cute and obedient. We have a good relationship. My daughter gave it the name, which I think is good. I hope it can live a good life.
+
+## Off Topic
+I really want to thank this project. In the loneliest moments of my life, it has always motivated me to move forward and complete these features with a high pursuit as my goal.
 
 ## Author
 
