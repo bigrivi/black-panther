@@ -24,4 +24,4 @@ asgi_correlation_id==4.3.4
 filestorage==0.0.6
 aiofiles==24.1.0
 user-agents==2.2.0
-better_crud==0.1.6
+better_crud==0.1.9
